@@ -1,0 +1,32 @@
+tr{
+    transition:0.2s;
+}
+
+tr:hover{
+    background:#F9FAFB;
+}
+
+strong{
+    display:block;
+    margin-bottom:5px;
+    color:#101828;
+}
+
+span{
+    color:#667085;
+}
+
+.ativa{
+    color:#12B76A;
+    font-weight:600;
+}
+
+.afastada{
+    color:#F79009;
+    font-weight:600;
+}
+
+.desassociada{
+    color:#F04438;
+    font-weight:600;
+}

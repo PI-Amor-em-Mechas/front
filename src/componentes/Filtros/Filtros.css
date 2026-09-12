@@ -1,0 +1,23 @@
+.caixaFiltros{
+    border:1px solid #EC2D6B;
+    border-radius:12px;
+    padding:20px;
+    margin:30px 0;
+}
+
+.filtros{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+}
+
+.filtros input,
+.filtros select{
+    width:600px;
+    height:42px;
+    border:1px solid #EC2D6B;
+    border-radius:8px;
+    padding:0 15px;
+    font-size:15px;
+    background:white;
+}

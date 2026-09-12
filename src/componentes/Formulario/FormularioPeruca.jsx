@@ -1,6 +1,6 @@
 import { useState } from "react";
 import style from "./FormularioPeruca.module.css";
-import logo from "../assets/logo amor em mechas.png";
+import logo from "../../assets/logo amor em mechas.png";
 
 function IconeNuvemUpload() {
  return (
