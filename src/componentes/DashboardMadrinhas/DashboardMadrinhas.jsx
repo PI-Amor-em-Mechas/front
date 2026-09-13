@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./DashboardMadrinhas.css";
 
 import Navbar from "../Navbar/Navbar";
@@ -5,28 +6,31 @@ import Header from "../Header/Header";
 import CardInfo from "../CardInfo/CardInfo";
 import Filtros from "../Filtros/Filtros";
 import Tabela from "../Tabela/Tabela";
+import CadastroMadrinha from "../CadastroMadrinha/CadastroMadrinha";
 
 function DashboardMadrinhas({irParaFormulario}) {
+  const [mostrarModal, setMostrarModal] = useState(false)
+  
   const cards = [
     {
       titulo: "Total de Madrinhas",
-      valor: "42",
+      valor: "6",
       descricao: ""
     },
     {
       titulo: "Madrinha com Mais Horas",
-      valor: "Marcela Borges",
-      descricao: "200 horas"
+      valor: "Tatiane Prado",
+      descricao: "240 horas"
     },
     {
       titulo: "Total de Horas Voluntárias",
-      valor: "3.429",
-      descricao: "No período de 1 ano"
+      valor: "960 horas",
+      descricao: ""
     },
     {
       titulo: "Amorímetro",
-      valor: "8.245",
-      descricao: "Peruca a caminho"
+      valor: "9401",
+      descricao: "Perucas a caminho"
     }
   ];
 
@@ -35,7 +39,7 @@ function DashboardMadrinhas({irParaFormulario}) {
       <Navbar irParaFormulario={irParaFormulario}/>
 
       <main className="conteudo">
-        <Header />
+        <Header abrirModal={() => setMostrarModal(true)}/>
 
         <section className="cards">
           {cards.map((card) => (
@@ -51,6 +55,9 @@ function DashboardMadrinhas({irParaFormulario}) {
 
         <Tabela />
       </main>
+      {
+        mostrarModal && <CadastroMadrinha fecharModal={() => setMostrarModal(false)}/>
+      }
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import "./Header.css";
 
-function Header(){
+function Header({abrirModal}){
     
     return(
         <header className="header">
@@ -8,7 +8,7 @@ function Header(){
                 <h1>Madrinhas do Amor</h1>
                 <p>Gestão de horas das madrinhas do amor</p>
             </div>
-            <button className="cadastrar">Cadastrar Madrinha</button>
+            <button className="cadastrar" onClick={abrirModal}>Cadastrar Madrinha</button>
         </header>
     )
 }
