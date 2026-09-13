@@ -28,7 +28,7 @@ function IconeNuvemUpload() {
  );
 }
 
-function FormularioPeruca() {
+function FormularioPeruca({irParaDashboard}) {
  const [aceitouCookies, setAceitouCookies] = useState(false);
  const [passoAtual, setPassoAtual] = useState(1);
  const [enviado, setEnviado] = useState(false);
@@ -82,9 +82,9 @@ function FormularioPeruca() {
  return (
   <div className={style.pagina}>
    <header className={style.header}>
-    <div className={style.logo}>
-     <img src={logo} alt="Instituto Amor em Mechas" />
-    </div>
+      <div className={style.logo} onClick={irParaDashboard}>
+         <img src={logo} alt="Instituto Amor em Mechas" />
+      </div>
    </header>
 
    <div className={style.passos}>

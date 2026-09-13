@@ -6,7 +6,7 @@ import CardInfo from "../CardInfo/CardInfo";
 import Filtros from "../Filtros/Filtros";
 import Tabela from "../Tabela/Tabela";
 
-function DashboardMadrinhas() {
+function DashboardMadrinhas({irParaFormulario}) {
   const cards = [
     {
       titulo: "Total de Madrinhas",
@@ -32,7 +32,7 @@ function DashboardMadrinhas() {
 
   return (
     <div className="app">
-      <Navbar />
+      <Navbar irParaFormulario={irParaFormulario}/>
 
       <main className="conteudo">
         <Header />
