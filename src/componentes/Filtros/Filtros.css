@@ -14,10 +14,10 @@
 .filtros input,
 .filtros select{
     width:600px;
-    height:42px;
+    height:25px;
     border:1px solid #EC2D6B;
     border-radius:8px;
     padding:0 15px;
-    font-size:15px;
+    font-size:10px;
     background:white;
 }

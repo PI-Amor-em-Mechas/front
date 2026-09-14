@@ -1,14 +1,16 @@
-.containerTabela{
+.containerTabela {
     border: 1px solid #E7E7E7;
     border-radius: 10px;
     overflow: hidden;
     background: white;
     flex: 1;
+    min-height: 0;
 }
 
-.tabela{
+.tabela {
     height: 100%;
-    overflow-y:auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 table{
@@ -27,7 +29,7 @@ th{
     text-align:center;
     padding:22px;
     color:#eff2f8;
-    font-size:20px;
+    font-size:14px;
     border-bottom:1px solid #ECECEC;
 }
 
@@ -35,5 +37,5 @@ td{
     padding:22px;
     border-bottom:1px solid #ECECEC;
     color:#344054;
-    font-size:17px;
+    font-size:12px;
 }

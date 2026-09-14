@@ -2,28 +2,28 @@
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
-    margin:10px 0;
+    margin:1px 0;
 }
 
 .header h1{
     color:#EC2D6B;
-    font-size:48px;
+    font-size:35px;
 }
 
 .header p{
     text-align: left;
     color:#F08AAE;
-    font-size: larger;
+    font-size: medium;
 }
 
 .cadastrar{
-    width:285px;
-    height:60px;
+    width:180px;
+    height:40px;
     border:none;
     background:#EC2D6B;
     color:white;
     border-radius:8px;
-    font-size: large;
+    font-size: small;
 }
 
 .cadastrar:hover{

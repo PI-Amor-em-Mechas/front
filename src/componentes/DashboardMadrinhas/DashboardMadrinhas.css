@@ -1,5 +1,4 @@
 .app {
-    width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -7,10 +6,13 @@
 }
 
 .conteudo {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 100px);
-    padding: 30px 40px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 20px 25px;
+    box-sizing: border-box;
 }
 
 .cards {
