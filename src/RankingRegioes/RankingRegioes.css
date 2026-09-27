@@ -1,0 +1,44 @@
+
+.regioes {
+    flex: 1;
+    padding: 15px;
+    background-color: #FFFFFF;
+    border: 1px solid #E91E63;
+    border-radius: 20px;
+}
+
+.regioes h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #E91E63;
+    margin-bottom: 15px;
+}
+
+.itemRegiao {
+    margin-bottom: 12px;
+}
+
+.informacoesRegiao {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.informacoesRegiao span:last-child {
+    color: #E91E63;
+    font-weight: 600;
+}
+
+.fundoBarraRegiao {
+    height: 7px;
+    background: #FCE3EC;
+    border-radius: 10px;
+}
+
+.barraRegiao {
+    height: 100%;
+    background: #E91E63;
+    border-radius: 10px;
+}   

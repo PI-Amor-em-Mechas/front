@@ -8,7 +8,7 @@ import Filtros from "../Filtros/Filtros";
 import Tabela from "../Tabela/Tabela";
 import CadastroMadrinha from "../CadastroMadrinha/CadastroMadrinha";
 
-function DashboardMadrinhas({irParaFormulario}) {
+function DashboardMadrinhas({irParaFormulario, irParaEnvios}) {
   const [mostrarModal, setMostrarModal] = useState(false)
   
   const cards = [
@@ -36,10 +36,12 @@ function DashboardMadrinhas({irParaFormulario}) {
 
   return (
     <div className="app">
-      <Navbar irParaFormulario={irParaFormulario}/>
+      <Navbar irParaFormulario={irParaFormulario}
+      irParaEnvios={irParaEnvios}
+      pagina="madrinhas"/>
 
       <main className="conteudo">
-        <Header abrirModal={() => setMostrarModal(true)}/>
+        <Header abrirModal={() => setMostrarModal(true)} />
 
         <section className="cards">
           {cards.map((card) => (

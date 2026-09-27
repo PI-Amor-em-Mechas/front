@@ -1,15 +1,20 @@
+
 import "./Header.css";
 
-function Header({abrirModal}){
-    
-    return(
+function Header({titulo = "Madrinhas do Amor", descricao = "Gestão de horas das madrinhas do amor", 
+    mostrarBotao = true, abrirModal}) {
+
+    return (
         <header className="header">
+
             <div>
-                <h1>Madrinhas do Amor</h1>
-                <p>Gestão de horas das madrinhas do amor</p>
+                <h1>{titulo}</h1>
+                <p>{descricao}</p>
             </div>
-            <button className="cadastrar" onClick={abrirModal}>Cadastrar Madrinha</button>
+
+            {mostrarBotao && (<button className="cadastrar"
+                    onClick={abrirModal}>Cadastrar Madrinha</button>)}
         </header>
-    )
+    );
 }
 export default Header;
