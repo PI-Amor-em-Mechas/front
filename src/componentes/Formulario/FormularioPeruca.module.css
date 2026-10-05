@@ -67,6 +67,16 @@
  width: auto;
 }
 
+.botaoEquipe {
+ border: 1px solid #c2185b;
+ border-radius: 5px;
+ padding: 9px 14px;
+ background: transparent;
+ color: #c2185b;
+ font: inherit;
+ cursor: pointer;
+}
+
 .passos {
  width: 100%;
  display: flex;

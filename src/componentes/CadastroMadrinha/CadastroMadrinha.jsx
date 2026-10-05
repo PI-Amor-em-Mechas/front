@@ -1,78 +1,72 @@
+import { useState } from "react";
+import { cadastrarMadrinha } from "../../services/dashboardService";
 import "./CadastroMadrinha.css";
 
-function CadastroMadrinha({ fecharModal }) {
+function CadastroMadrinha({ fecharModal, aoSalvar }) {
+    const [form, setForm] = useState({ nomeCompleto: "", email: "", horasVoluntarias: "0", funcao: "", status: "Ativa" });
+    const [erro, setErro] = useState("");
+    const [enviando, setEnviando] = useState(false);
+
+    function alterar(campo, valor) {
+        setForm((atual) => ({ ...atual, [campo]: valor }));
+    }
+
+    async function enviar(evento) {
+        evento.preventDefault();
+        setErro("");
+        setEnviando(true);
+        try {
+            await cadastrarMadrinha({
+                ...form,
+                horasVoluntarias: Number(form.horasVoluntarias),
+                dataCadastro: new Date().toISOString().slice(0, 10),
+            });
+            aoSalvar();
+        } catch (error_) {
+            setErro(error_.response?.data?.erro ?? error_.response?.data?.mensagem ?? "Não foi possível cadastrar a madrinha.");
+        } finally {
+            setEnviando(false);
+        }
+    }
+
     return (
         <div className="fundoModal">
-            <div className="modal">
-
-                <button className="fechar" onClick={fecharModal}>×</button>
+            <form className="modal" onSubmit={enviar}>
+                <button type="button" className="fechar" onClick={fecharModal}>×</button>
                 <h1>Cadastro de Madrinha do amor</h1>
-                <p>Preencha todos os campos obrigatórios para o cadastro</p>
-
+                <p>Preencha os dados aceitos no cadastro de voluntárias.</p>
                 <div className="formularioMadrinha">
-
-                    <label>Nome completo da Madrinha/Padrinho *<input type="text" /></label>
-
-                    <label>Endereço de email *<input type="email" /></label>
-
-                    <label> Data de Nascimento *<input type="date" /></label>
-
-                    <label> Número de Telefone *<input type="tel" /></label>
-
-                    <label>CEP *<input type="text" /></label>
-
-                    <h2>Endereço da madrinha/padrinho</h2>
-
-                    <label className="campoGrande">Endereço completo *<input type="text" placeholder="Rua, Avenida, etc." /></label>
-
-                    <label>Número *<input type="text" /></label>
-
-                    <label>Bairro *<input type="text" />
+                    <label>
+                        <span>Nome completo *</span>
+                        <input required value={form.nomeCompleto} onChange={(evento) => alterar("nomeCompleto", evento.target.value)} />
                     </label>
-
-                    <label>Cidade *<input type="text" /></label>
-
-                    <label>Estado *
-                        <select defaultValue="">
-                            <option value="">Selecione o estado</option>
-                            <option value="AC">Acre</option>
-                            <option value="AL">Alagoas</option>
-                            <option value="AP">Amapá</option>
-                            <option value="AM">Amazonas</option>
-                            <option value="BA">Bahia</option>
-                            <option value="CE">Ceará</option>
-                            <option value="DF">Distrito Federal</option>
-                            <option value="ES">Espírito Santo</option>
-                            <option value="GO">Goiás</option>
-                            <option value="MA">Maranhão</option>
-                            <option value="MT">Mato Grosso</option>
-                            <option value="MS">Mato Grosso do Sul</option>
-                            <option value="MG">Minas Gerais</option>
-                            <option value="PA">Pará</option>
-                            <option value="PB">Paraíba</option>
-                            <option value="PR">Paraná</option>
-                            <option value="PE">Pernambuco</option>
-                            <option value="PI">Piauí</option>
-                            <option value="RJ">Rio de Janeiro</option>
-                            <option value="RN">Rio Grande do Norte</option>
-                            <option value="RS">Rio Grande do Sul</option>
-                            <option value="RO">Rondônia</option>
-                            <option value="RR">Roraima</option>
-                            <option value="SC">Santa Catarina</option>
-                            <option value="SP">São Paulo</option>
-                            <option value="SE">Sergipe</option>
-                            <option value="TO">Tocantins</option>
+                    <label>
+                        <span>E-mail *</span>
+                        <input type="email" required value={form.email} onChange={(evento) => alterar("email", evento.target.value)} />
+                    </label>
+                    <label>
+                        <span>Horas voluntárias *</span>
+                        <input type="number" min="0" required value={form.horasVoluntarias} onChange={(evento) => alterar("horasVoluntarias", evento.target.value)} />
+                    </label>
+                    <label>
+                        <span>Função *</span>
+                        <input required value={form.funcao} onChange={(evento) => alterar("funcao", evento.target.value)} />
+                    </label>
+                    <label>
+                        <span>Status *</span>
+                        <select value={form.status} onChange={(evento) => alterar("status", evento.target.value)}>
+                            <option value="Ativa">Ativa</option>
+                            <option value="Afastada">Afastada</option>
+                            <option value="Desassociada">Desassociada</option>
                         </select>
                     </label>
-
-                    <label>Complemento< input type="text" /></label>
-
                 </div>
+                {erro && <p className="erroCadastro" role="alert">{erro}</p>}
                 <div className="botoesModal">
-                    <button className="botaoVoltar"onClick={fecharModal}>Voltar</button>
-                    <button className="botaoCadastrar">Cadastrar</button>
+                    <button type="button" className="botaoVoltar" onClick={fecharModal}>Cancelar</button>
+                    <button type="submit" className="botaoCadastrar" disabled={enviando}>{enviando ? "Salvando..." : "Cadastrar"}</button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

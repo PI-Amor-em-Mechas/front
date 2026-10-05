@@ -1,0 +1,71 @@
+.resumoPacientes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 12px 0 16px;
+    color: #344054;
+}
+
+.resumoPacientes input {
+    width: min(100%, 360px);
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 5px;
+    font: inherit;
+}
+
+.resumoPacientes input:focus {
+    outline: 2px solid #e91e63;
+    outline-offset: 1px;
+}
+
+.paginacaoPacientes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    padding-top: 14px;
+    color: #475467;
+    font-size: 14px;
+}
+
+.paginacaoPacientes button {
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid #d0d5dd;
+    border-radius: 5px;
+    background: #fff;
+    color: #344054;
+    cursor: pointer;
+}
+
+.paginacaoPacientes button:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+.estadoTabela {
+    padding: 18px;
+    color: #667085;
+}
+
+@media (max-width: 640px) {
+    .resumoPacientes {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .resumoPacientes input {
+        width: 100%;
+    }
+
+    .containerTabela {
+        overflow-x: auto;
+    }
+
+    .tabela {
+        min-width: 760px;
+    }
+}

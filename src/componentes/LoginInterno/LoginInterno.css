@@ -1,0 +1,74 @@
+.loginInterno {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #f5f5f7;
+}
+
+.loginPainel {
+    width: min(100%, 420px);
+    display: grid;
+    gap: 16px;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e5e5e9;
+    border-radius: 10px;
+}
+
+.loginPainel h1,
+.loginPainel p {
+    margin: 0;
+}
+
+.loginPainel h1 {
+    color: #222;
+    font-size: 24px;
+}
+
+.loginPainel > p {
+    color: #666;
+    font-size: 14px;
+}
+
+.loginPainel label {
+    display: grid;
+    gap: 7px;
+    color: #333;
+    font-size: 14px;
+}
+
+.loginPainel input {
+    min-height: 42px;
+    padding: 8px 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font: inherit;
+}
+
+.loginPainel button {
+    min-height: 42px;
+    border: 0;
+    border-radius: 5px;
+    background: #c2185b;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.loginPainel button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.loginPainel .botaoDemo {
+    border: 1px solid #c2185b;
+    background: #fff;
+    color: #9e174a;
+}
+
+.loginPainel .loginErro {
+    color: #b42318;
+    font-size: 14px;
+}

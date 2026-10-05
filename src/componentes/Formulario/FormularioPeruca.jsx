@@ -311,9 +311,10 @@ function FormularioPeruca({irParaDashboard}) {
  return (
   <div className={style.pagina}>
    <header className={style.header}>
-      <div className={style.logo} onClick={irParaDashboard}>
+      <div className={style.logo}>
          <img src={logo} alt="Instituto Amor em Mechas" />
       </div>
+      <button className={style.botaoEquipe} type="button" onClick={irParaDashboard}>Área da equipe</button>
    </header>
 
    <div className={style.passos}>

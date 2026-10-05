@@ -11,6 +11,13 @@
     height:35px;
 }
 
+.logoBotao {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
 .menu{
     display:flex;
     gap:40px;
@@ -38,13 +45,13 @@
     height:35px;
     border:none;
     border-radius:8px;
-    background:#EC2D6B;
+    background:#C2185B;
     color:white;
     font-size:small;
 }
 
 .btnExportar:hover{
-    background:#f9769f;
+    background:#9E174A;
     cursor:pointer;
 }
 
@@ -52,4 +59,13 @@
     width:40px;
     height:40px;
     border-radius:50%;
+}
+
+.menu button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #888;
+    font: inherit;
+    cursor: pointer;
 }

@@ -86,17 +86,10 @@
     border: 2px solid #E91E63;
 }
 
-.formularioMadrinha h2 {
-    grid-column: 1 / 3;
-
-    margin: 10px 0 -5px;
-
-    font-size: 16px;
-    color: #333;
-}
-
-.formularioMadrinha .campoGrande {
-    grid-column: 1 / 3;
+.erroCadastro {
+    margin: 14px 0 0;
+    color: #b42318;
+    font-size: 14px;
 }
 
 .botoesModal {
@@ -116,7 +109,7 @@
     border: 1px solid #E91E63;
     border-radius: 6px;
 
-    color: #E91E63;
+    color: #C2185B;
 
     cursor: pointer;
 }
@@ -125,7 +118,7 @@
     width: 110px;
     height: 38px;
 
-    background: #E91E63;
+    background: #C2185B;
 
     border: none;
     border-radius: 6px;
@@ -133,4 +126,9 @@
     color: white;
 
     cursor: pointer;
+}
+
+.botaoCadastrar:disabled {
+    cursor: wait;
+    opacity: 0.7;
 }

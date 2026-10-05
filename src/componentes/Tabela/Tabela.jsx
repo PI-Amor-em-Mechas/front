@@ -1,63 +1,13 @@
 import "./Tabela.css";
 import LinhaTabela from "../LinhaTabela/LinhaTabela";
 
-function Tabela() {
-    const madrinhas = [
-        {
-            id:6,
-            nome:"Marcela Borges",
-            email:"marcela@email.com",
-            horas:"200 horas",
-            funcao:"Montagem dos Kits",
-            data:"29 Novembro 2024",
-            status:"Ativa"
-        },
-        {
-            id:5,
-            nome:"Anna Clara Mattos",
-            email:"anna@email.com",
-            horas:"160 horas",
-            funcao:"Reciclagem de bijuterias",
-            data:"14 Ago 2024",
-            status:"Afastada"
-        },
-        {
-            id:4,
-            nome:"Verenna Cortez",
-            email:"verena@email.com",
-            horas:"120 horas",
-            funcao:"Montagem dos Kits",
-            data:"13 Jan 2022",
-            status:"Ativa"
-        },
-        {
-            id:3,
-            nome:"Larissa Menezes",
-            email:"larissa@email.com",
-            horas:"100 horas",
-            funcao:"Inativa",
-            data:"02 Mar 2021",
-            status:"Desassociada"
-        },
-        {
-            id:2,
-            nome:"Giovanna Oliveira",
-            email:"gioliveira@email.com",
-            horas:"150 horas",
-            funcao:"Reciclagem de bijuterias",
-            data:"28 Maio 2019",
-            status:"Ativa"
-        },
-        {
-            id:1,
-            nome:"Tatiane Prado",
-            email:"pradotati@email.com",
-            horas:"240 horas",
-            funcao:"Reciclagem de bijuterias",
-            data:"29 Janeiro 2019",
-            status:"Ativa"
-        }
-    ];
+function formatarData(data) {
+    if (!data) return "-";
+    const dataLocal = new Date(`${data}T00:00:00`);
+    return Number.isNaN(dataLocal.getTime()) ? "-" : dataLocal.toLocaleDateString("pt-BR");
+}
+
+function Tabela({ madrinhas }) {
     return (
         <div className="containerTabela">
             <div className="tabela">
@@ -75,15 +25,17 @@ function Tabela() {
                     </thead>
                     <tbody>
                         {madrinhas.map((m) => (<LinhaTabela
+                                key={m.id}
                                 id={m.id}
-                                nome={m.nome}
+                                nome={m.nomeCompleto}
                                 email={m.email}
-                                horas={m.horas}
+                                horas={`${m.horasVoluntarias ?? 0} horas`}
                                 funcao={m.funcao}
-                                data={m.data}
-                                status={m.status}
+                                data={formatarData(m.dataCadastro)}
+                                status={m.status ? `${m.status[0].toUpperCase()}${m.status.slice(1).toLowerCase()}` : "-"}
                             />
                         ))}
+                        {madrinhas.length === 0 && <tr><td colSpan="7">Nenhuma madrinha encontrada.</td></tr>}
                     </tbody>
                 </table>
             </div>
