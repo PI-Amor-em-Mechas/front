@@ -1,7 +1,7 @@
 
 import "./RankingRegioes.css";
 
-function RankingRegioes() {
+function RankingRegioes({ titulo = "Regiões com mais kits entregues"}) {
 
     const regioes = [
         { nome: "São Paulo", total: 1000 },
@@ -13,7 +13,7 @@ function RankingRegioes() {
 
     return (
         <section className="regioes">
-            <h2>Regiões com mais kits entregues</h2>
+            <h2>{titulo}</h2>
 
             {regioes.map((regiao, indice) => (
                 <div className="itemRegiao" key={regiao.nome}>

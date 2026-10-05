@@ -4,7 +4,7 @@ import "./Navbar.css";
 import logo from "../../assets/logo.png";
 import perfil from "../../assets/perfil.png";
 
-function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, pagina}) {
+function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, pagina}) {
 
     return (
         <nav className="navbar">
@@ -15,7 +15,10 @@ function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, pagina}) {
             <div className="menu">
 
                 <a className={pagina === "envios" ? "ativo" : ""}
-                    onClick={irParaEnvios}>Painel</a> <a>Pacientes</a>
+                    onClick={irParaEnvios}>Painel</a> 
+                    
+                <a className={pagina === "pacientes" ? "ativo" : ""}
+                    onClick={irParaPacientes}>Pacientes</a>
 
                 <a className={pagina === "madrinhas" ? "ativo" : ""}
                     onClick={irParaMadrinhas} >Madrinhas</a>

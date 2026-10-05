@@ -1,32 +1,40 @@
 import "./LinhaTabela.css";
 
-function LinhaTabela({
-    id,
-    nome,
-    email,
-    horas,
-    funcao,
-    data,
-    status
-}){
-    return(
+function LinhaTabela({ dados, tipo }) {
+    return (
         <tr>
-            <td>#{id}</td>
             <td>
-                <strong>{nome}</strong>
-                <br />
-                <span>{email}</span>
+                {dados.id}
             </td>
-            <td>{horas}</td>
-            <td>{funcao}</td>
-            <td>{data}</td>
+
             <td>
-                <span className={status === "Ativa" ? "ativa" : status === "Afastada" ? "afastada" : "desassociada"}>{status}</span>
+                <strong>{dados.nome}</strong><br />
+                <span className="email">{dados.email}</span>
+            </td>
+
+            {tipo === "madrinhas" ? (
+                <>
+                    <td>{dados.horas}</td>
+                    <td>{dados.funcao}</td>
+                </>
+            ) : (
+                <>
+                    <td>{dados.idade} anos</td>
+                    <td>{dados.tratamento}</td></>
+            )}
+            <td>
+                {dados.data}
             </td>
             <td>
-                ⋮
+                <span className={`status ${dados.status.toLowerCase()}`}>
+                    {dados.status}</span>
+            </td>
+
+            <td className="acoes">
+                <button className="acao">Ver</button>
+                <button className="acao">Excluir</button>
             </td>
         </tr>
-    )
+    );
 }
 export default LinhaTabela;

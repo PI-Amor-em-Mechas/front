@@ -3,7 +3,7 @@ import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 import CardInfo from "../CardInfo/CardInfo";
 import Tabela from "../Tabela/Tabela";
-import RankingRegioes from "../../RankingRegioes/RankingRegioes";
+import RankingRegioes from "../RankingRegioes/RankingRegioes";
 
 import "../DashboardMadrinhas/DashboardMadrinhas.css";
 import "./DashboardEnvios.css";

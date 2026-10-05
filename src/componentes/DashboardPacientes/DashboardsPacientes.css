@@ -1,0 +1,26 @@
+.app {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.conteudo {
+    flex: 1;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.tabela {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}
