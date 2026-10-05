@@ -346,3 +346,63 @@
   grid-template-columns: 1fr;
  }
 }
+.erroEnvio {
+ color: #c62828;
+ font-size: 14px;
+ margin: 8px 0;
+}
+
+.botaoAvancar:disabled {
+ opacity: 0.6;
+ cursor: not-allowed;
+}
+
+.avaliacao {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 12px;
+ background: #fff;
+ border-radius: 12px;
+ padding: 20px 24px;
+ margin-bottom: 24px;
+ width: 100%;
+ box-sizing: border-box;
+}
+
+.avaliacaoTitulo {
+ font-size: 16px;
+ color: #C2185B;
+ margin: 0;
+}
+
+.avaliacaoObrigado {
+ color: #C2185B;
+ font-size: 16px;
+ margin: 0;
+}
+
+.estrelas {
+ display: flex;
+ gap: 4px;
+}
+
+.estrela {
+ background: none;
+ border: none;
+ font-size: 36px;
+ line-height: 1;
+ color: #d9d9d9;
+ cursor: pointer;
+ padding: 0 2px;
+ transition: color 0.15s;
+}
+
+.estrelaAtiva {
+ color: #E91E63;
+}
+
+.erroCep {
+ color: #c62828;
+ font-size: 12px;
+}

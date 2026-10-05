@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import style from "./FormularioPeruca.module.css";
 import logo from "../../assets/logo amor em mechas.png";
+import { enviarSolicitacao, enviarAvaliacao, buscarCep } from "../../services/solicitacaoService";
+import { EnvioFormularioError } from "../../services/EnvioFormularioError";
 
 function IconeNuvemUpload() {
  return (
@@ -28,6 +30,15 @@ function IconeNuvemUpload() {
  );
 }
 
+const FORM_INICIAL = {
+ nomePaciente: "", email: "", dataNascimento: "", celular: "", cpf: "", cep: "",
+ endereco: "", numero: "", bairro: "", cidade: "", estado: "", complemento: "",
+ estadoCivil: "", temFilhos: "sim", qtdFilhos: "", idadesFilhos: [], qtdPessoasEmCasa: "",
+ motivo: "quimioterapico", tipoCancer: "", dtInicioTratamento: "", tipoAtendimento: "sus",
+ arquivoRelatorio: null, arquivoCabelo: null,
+ declaracaoAceita: false, nomeSolicitante: "", rgSolicitante: "",
+};
+
 function FormularioPeruca({irParaDashboard}) {
  const [aceitouCookies, setAceitouCookies] = useState(false);
  const [passoAtual, setPassoAtual] = useState(1);
@@ -35,12 +46,126 @@ function FormularioPeruca({irParaDashboard}) {
  const [arquivoRelatorio, setArquivoRelatorio] = useState(null);
  const [arquivoCabelo, setArquivoCabelo] = useState(null);
  const totalPassos = 4;
+ const [form, setForm] = useState(FORM_INICIAL);
+ // avaliação do formulário (tela de sucesso)
+ const [solicitanteId, setSolicitanteId] = useState(null);
+ const [nota, setNota] = useState(0);
+ const [notaHover, setNotaHover] = useState(0);
+ const [consentimentoAval, setConsentimentoAval] = useState(false);
+ const [enviandoAval, setEnviandoAval] = useState(false);
+ const [avaliacaoEnviada, setAvaliacaoEnviada] = useState(false);
+ const [erroAval, setErroAval] = useState(null);
+ const [enviando, setEnviando] = useState(false);
+ const [erroEnvio, setErroEnvio] = useState(null);
+ // ViaCEP
+ const [buscandoCep, setBuscandoCep] = useState(false);
+ const [erroCep, setErroCep] = useState(null);
+ const cepBuscado = useRef(""); // último CEP consultado (evita consulta repetida e resposta "velha")
+ // ids já criados no backend; useRef mantém o valor entre tentativas sem re-renderizar
+ const progresso = useRef({});
+
+ function atualizar(nome, valor) {
+  setForm((atual) => ({ ...atual, [nome]: valor }));
+ }
+
+ // devolve value + onChange para campos de texto, select e date
+ function campo(nome) {
+  return { value: form[nome], onChange: (e) => atualizar(nome, e.target.value) };
+ }
+
+ // Formata enquanto digita (12345-678) e consulta o ViaCEP quando completar 8 dígitos.
+ function alterarCep(texto) {
+  const digitos = texto.replace(/\D/g, "").slice(0, 8);
+  const formatado = digitos.length > 5 ? `${digitos.slice(0, 5)}-${digitos.slice(5)}` : digitos;
+  atualizar("cep", formatado);
+  setErroCep(null);
+
+  if (digitos.length === 8) {
+   preencherEnderecoPeloCep(digitos);
+  } else {
+   cepBuscado.current = "";
+   setBuscandoCep(false);
+  }
+ }
+
+ async function preencherEnderecoPeloCep(digitos) {
+  if (cepBuscado.current === digitos) return;
+  cepBuscado.current = digitos;
+  setBuscandoCep(true);
+  try {
+   const dados = await buscarCep(digitos);
+   // se a pessoa mudou o CEP enquanto a resposta vinha, ignora esta resposta
+   if (cepBuscado.current !== digitos) return;
+
+   if (!dados?.logradouro && !dados?.localidade) {
+    setErroCep("CEP não encontrado. Preencha o endereço manualmente.");
+    return;
+   }
+   // só sobrescreve o que o ViaCEP trouxe; número e complemento a pessoa preenche
+   setForm((atual) => ({
+    ...atual,
+    endereco: dados.logradouro || atual.endereco,
+    bairro: dados.bairro || atual.bairro,
+    cidade: dados.localidade || atual.cidade,
+    estado: dados.uf || atual.estado,
+   }));
+  } catch {
+   if (cepBuscado.current === digitos) {
+    setErroCep("Não foi possível consultar o CEP agora. Preencha o endereço manualmente.");
+   }
+  } finally {
+   if (cepBuscado.current === digitos) setBuscandoCep(false);
+  }
+ }
 
  function aceitarCookies() {
   setAceitouCookies(true);
  }
 
+ const MAX_FILHOS = 15;
+
+ // Quando a pessoa muda "quantos filhos", a lista de idades é redimensionada:
+ // mantém o que já foi digitado e cria/remove só as caixinhas necessárias.
+ function alterarQtdFilhos(texto) {
+  const qtd = Math.min(Math.max(parseInt(texto, 10) || 0, 0), MAX_FILHOS);
+  setForm((atual) => ({
+   ...atual,
+   qtdFilhos: texto === "" ? "" : String(qtd),
+   idadesFilhos: Array.from({ length: qtd }, (_, i) => atual.idadesFilhos[i] ?? ""),
+  }));
+ }
+
+ function alterarIdadeFilho(indice, valor) {
+  setForm((atual) => {
+   const idades = [...atual.idadesFilhos];
+   idades[indice] = valor;
+   return { ...atual, idadesFilhos: idades };
+  });
+ }
+
+ // Se marcar "Não", limpa os dados de filhos para não enviar lixo.
+ function alterarTemFilhos(valor) {
+  setForm((atual) => ({
+   ...atual,
+   temFilhos: valor,
+   ...(valor === "nao" ? { qtdFilhos: "", idadesFilhos: [] } : {}),
+  }));
+ }
+
+ function filhosValidos() {
+  if (form.temFilhos !== "sim") return true;
+  return (
+   form.idadesFilhos.length > 0 &&
+   form.idadesFilhos.every((idade) => idade !== "" && Number(idade) >= 0 && Number(idade) <= 120)
+  );
+ }
+
  function avancar() {
+  if (passoAtual === 2 && !filhosValidos()) {
+   setErroEnvio("Informe quantos filhos você tem e a idade de cada um.");
+   return;
+  }
+  setErroEnvio(null);
   setPassoAtual((passo) => Math.min(passo + 1, totalPassos));
  }
 
@@ -48,16 +173,79 @@ function FormularioPeruca({irParaDashboard}) {
   setPassoAtual((passo) => Math.max(passo - 1, 1));
  }
 
- function enviarFormulario() {
-  setEnviado(true);
+ async function enviarFormulario() {
+  setErroEnvio(null);
+  if (!form.declaracaoAceita) {
+   setErroEnvio("Marque a declaração para enviar o formulário.");
+   return;
+  }
+  if (!form.arquivoRelatorio || !form.arquivoCabelo) {
+   setErroEnvio("Envie a foto do relatório médico e a foto do cabelo (passo 3).");
+   return;
+  }
+  setEnviando(true);
+  try {
+   await enviarSolicitacao(form, progresso.current);
+   // a avaliação precisa do id do solicitante, então guardamos antes de limpar o progresso
+   setSolicitanteId(progresso.current.solicitanteId);
+   progresso.current = {};
+   setEnviado(true);
+  } catch (erro) {
+   if (erro instanceof EnvioFormularioError) {
+    const detalhes = Object.values(erro.campos).join("; ");
+    setErroEnvio(`Falha na etapa "${erro.etapa}": ${erro.message}${detalhes ? " (" + detalhes + ")" : ""}`);
+   } else {
+    setErroEnvio("Erro inesperado ao enviar o formulário.");
+   }
+  } finally {
+   setEnviando(false);
+  }
  }
 
- function selecionarArquivo(evento, definirArquivo) {
+ function selecionarArquivo(evento, definirArquivo, nomeCampo) {
   const arquivo = evento.target.files[0];
   definirArquivo(arquivo ? arquivo.name : null);
+  atualizar(nomeCampo, arquivo ?? null);
+ }
+
+ async function enviarAvaliacaoFormulario() {
+  setErroAval(null);
+  if (nota < 1) {
+   setErroAval("Escolha uma nota de 1 a 5 estrelas.");
+   return;
+  }
+  if (!consentimentoAval) {
+   setErroAval("Marque o consentimento para enviar sua avaliação.");
+   return;
+  }
+  setEnviandoAval(true);
+  try {
+   await enviarAvaliacao({ solicitanteId, nota, consentimento: consentimentoAval });
+   setAvaliacaoEnviada(true);
+  } catch (erro) {
+   if (erro instanceof EnvioFormularioError) {
+    const detalhes = Object.values(erro.campos).join("; ");
+    setErroAval(`${erro.message}${detalhes ? " (" + detalhes + ")" : ""}`);
+   } else {
+    setErroAval("Erro inesperado ao enviar a avaliação.");
+   }
+  } finally {
+   setEnviandoAval(false);
+  }
  }
 
  function retornarAoFormulario() {
+  // limpa tudo para a próxima pessoa começar um formulário em branco
+  setForm(FORM_INICIAL);
+  setArquivoRelatorio(null);
+  setArquivoCabelo(null);
+  setSolicitanteId(null);
+  setNota(0);
+  setNotaHover(0);
+  setConsentimentoAval(false);
+  setAvaliacaoEnviada(false);
+  setErroAval(null);
+  setErroEnvio(null);
   setEnviado(false);
   setPassoAtual(1);
  }
@@ -71,6 +259,47 @@ function FormularioPeruca({irParaDashboard}) {
       Formulário preenchido e enviado com sucesso.
      </h1>
      <p className={style.subtituloSucesso}>Seu pedido será revisado para o envio</p>
+
+     <div className={style.avaliacao}>
+      {avaliacaoEnviada ? (
+       <p className={style.avaliacaoObrigado}>Obrigado pela sua avaliação! 💗</p>
+      ) : (
+       <>
+        <h2 className={style.avaliacaoTitulo}>Como foi preencher este formulário?</h2>
+        <div className={style.estrelas} onMouseLeave={() => setNotaHover(0)}>
+         {[1, 2, 3, 4, 5].map((valor) => (
+          <button
+           key={valor}
+           type="button"
+           className={`${style.estrela} ${valor <= (notaHover || nota) ? style.estrelaAtiva : ""}`}
+           onClick={() => setNota(valor)}
+           onMouseEnter={() => setNotaHover(valor)}
+           aria-label={`${valor} estrela${valor > 1 ? "s" : ""}`}
+          >
+           ★
+          </button>
+         ))}
+        </div>
+        <label className={style.checkboxOpcao}>
+         <input
+          type="checkbox"
+          checked={consentimentoAval}
+          onChange={(e) => setConsentimentoAval(e.target.checked)}
+         />
+         Autorizo o uso da minha avaliação para melhorar o formulário.
+        </label>
+        {erroAval && <p className={style.erroEnvio}>{erroAval}</p>}
+        <button
+         className={style.botaoAvancar}
+         onClick={enviarAvaliacaoFormulario}
+         disabled={enviandoAval}
+        >
+         {enviandoAval ? "Enviando..." : "Enviar avaliação"}
+        </button>
+       </>
+      )}
+     </div>
+
      <button className={style.botaoAvancar} onClick={retornarAoFormulario}>
       Voltar ao início
      </button>
@@ -129,27 +358,36 @@ function FormularioPeruca({irParaDashboard}) {
        <div className={style.grid}>
         <label className={style.campo}>
          Nome completo da/o Paciente *
-         <input type="text" placeholder="Ex. Luciana Silva" />
+         <input type="text" placeholder="Ex. Luciana Silva" {...campo("nomePaciente")} />
         </label>
         <label className={style.campo}>
          Seu email *
-         <input type="email" placeholder="Ex. luciana@email.com" />
+         <input type="email" placeholder="Ex. luciana@email.com" {...campo("email")} />
         </label>
         <label className={style.campo}>
          Data do Nascimento *
-         <input type="date" placeholder="dd/mm/aaaa" />
+         <input type="date" placeholder="dd/mm/aaaa" {...campo("dataNascimento")} />
         </label>
         <label className={style.campo}>
          Celular *
-         <input type="tel" placeholder="Ex. 11 987654321" />
+         <input type="tel" placeholder="Ex. 11 987654321" {...campo("celular")} />
         </label>
         <label className={style.campo}>
          CPF *
-         <input type="text" placeholder="Ex. 123.456.789-11" />
+         <input type="text" placeholder="Ex. 123.456.789-11" {...campo("cpf")} />
         </label>
         <label className={style.campo}>
          CEP *
-         <input type="text" placeholder="Ex. 12345-678" />
+         <input
+          type="text"
+          inputMode="numeric"
+          maxLength={9}
+          placeholder="Ex. 12345-678"
+          value={form.cep}
+          onChange={(e) => alterarCep(e.target.value)}
+         />
+         {buscandoCep && <span className={style.subLabel}>Buscando endereço...</span>}
+         {erroCep && <span className={style.erroCep}>{erroCep}</span>}
         </label>
        </div>
       </section>
@@ -159,23 +397,23 @@ function FormularioPeruca({irParaDashboard}) {
        <div className={style.grid}>
         <label className={`${style.campo} ${style.largo}`}>
          Endereço completo *
-         <input type="text" placeholder="Ex. Rua, Número, Bairro, Cidade, Estado" />
+         <input type="text" placeholder="Ex. Rua, Número, Bairro, Cidade, Estado" {...campo("endereco")} />
         </label>
         <label className={style.campo}>
          Número *
-         <input type="text" placeholder="Ex. 2500" />
+         <input type="text" placeholder="Ex. 2500" {...campo("numero")} />
         </label>
         <label className={style.campo}>
          Bairro *
-         <input type="text" placeholder="Ex. Barra Funda" />
+         <input type="text" placeholder="Ex. Barra Funda" {...campo("bairro")} />
         </label>
         <label className={style.campo}>
          Cidade *
-         <input type="text" placeholder="Ex. São Paulo" />
+         <input type="text" placeholder="Ex. São Paulo" {...campo("cidade")} />
         </label>
         <label className={style.campo}>
          Estado *
-         <select defaultValue="">
+         <select {...campo("estado")}>
           <option value="" disabled>Selecione o estado</option>
           <option value="AC">Acre</option>
           <option value="AL">Alagoas</option>
@@ -208,7 +446,7 @@ function FormularioPeruca({irParaDashboard}) {
         </label>
         <label className={style.campo}>
          Complemento
-         <input type="text" placeholder="Ex. Bloco B" />
+         <input type="text" placeholder="Ex. Bloco B" {...campo("complemento")} />
         </label>
        </div>
 
@@ -226,7 +464,7 @@ function FormularioPeruca({irParaDashboard}) {
 
       <label className={style.campoSimples}>
        Estado Civil *
-       <select defaultValue="">
+       <select {...campo("estadoCivil")}>
         <option value="" disabled>Selecione seu estado civil</option>
         <option value="solteiro">Solteiro(a)</option>
         <option value="casado">Casado(a)</option>
@@ -239,25 +477,52 @@ function FormularioPeruca({irParaDashboard}) {
        Tem filhos? *
        <div className={style.radioGroup}>
         <label className={style.radioOpcao}>
-         <input type="radio" name="temFilhos" value="sim" defaultChecked />
+         <input type="radio" name="temFilhos" value="sim" checked={form.temFilhos === "sim"} onChange={() => alterarTemFilhos("sim")} />
          Sim
         </label>
         <label className={style.radioOpcao}>
-         <input type="radio" name="temFilhos" value="nao" />
+         <input type="radio" name="temFilhos" value="nao" checked={form.temFilhos === "nao"} onChange={() => alterarTemFilhos("nao")} />
          Não
         </label>
        </div>
       </div>
 
-      <label className={style.campoSimples}>
-       Se tem filhos, qual idade?
-       <input type="text" placeholder="Ex. 10" />
-      </label>
+      {form.temFilhos === "sim" && (
+       <>
+        <label className={style.campoSimples}>
+         Quantos filhos? *
+         <input
+          type="number"
+          min="1"
+          max={MAX_FILHOS}
+          placeholder="Ex. 2"
+          value={form.qtdFilhos}
+          onChange={(e) => alterarQtdFilhos(e.target.value)}
+         />
+        </label>
+
+        {form.idadesFilhos.map((idade, indice) => (
+         <label key={indice} className={style.campoSimples}>
+          Idade do {indice + 1}º filho(a) *
+          <input
+           type="number"
+           min="0"
+           max="120"
+           placeholder="Ex. 10"
+           value={idade}
+           onChange={(e) => alterarIdadeFilho(indice, e.target.value)}
+          />
+         </label>
+        ))}
+       </>
+      )}
 
       <label className={style.campoSimples}>
        Quantas pessoas moram com você? *
-       <input type="text" placeholder="Ex. 2" />
+       <input type="text" placeholder="Ex. 2" {...campo("qtdPessoasEmCasa")} />
       </label>
+
+      {erroEnvio && <p className={style.erroEnvio}>{erroEnvio}</p>}
 
       <div className={style.acoes}>
        <button className={style.botaoVoltar} onClick={voltar}>Voltar</button>
@@ -275,15 +540,15 @@ function FormularioPeruca({irParaDashboard}) {
         Motivo para querer uma peruca do Amor *
         <div className={style.radioGroup}>
          <label className={style.radioOpcao}>
-          <input type="radio" name="motivo" value="quimioterapico" defaultChecked />
+          <input type="radio" name="motivo" value="quimioterapico" checked={form.motivo === "quimioterapico"} onChange={() => atualizar("motivo", "quimioterapico")} />
           Tratamento quimioterápico
          </label>
          <label className={style.radioOpcao}>
-          <input type="radio" name="motivo" value="alopecia" />
+          <input type="radio" name="motivo" value="alopecia" checked={form.motivo === "alopecia"} onChange={() => atualizar("motivo", "alopecia")} />
           Alopecia Areata
          </label>
          <label className={style.radioOpcao}>
-          <input type="radio" name="motivo" value="outros" />
+          <input type="radio" name="motivo" value="outros" checked={form.motivo === "outros"} onChange={() => atualizar("motivo", "outros")} />
           Outros
          </label>
         </div>
@@ -291,7 +556,7 @@ function FormularioPeruca({irParaDashboard}) {
 
        <label className={style.campoSimples}>
         Em caso de tratamento quimioterápico, qual o tipo de câncer *
-        <select defaultValue="">
+        <select {...campo("tipoCancer")}>
          <option value="" disabled>Selecione o tipo</option>
          <option value="mama">Mama</option>
          <option value="prostata">Próstata</option>
@@ -302,7 +567,7 @@ function FormularioPeruca({irParaDashboard}) {
 
        <label className={style.campoSimples}>
         Início das quimioterapias ou tratamento *
-        <input type="date" placeholder="dd/mm/yyyy" />
+        <input type="date" placeholder="dd/mm/yyyy" {...campo("dtInicioTratamento")} />
        </label>
 
        <div className={style.campoSimples}>
@@ -312,15 +577,15 @@ function FormularioPeruca({irParaDashboard}) {
         </p>
         <div className={style.radioGroup}>
          <label className={style.radioOpcao}>
-          <input type="radio" name="atendimento" value="sus" defaultChecked />
+          <input type="radio" name="atendimento" value="sus" checked={form.tipoAtendimento === "sus"} onChange={() => atualizar("tipoAtendimento", "sus")} />
           Público - SUS
          </label>
          <label className={style.radioOpcao}>
-          <input type="radio" name="atendimento" value="convenio" />
+          <input type="radio" name="atendimento" value="convenio" checked={form.tipoAtendimento === "convenio"} onChange={() => atualizar("tipoAtendimento", "convenio")} />
           Convênio
          </label>
          <label className={style.radioOpcao}>
-          <input type="radio" name="atendimento" value="particular" />
+          <input type="radio" name="atendimento" value="particular" checked={form.tipoAtendimento === "particular"} onChange={() => atualizar("tipoAtendimento", "particular")} />
           Particular
          </label>
         </div>
@@ -340,7 +605,7 @@ function FormularioPeruca({irParaDashboard}) {
           type="file"
           accept="image/*"
           hidden
-          onChange={(evento) => selecionarArquivo(evento, setArquivoRelatorio)}
+          onChange={(evento) => selecionarArquivo(evento, setArquivoRelatorio, "arquivoRelatorio")}
          />
          {arquivoRelatorio ? (
           <>
@@ -368,7 +633,7 @@ function FormularioPeruca({irParaDashboard}) {
           type="file"
           accept="image/*"
           hidden
-          onChange={(evento) => selecionarArquivo(evento, setArquivoCabelo)}
+          onChange={(evento) => selecionarArquivo(evento, setArquivoCabelo, "arquivoCabelo")}
          />
          {arquivoCabelo ? (
           <>
@@ -400,27 +665,28 @@ function FormularioPeruca({irParaDashboard}) {
        <h2 className={style.tituloCard}>Declaração</h2>
 
        <label className={style.checkboxOpcao}>
-        <input type="checkbox" />
+        <input type="checkbox" checked={form.declaracaoAceita} onChange={(e) => atualizar("declaracaoAceita", e.target.checked)} />
         Estou ciente que o presente questionário foi enviado a meu pedido e com meu
         consentimento. Declaro não ter condições de comprar uma peruca.
        </label>
 
        <label className={style.campoSimples}>
         Nome Completo do Solicitante*
-        <input type="text" placeholder="Ex. Maria Silva" />
+        <input type="text" placeholder="Ex. Maria Silva" {...campo("nomeSolicitante")} />
        </label>
 
        <label className={style.campoSimples}>
         RG do Solicitante*
-        <input type="text" placeholder="Ex. 12.345.678-9" />
+        <input type="text" placeholder="Ex. 12.345.678-9" {...campo("rgSolicitante")} />
        </label>
       </section>
 
       <div className={style.rodapeDeclaracao}>
        <p className={style.assinatura}>Com Amor, Débora e equipe IAM</p>
+       {erroEnvio && <p className={style.erroEnvio}>{erroEnvio}</p>}
        <div className={style.acoes}>
         <button className={style.botaoVoltar} onClick={voltar}>Voltar</button>
-        <button className={style.botaoAvancar} onClick={enviarFormulario}>Enviar Formulário</button>
+        <button className={style.botaoAvancar} onClick={enviarFormulario} disabled={enviando}>{enviando ? "Enviando..." : "Enviar Formulário"}</button>
        </div>
       </div>
      </>
