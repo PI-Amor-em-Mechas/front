@@ -4,11 +4,12 @@
     border: 0.1px solid #E91E63;
     border-radius:16px;
     padding:25px;
-    height:110px;
+    height:100px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     text-align: left;
+    margin-top: 10px;
 }
 
 .card h3{
@@ -26,6 +27,6 @@
 
 .card p{
     color:#8A8A8A;
-    font-size:16px;
+    font-size:12px;
     margin: 0;
 }

@@ -2,18 +2,19 @@
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
-    margin:1px 0;
+    margin:-20px 0;
 }
 
 .header h1{
     color:#EC2D6B;
-    font-size:35px;
+    font-size:30px;
 }
 
 .header p{
     text-align: left;
     color:#F08AAE;
     font-size: medium;
+    margin-top: -20px;
 }
 
 .cadastrar{
@@ -24,6 +25,7 @@
     color:white;
     border-radius:8px;
     font-size: small;
+    margin-top:25px;
 }
 
 .cadastrar:hover{
