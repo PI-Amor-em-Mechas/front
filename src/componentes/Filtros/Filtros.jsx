@@ -1,38 +1,53 @@
 import "./Filtros.css";
-
-function Filtros() {
+function Filtros({ tipo }) {
 
     return (
         <div className="caixaFiltros">
             <div className="filtros">
-                <input type="text" placeholder="Buscar por nome ou ID..."/>
 
-                <select>
-                    <option>Todos os Status</option>
-                    <option value="ativa">Ativa</option>
-                    <option value="afastada">Afastada</option>
-                    <option value="desassociada">Desassociada</option>
-                </select>
+                <input
+                    type="text"
+                    placeholder="Buscar por nome ou ID..."/>
 
-                <input type="number" placeholder="Buscar por quantidade de horas..." />
+                {tipo === "madrinhas" ? (
+                    <>
+                        <select>
+                            <option>Todos os Status</option>
+                            <option value="ativa">Ativa</option>
+                            <option value="afastada">Afastada</option>
+                            <option value="desassociada">Desassociada</option>
+                        </select>
 
-                <select>
-                    <option>Data de Entradas</option>
-                    <option value="12">Dezembro | 2026</option>
-                    <option value="11">Novembro | 2026</option>
-                    <option value="10">Outubro | 2026</option>
-                    <option value="9">Setembro | 2026</option>
-                    <option value="8">Agosto | 2026</option>
-                    <option value="7">Julho | 2026</option>
-                    <option value="6">Junho | 2026</option>
-                    <option value="5">Maio | 2026</option>
-                    <option value="4">Abril | 2026</option>
-                    <option value="3">Março | 2026</option>
-                    <option value="2">Fevereiro | 2026</option>
-                    <option value="1">Janeiro | 2026</option>
-                </select>
+                        <input
+                            type="number"
+                            placeholder="Buscar por quantidade de horas..."
+                        />
+
+                        <input type="date"/>
+                    </>
+                ) : (
+                    <>
+                        <select>
+                            <option>Todos os Status</option>
+                            <option value="enviando">Enviando</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="cancelado">Cancelado</option>
+                            <option value="entregue">Entregue</option>
+                        </select>
+
+                        <select>
+                            <option>Todos os Tratamentos</option>
+                            <option value="quimioterapia">Quimioterapia</option>
+                            <option value="radioterapia">Radioterapia</option>
+                            <option value="hormonoterapia">Hormonoterapia</option>
+                            <option value="alopecia">Alopecia</option>
+                        </select>
+
+                        <input type="date"/>
+                    </>
+                )}
             </div>
         </div>
-    )
+    );
 }
 export default Filtros;

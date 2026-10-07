@@ -1,24 +1,27 @@
-.caixaFiltros{
-    border:1px solid #EC2D6B;
-    border-radius:12px;
-    padding:20px;
-    margin:15px 0;
+.caixaFiltros {
+    border: 1px solid #EC2D6B;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
     height: 80px;
+    box-sizing: border-box;
 }
 
-.filtros{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
+.filtros {
+    display: flex;
+    gap: 15px;
+    width: 100%;
 }
 
 .filtros input,
-.filtros select{
-    width:600px;
-    height:40px;
-    border:1px solid #EC2D6B;
-    border-radius:8px;
-    padding:0 15px;
-    font-size:12px;
-    background:white;
+.filtros select {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    border: 1px solid #EC2D6B;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 12px;
+    background: white;
+    box-sizing: border-box;
 }

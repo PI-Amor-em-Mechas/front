@@ -1,13 +1,10 @@
 import { useState } from "react";
-
 import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 import CardInfo from "../CardInfo/CardInfo";
 import Filtros from "../Filtros/Filtros";
 import Tabela from "../Tabela/Tabela";
-
 import "./DashboardsPacientes.css";
-
 import RankingRegioes from "../RankingRegioes/RankingRegioes";
 
 function DashboardPacientes({
@@ -15,7 +12,6 @@ function DashboardPacientes({
     irParaEnvios,
     irParaMadrinhas
 }) {
-
     const [pacientes, setPacientes] = useState([
         {
             id: 1248,
@@ -72,7 +68,6 @@ function DashboardPacientes({
             status: "Entregue"
         }
     ]);
-
     return (
         <div className="app">
             <Navbar
@@ -82,34 +77,37 @@ function DashboardPacientes({
                 pagina="pacientes"/>
 
             <main className="conteudo">
-                <Header
-                    titulo="Gerenciamento de Formulários"
-                    descricao="Visualize e gerencie os dados das pacientes cadastradas"
-                    mostrarBotao={false}/>
+                <section className="resumoPacientes">
+                    <div className="resumoPrincipalPacientes">
+                        <Header
+                            titulo="Gerenciamento de Formulários"
+                            descricao="Visualize e gerencie os dados das pacientes cadastradas"
+                            mostrarBotao={false}/>
 
-                <section className="cards">
-                    <CardInfo
-                        titulo="Kits do amor doados"
-                        valor="8808"
-                        descricao="No último mês"/>
+                        <section className="cards">
+                            <CardInfo
+                                titulo="Kits do amor doados"
+                                valor="8808"
+                                descricao="No último mês"/>
 
-                    <CardInfo
-                        titulo="Taxa de pacientes do SUS"
-                        valor="70%"
-                        descricao="30% de pacientes por convênio"/>
+                            <CardInfo
+                                titulo="Taxa de pacientes do SUS"
+                                valor="70%"
+                                descricao="30% de pacientes por convênio"/>
 
-                    <CardInfo
-                        titulo="Tipo de tratamento mais recorrente"
-                        valor="Quimioterapia"
-                        descricao="65% das pacientes"/>
-
+                            <CardInfo
+                                titulo="Tipo de tratamento mais recorrente"
+                                valor="Quimioterapia"
+                                descricao="65% das pacientes"/>
+                        </section>
+                    </div>
                     <RankingRegioes
                         titulo="Regiões com mais solicitações"/>
                 </section>
-                <Filtros />
+                <Filtros tipo="pacientes" />
                 <Tabela
                     dados={pacientes}
-                    tipo="pacientes" />
+                    tipo="pacientes"/>
             </main>
         </div>
     );

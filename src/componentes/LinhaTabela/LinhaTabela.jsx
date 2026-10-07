@@ -31,8 +31,8 @@ function LinhaTabela({ dados, tipo }) {
             </td>
 
             <td className="acoes">
-                <button className="acao">Ver</button>
-                <button className="acao">Excluir</button>
+                <button className="btn-editar">Editar</button>
+                <button className="btn-excluir">Excluir</button>
             </td>
         </tr>
     );

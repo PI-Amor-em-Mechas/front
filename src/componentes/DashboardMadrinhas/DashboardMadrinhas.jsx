@@ -112,7 +112,7 @@ function DashboardMadrinhas({
                         valor="9401"
                         descricao="Perucas a caminho"/>
                 </section>
-                <Filtros />
+                <Filtros tipo="madrinhas"/>
                 <Tabela
                     dados={madrinhas}
                     tipo="madrinhas"/>
