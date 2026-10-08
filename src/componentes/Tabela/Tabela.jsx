@@ -7,7 +7,7 @@ function formatarData(data) {
     return Number.isNaN(dataLocal.getTime()) ? "-" : dataLocal.toLocaleDateString("pt-BR");
 }
 
-function Tabela({ madrinhas }) {
+function Tabela({ madrinhas, aoEditar, aoExcluir }) {
     return (
         <div className="containerTabela">
             <div className="tabela">
@@ -40,6 +40,8 @@ function Tabela({ madrinhas }) {
                                         : "-",
                                 }}
                                 tipo="madrinhas"
+                                aoEditar={() => aoEditar(madrinha)}
+                                aoExcluir={() => aoExcluir(madrinha)}
                             />
                         ))}
                         {madrinhas.length === 0 && <tr><td colSpan="7">Nenhuma madrinha encontrada.</td></tr>}

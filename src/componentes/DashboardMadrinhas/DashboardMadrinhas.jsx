@@ -7,10 +7,11 @@ import CardInfo from "../CardInfo/CardInfo";
 import Filtros from "../Filtros/Filtros";
 import Tabela from "../Tabela/Tabela";
 import CadastroMadrinha from "../CadastroMadrinha/CadastroMadrinha";
-import { listarMadrinhas } from "../../services/dashboardService";
+import { listarMadrinhas, removerMadrinha } from "../../services/dashboardService";
 
 function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, sair }) {
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [madrinhaEmEdicao, setMadrinhaEmEdicao] = useState(null);
   const [madrinhas, setMadrinhas] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -49,19 +50,35 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, s
     return correspondeBusca && correspondeStatus && correspondeHoras && correspondeMes;
   });
 
+  async function excluirMadrinha(madrinha) {
+    if (!window.confirm(`Deseja excluir a madrinha ${madrinha.nomeCompleto}?`)) return;
+    setErro("");
+    try {
+      await removerMadrinha(madrinha.id);
+      setMadrinhas((atuais) => atuais.filter((atual) => atual.id !== madrinha.id));
+    } catch (error_) {
+      setErro(error_.response?.data?.mensagem ?? error_.response?.data?.erro ?? "Não foi possível excluir a madrinha.");
+    }
+  }
+
   return (
     <div className="app">
       <Navbar irParaFormulario={irParaFormulario} irParaEnvios={irParaEnvios} irParaPacientes={irParaPacientes} pagina="madrinhas" sair={sair} />
       <main className="conteudo">
-        <Header abrirModal={() => setMostrarModal(true)} />
+        <Header abrirModal={() => { setMadrinhaEmEdicao(null); setMostrarModal(true); }} />
         <section className="cards">
           {cards.map((card) => <CardInfo key={card.titulo} {...card} />)}
         </section>
         {erro && <p role="alert">{erro}</p>}
         <Filtros filtros={filtros} aoAlterar={setFiltros} />
-        {carregando ? <p>Carregando madrinhas...</p> : <Tabela madrinhas={madrinhasFiltradas} />}
+        {carregando ? <p>Carregando madrinhas...</p> : <Tabela
+          madrinhas={madrinhasFiltradas}
+          aoEditar={(madrinha) => { setMadrinhaEmEdicao(madrinha); setMostrarModal(true); }}
+          aoExcluir={excluirMadrinha}
+        />}
       </main>
       {mostrarModal && <CadastroMadrinha
+        madrinha={madrinhaEmEdicao}
         fecharModal={() => setMostrarModal(false)}
         aoSalvar={() => {
           setMostrarModal(false);

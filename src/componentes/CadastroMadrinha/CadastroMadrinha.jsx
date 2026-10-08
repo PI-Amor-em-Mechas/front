@@ -1,9 +1,15 @@
 import { useState } from "react";
-import { cadastrarMadrinha } from "../../services/dashboardService";
+import { atualizarMadrinha, cadastrarMadrinha } from "../../services/dashboardService";
 import "./CadastroMadrinha.css";
 
-function CadastroMadrinha({ fecharModal, aoSalvar }) {
-    const [form, setForm] = useState({ nomeCompleto: "", email: "", horasVoluntarias: "0", funcao: "", status: "Ativa" });
+function CadastroMadrinha({ fecharModal, aoSalvar, madrinha = null }) {
+    const [form, setForm] = useState(() => ({
+        nomeCompleto: madrinha?.nomeCompleto ?? "",
+        email: madrinha?.email ?? "",
+        horasVoluntarias: String(madrinha?.horasVoluntarias ?? 0),
+        funcao: madrinha?.funcao ?? "",
+        status: madrinha?.status ?? "Ativa",
+    }));
     const [erro, setErro] = useState("");
     const [enviando, setEnviando] = useState(false);
 
@@ -16,11 +22,16 @@ function CadastroMadrinha({ fecharModal, aoSalvar }) {
         setErro("");
         setEnviando(true);
         try {
-            await cadastrarMadrinha({
+            const dados = {
                 ...form,
                 horasVoluntarias: Number(form.horasVoluntarias),
-                dataCadastro: new Date().toISOString().slice(0, 10),
-            });
+                dataCadastro: madrinha?.dataCadastro ?? new Date().toISOString().slice(0, 10),
+            };
+            if (madrinha) {
+                await atualizarMadrinha(madrinha.id, dados);
+            } else {
+                await cadastrarMadrinha(dados);
+            }
             aoSalvar();
         } catch (error_) {
             setErro(error_.response?.data?.erro ?? error_.response?.data?.mensagem ?? "Não foi possível cadastrar a madrinha.");
@@ -29,12 +40,15 @@ function CadastroMadrinha({ fecharModal, aoSalvar }) {
         }
     }
 
+    let textoBotao = madrinha ? "Salvar alterações" : "Cadastrar";
+    if (enviando) textoBotao = "Salvando...";
+
     return (
         <div className="fundoModal">
             <form className="modal" onSubmit={enviar}>
                 <button type="button" className="fechar" onClick={fecharModal}>×</button>
-                <h1>Cadastro de Madrinha do amor</h1>
-                <p>Preencha os dados aceitos no cadastro de voluntárias.</p>
+                <h1>{madrinha ? "Editar madrinha do amor" : "Cadastro de Madrinha do amor"}</h1>
+                <p>{madrinha ? "Atualize os dados da voluntária." : "Preencha os dados aceitos no cadastro de voluntárias."}</p>
                 <div className="formularioMadrinha">
                     <label>
                         <span>Nome completo *</span>
@@ -64,7 +78,9 @@ function CadastroMadrinha({ fecharModal, aoSalvar }) {
                 {erro && <p className="erroCadastro" role="alert">{erro}</p>}
                 <div className="botoesModal">
                     <button type="button" className="botaoVoltar" onClick={fecharModal}>Cancelar</button>
-                    <button type="submit" className="botaoCadastrar" disabled={enviando}>{enviando ? "Salvando..." : "Cadastrar"}</button>
+                    <button type="submit" className="botaoCadastrar" disabled={enviando}>
+                        {textoBotao}
+                    </button>
                 </div>
             </form>
         </div>

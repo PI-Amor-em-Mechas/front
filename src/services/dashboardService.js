@@ -10,6 +10,15 @@ export async function cadastrarMadrinha(madrinha) {
   return data;
 }
 
+export async function atualizarMadrinha(id, madrinha) {
+  const { data } = await api.put(`/madrinhas/${id}`, madrinha);
+  return data;
+}
+
+export async function removerMadrinha(id) {
+  await api.delete(`/madrinhas/${id}`);
+}
+
 export async function listarKits() {
   const { data } = await api.get("/kits");
   return Array.isArray(data) ? data : [];

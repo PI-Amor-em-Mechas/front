@@ -1,6 +1,6 @@
 import "./LinhaTabela.css";
 
-function LinhaTabela({ dados, tipo }) {
+function LinhaTabela({ dados, tipo, aoEditar, aoExcluir }) {
     return (
         <tr>
             <td>
@@ -31,8 +31,8 @@ function LinhaTabela({ dados, tipo }) {
             </td>
 
             <td className="acoes">
-                <button className="btn-editar">Editar</button>
-                <button className="btn-excluir">Excluir</button>
+                <button type="button" className="btn-editar" onClick={aoEditar}>Editar</button>
+                <button type="button" className="btn-excluir" onClick={aoExcluir}>Excluir</button>
             </td>
         </tr>
     );
