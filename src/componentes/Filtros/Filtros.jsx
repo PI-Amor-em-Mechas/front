@@ -25,6 +25,6 @@ function Filtros({ filtros, aoAlterar }) {
                     onChange={(evento) => alterar("mes", evento.target.value)} />
             </div>
         </div>
-    )
+    );
 }
 export default Filtros;

@@ -25,7 +25,7 @@ function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPaciente
             </div>
 
             <div className="ladoDireito">
-                <button className="btnExportar" onClick={sair}>Sair</button>
+                {sair && <button type="button" className="btnExportar" onClick={sair}>Sair</button>}
 
                 <img src={perfil} alt="Perfil" className="perfil"/>
             </div>

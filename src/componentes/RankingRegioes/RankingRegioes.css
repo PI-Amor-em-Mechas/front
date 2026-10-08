@@ -5,17 +5,18 @@
     background-color: #FFFFFF;
     border: 1px solid #E91E63;
     border-radius: 20px;
+    height: 200px;
 }
 
 .regioes h2 {
     font-size: 15px;
     font-weight: 600;
     color: #E91E63;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 .itemRegiao {
-    margin-bottom: 12px;
+    margin-bottom: 2px;
 }
 
 .informacoesRegiao {
@@ -23,7 +24,7 @@
     justify-content: space-between;
     gap: 10px;
     font-size: 11px;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
 }
 
 .informacoesRegiao span:last-child {

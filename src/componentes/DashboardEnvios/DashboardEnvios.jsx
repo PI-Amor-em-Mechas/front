@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 import CardInfo from "../CardInfo/CardInfo";
-import RankingRegioes from "../../RankingRegioes/RankingRegioes";
+import RankingRegioes from "../RankingRegioes/RankingRegioes";
 import { listarKits } from "../../services/dashboardService";
 import "../DashboardMadrinhas/DashboardMadrinhas.css";
 import "./DashboardEnvios.css";

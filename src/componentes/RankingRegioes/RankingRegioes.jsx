@@ -15,6 +15,7 @@ function RankingRegioes({ kits = [] }) {
     return (
         <section className="regioes">
             <h2>Regiões com mais kits cadastrados</h2>
+            <h2>Regiões com mais kits cadastrados</h2>
 
             {regioes.map((regiao, indice) => (
                 <div className="itemRegiao" key={regiao.nome}>

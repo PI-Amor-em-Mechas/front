@@ -23,16 +23,23 @@ function Tabela({ madrinhas }) {
                             <th>Ações</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {madrinhas.map((m) => (<LinhaTabela
-                                key={m.id}
-                                id={m.id}
-                                nome={m.nomeCompleto}
-                                email={m.email}
-                                horas={`${m.horasVoluntarias ?? 0} horas`}
-                                funcao={m.funcao}
-                                data={formatarData(m.dataCadastro)}
-                                status={m.status ? `${m.status[0].toUpperCase()}${m.status.slice(1).toLowerCase()}` : "-"}
+                        {madrinhas.map((madrinha) => (
+                            <LinhaTabela
+                                key={madrinha.id}
+                                dados={{
+                                    id: madrinha.id,
+                                    nome: madrinha.nomeCompleto ?? "Sem nome",
+                                    email: madrinha.email ?? "-",
+                                    horas: `${madrinha.horasVoluntarias ?? 0} horas`,
+                                    funcao: madrinha.funcao ?? "-",
+                                    data: formatarData(madrinha.dataCadastro),
+                                    status: madrinha.status
+                                        ? `${madrinha.status[0].toUpperCase()}${madrinha.status.slice(1).toLowerCase()}`
+                                        : "-",
+                                }}
+                                tipo="madrinhas"
                             />
                         ))}
                         {madrinhas.length === 0 && <tr><td colSpan="7">Nenhuma madrinha encontrada.</td></tr>}
@@ -40,6 +47,6 @@ function Tabela({ madrinhas }) {
                 </table>
             </div>
         </div>
-    )
+    );
 }
 export default Tabela;
