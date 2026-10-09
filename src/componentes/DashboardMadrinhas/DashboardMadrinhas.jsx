@@ -9,6 +9,10 @@ import Tabela from "../Tabela/Tabela";
 import CadastroMadrinha from "../CadastroMadrinha/CadastroMadrinha";
 import { listarMadrinhas, removerMadrinha } from "../../services/dashboardService";
 
+function normalizarStatus(status) {
+  return String(status ?? "").trim().toLowerCase();
+}
+
 function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, sair }) {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [madrinhaEmEdicao, setMadrinhaEmEdicao] = useState(null);
@@ -33,7 +37,7 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, s
   const maisHoras = madrinhas.reduce((maior, madrinha) => (
     Number(madrinha.horasVoluntarias ?? 0) > Number(maior?.horasVoluntarias ?? -1) ? madrinha : maior
   ), null);
-  const ativas = madrinhas.filter((madrinha) => madrinha.status?.toLowerCase() === "ativa").length;
+  const ativas = madrinhas.filter((madrinha) => normalizarStatus(madrinha.status) === "ativa").length;
   const cards = [
     { titulo: "Total de Madrinhas", valor: madrinhas.length, descricao: "Cadastros retornados pela API" },
     { titulo: "Madrinha com Mais Horas", valor: maisHoras?.nomeCompleto ?? "-", descricao: maisHoras ? `${maisHoras.horasVoluntarias} horas` : "Sem registros" },
@@ -44,7 +48,7 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, s
   const madrinhasFiltradas = madrinhas.filter((madrinha) => {
     const busca = filtros.busca.trim().toLowerCase();
     const correspondeBusca = !busca || `${madrinha.id} ${madrinha.nomeCompleto} ${madrinha.email}`.toLowerCase().includes(busca);
-    const correspondeStatus = !filtros.status || madrinha.status?.toLowerCase() === filtros.status.toLowerCase();
+    const correspondeStatus = !filtros.status || normalizarStatus(madrinha.status) === normalizarStatus(filtros.status);
     const correspondeHoras = filtros.horas === "" || Number(madrinha.horasVoluntarias ?? 0) >= Number(filtros.horas);
     const correspondeMes = !filtros.mes || madrinha.dataCadastro?.startsWith(filtros.mes);
     return correspondeBusca && correspondeStatus && correspondeHoras && correspondeMes;

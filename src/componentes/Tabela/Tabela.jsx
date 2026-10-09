@@ -7,6 +7,16 @@ function formatarData(data) {
     return Number.isNaN(dataLocal.getTime()) ? "-" : dataLocal.toLocaleDateString("pt-BR");
 }
 
+function formatarStatus(status) {
+    const valor = String(status ?? "");
+    const statusConhecidos = {
+        ativa: "Ativa",
+        afastada: "Afastada",
+        desassociada: "Desassociada",
+    };
+    return statusConhecidos[valor.trim().toLowerCase()] ?? (valor || "-");
+}
+
 function Tabela({ madrinhas, aoEditar, aoExcluir }) {
     return (
         <div className="containerTabela">
@@ -35,9 +45,7 @@ function Tabela({ madrinhas, aoEditar, aoExcluir }) {
                                     horas: `${madrinha.horasVoluntarias ?? 0} horas`,
                                     funcao: madrinha.funcao ?? "-",
                                     data: formatarData(madrinha.dataCadastro),
-                                    status: madrinha.status
-                                        ? `${madrinha.status[0].toUpperCase()}${madrinha.status.slice(1).toLowerCase()}`
-                                        : "-",
+                                    status: formatarStatus(madrinha.status),
                                 }}
                                 tipo="madrinhas"
                                 aoEditar={() => aoEditar(madrinha)}

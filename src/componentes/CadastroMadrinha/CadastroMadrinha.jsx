@@ -2,13 +2,21 @@ import { useState } from "react";
 import { atualizarMadrinha, cadastrarMadrinha } from "../../services/dashboardService";
 import "./CadastroMadrinha.css";
 
+const STATUS_VALIDOS = ["Ativa", "Afastada", "Desassociada"];
+
+function obterStatusInicial(madrinha) {
+    if (!madrinha) return "Ativa";
+    const statusAtual = String(madrinha.status ?? "").trim().toLowerCase();
+    return STATUS_VALIDOS.find((status) => status.toLowerCase() === statusAtual) ?? "";
+}
+
 function CadastroMadrinha({ fecharModal, aoSalvar, madrinha = null }) {
     const [form, setForm] = useState(() => ({
         nomeCompleto: madrinha?.nomeCompleto ?? "",
         email: madrinha?.email ?? "",
         horasVoluntarias: String(madrinha?.horasVoluntarias ?? 0),
         funcao: madrinha?.funcao ?? "",
-        status: madrinha?.status ?? "Ativa",
+        status: obterStatusInicial(madrinha),
     }));
     const [erro, setErro] = useState("");
     const [enviando, setEnviando] = useState(false);
@@ -68,7 +76,8 @@ function CadastroMadrinha({ fecharModal, aoSalvar, madrinha = null }) {
                     </label>
                     <label>
                         <span>Status *</span>
-                        <select value={form.status} onChange={(evento) => alterar("status", evento.target.value)}>
+                        <select required value={form.status} onChange={(evento) => alterar("status", evento.target.value)}>
+                            <option value="" disabled>Selecione um status</option>
                             <option value="Ativa">Ativa</option>
                             <option value="Afastada">Afastada</option>
                             <option value="Desassociada">Desassociada</option>

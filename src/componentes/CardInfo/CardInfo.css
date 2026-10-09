@@ -1,10 +1,13 @@
 .card{
     flex:1;
+    min-width:0;
     background:white;
     border: 0.1px solid #E91E63;
     border-radius:16px;
     padding:25px;
-    height:100px;
+    min-height:150px;
+    height:auto;
+    box-sizing:border-box;
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -22,7 +25,9 @@
 .card h2{
     font-size:20px;
     color:#E91E63;
-    margin-bottom:15px;
+    line-height:1.2;
+    margin:8px 0;
+    overflow-wrap:anywhere;
 }
 
 .card p{
