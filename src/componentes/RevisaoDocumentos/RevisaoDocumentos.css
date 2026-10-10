@@ -1,0 +1,29 @@
+.documentos-conteudo { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+.documentos-cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.documentos-cabecalho h1 { font-size: 24px; margin: 0 0 24px; }
+.documentos-cabecalho h2 { font-size: 18px; overflow-wrap: anywhere; }
+.documentos-tabela-scroll { overflow-x: auto; }
+.documentos-tabela { width: 100%; border-collapse: collapse; background: white; }
+.documentos-tabela th, .documentos-tabela td { padding: 16px 12px; border-bottom: 1px solid #ddd; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.documentos-tabela th { color: #555; font-size: 14px; }
+.documentos-tabela td:first-child { max-width: 220px; }
+.documentos-tabela td p { font-size: 14px; color: #555; }
+.documentos-revisao { display: grid; gap: 8px; min-width: 250px; }
+.documentos-revisao textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid #999; border-radius: 4px; font: inherit; padding: 8px; }
+.documentos-acoes { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.revisao-documentos .documentos-acoes button, .revisao-documentos .documentos-icone { min-height: 40px; border: 1px solid #aaa; border-radius: 4px; background: white; color: #222; cursor: pointer; padding: 8px 12px; font: inherit; }
+.revisao-documentos .documentos-icone { width: 40px; height: 40px; padding: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.revisao-documentos .documentos-rejeitar { color: #a12236; border-color: #a12236; }
+.revisao-documentos button:disabled { opacity: .5; cursor: not-allowed; }
+.documentos-erro { color: #a12236; }
+.documentos-feedback { border-left: 4px solid #29794b; padding: 12px 16px; margin: 16px 0; background: #edf7f0; overflow-wrap: anywhere; }
+.documentos-modal { position: fixed; inset: 0; margin: auto; width: min(1000px, 94vw); height: 90vh; z-index: 100; padding: 16px; border: 1px solid #aaa; border-radius: 8px; box-shadow: 0 0 0 100vmax #0009; display: flex; flex-direction: column; }
+.documentos-modal iframe { border: 0; width: 100%; flex: 1; min-height: 0; }
+.documentos-modal img { width: 100%; flex: 1; min-height: 0; object-fit: contain; }
+@media (max-width: 640px) {
+  .documentos-conteudo { padding: 24px 12px; }
+  .revisao-documentos .navbar { height: auto; min-height: 50px; flex-wrap: wrap; gap: 12px; padding: 12px; }
+  .revisao-documentos .menu { flex-wrap: wrap; gap: 14px; order: 3; width: 100%; }
+  .revisao-documentos .btnExportar { width: 64px; }
+  .documentos-tabela { min-width: 850px; }
+}

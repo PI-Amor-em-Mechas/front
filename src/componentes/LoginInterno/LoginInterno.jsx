@@ -22,11 +22,11 @@ function LoginInterno({ aoEntrar }) {
     }
   }
 
-  async function entrarDemo() {
+  async function entrarDemo(perfil) {
     setErro("");
     setEnviando(true);
     try {
-      await entrarComoDemonstracao();
+      await entrarComoDemonstracao(perfil);
       aoEntrar();
     } catch (error_) {
       setErro(error_.response?.data?.mensagem ?? "Não foi possível iniciar a sessão de demonstração.");
@@ -50,8 +50,11 @@ function LoginInterno({ aoEntrar }) {
         </label>
         {erro && <p className="loginErro" role="alert">{erro}</p>}
         <button type="submit" disabled={enviando}>{enviando ? "Entrando..." : "Entrar"}</button>
-        {import.meta.env.DEV && <button className="botaoDemo" type="button" onClick={entrarDemo} disabled={enviando}>
+        {import.meta.env.DEV && <button className="botaoDemo" type="button" onClick={() => entrarDemo("atendente")} disabled={enviando}>
           Entrar como demo.atendente
+        </button>}
+        {import.meta.env.DEV && <button className="botaoDemo" type="button" onClick={() => entrarDemo("admin")} disabled={enviando}>
+          Entrar como admin.dev
         </button>}
       </form>
     </main>

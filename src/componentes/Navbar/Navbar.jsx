@@ -3,8 +3,9 @@ import "./Navbar.css";
 
 import logo from "../../assets/logo.png";
 import perfil from "../../assets/perfil.png";
+import { podeRevisarDocumentos } from "../../services/authService";
 
-function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, pagina, sair}) {
+function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, irParaDocumentos, pagina, sair}) {
 
     return (
         <nav className="navbar">
@@ -22,6 +23,8 @@ function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPaciente
                     aria-current={pagina === "pacientes" ? "page" : undefined} onClick={irParaPacientes}>Pacientes</button>
                 <button type="button" className={pagina === "madrinhas" ? "ativo" : ""}
                     aria-current={pagina === "madrinhas" ? "page" : undefined} onClick={irParaMadrinhas}>Madrinhas</button>
+                {podeRevisarDocumentos() && irParaDocumentos && <button type="button" className={pagina === "documentos" ? "ativo" : ""}
+                    aria-current={pagina === "documentos" ? "page" : undefined} onClick={irParaDocumentos}>Documentos</button>}
             </div>
 
             <div className="ladoDireito">

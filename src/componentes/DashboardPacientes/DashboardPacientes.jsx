@@ -8,7 +8,7 @@ import "./DashboardPacientes.css";
 
 const TAMANHO_PAGINA = 20;
 
-function DashboardPacientes({ irParaFormulario, irParaMadrinhas, irParaEnvios, sair }) {
+function DashboardPacientes({ irParaFormulario, irParaMadrinhas, irParaEnvios, irParaDocumentos, sair }) {
     const [pagina, setPagina] = useState(0);
     const [resultado, setResultado] = useState({ content: [], totalPages: 0, totalElements: 0 });
     const [busca, setBusca] = useState("");
@@ -48,6 +48,7 @@ function DashboardPacientes({ irParaFormulario, irParaMadrinhas, irParaEnvios, s
                 irParaFormulario={irParaFormulario}
                 irParaMadrinhas={irParaMadrinhas}
                 irParaEnvios={irParaEnvios}
+                irParaDocumentos={irParaDocumentos}
                 pagina="pacientes"
                 sair={sair}
             />

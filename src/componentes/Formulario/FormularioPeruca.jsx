@@ -3,6 +3,9 @@ import style from "./FormularioPeruca.module.css";
 import logo from "../../assets/logo amor em mechas.png";
 import { enviarSolicitacao, enviarAvaliacao, buscarCep } from "../../services/solicitacaoService";
 import { EnvioFormularioError } from "../../services/EnvioFormularioError";
+import { validarArquivo } from "../../services/arquivoValidation";
+import { buscarArquivo, obterConteudoArquivo, mensagemErroArquivo } from "../../services/arquivoService";
+import { Download, RefreshCw } from "lucide-react";
 
 function IconeNuvemUpload() {
  return (
@@ -57,6 +60,13 @@ function FormularioPeruca({irParaDashboard}) {
  const [erroAval, setErroAval] = useState(null);
  const [enviando, setEnviando] = useState(false);
  const [erroEnvio, setErroEnvio] = useState(null);
+ const [documento, setDocumento] = useState(null);
+ const [errosArquivos, setErrosArquivos] = useState({});
+ const [validandoArquivos, setValidandoArquivos] = useState({});
+ const [consultandoDocumento, setConsultandoDocumento] = useState(false);
+ const [arquivosBloqueados, setArquivosBloqueados] = useState(false);
+ const selecoesArquivos = useRef({});
+ const validando = Object.values(validandoArquivos).some(Boolean);
  // ViaCEP
  const [buscandoCep, setBuscandoCep] = useState(false);
  const [erroCep, setErroCep] = useState(null);
@@ -161,6 +171,7 @@ function FormularioPeruca({irParaDashboard}) {
  }
 
  function avancar() {
+   if (passoAtual === 3 && (validando || Object.values(errosArquivos).some(Boolean))) return;
   if (passoAtual === 2 && !filhosValidos()) {
    setErroEnvio("Informe quantos filhos você tem e a idade de cada um.");
    return;
@@ -174,6 +185,7 @@ function FormularioPeruca({irParaDashboard}) {
  }
 
  async function enviarFormulario() {
+   if (enviando || validando || Object.values(errosArquivos).some(Boolean)) return;
   setErroEnvio(null);
   if (!form.declaracaoAceita) {
    setErroEnvio("Marque a declaração para enviar o formulário.");
@@ -191,7 +203,11 @@ function FormularioPeruca({irParaDashboard}) {
    progresso.current = {};
    setEnviado(true);
   } catch (erro) {
-   if (erro instanceof EnvioFormularioError) {
+   setDocumento(progresso.current.documento ?? null);
+   setArquivosBloqueados(Boolean(progresso.current.pacienteId));
+  if (erro.aguardandoValidacao) {
+   setErroEnvio(null);
+  } else if (erro instanceof EnvioFormularioError) {
     const detalhes = Object.values(erro.campos).join("; ");
     setErroEnvio(`Falha na etapa "${erro.etapa}": ${erro.message}${detalhes ? " (" + detalhes + ")" : ""}`);
    } else {
@@ -202,10 +218,71 @@ function FormularioPeruca({irParaDashboard}) {
   }
  }
 
- function selecionarArquivo(evento, definirArquivo, nomeCampo) {
-  const arquivo = evento.target.files[0];
-  definirArquivo(arquivo ? arquivo.name : null);
-  atualizar(nomeCampo, arquivo ?? null);
+ async function selecionarArquivo(evento, definirArquivo, nomeCampo) {
+  const input = evento.target;
+  const arquivo = input.files[0];
+  const selecao = (selecoesArquivos.current[nomeCampo] ?? 0) + 1;
+  selecoesArquivos.current[nomeCampo] = selecao;
+  definirArquivo(null);
+  atualizar(nomeCampo, null);
+  setErrosArquivos((atuais) => ({ ...atuais, [nomeCampo]: "" }));
+  if (nomeCampo === "arquivoRelatorio") {
+   delete progresso.current.relatorioId;
+   delete progresso.current.documento;
+   setDocumento(null);
+  } else {
+   delete progresso.current.cabeloId;
+  }
+  setValidandoArquivos((atuais) => ({ ...atuais, [nomeCampo]: Boolean(arquivo) }));
+  if (!arquivo) return;
+  try {
+   const seguro = await validarArquivo(arquivo);
+   if (selecoesArquivos.current[nomeCampo] !== selecao) return;
+   definirArquivo(seguro.name);
+   atualizar(nomeCampo, seguro);
+   } catch (error_) {
+   if (selecoesArquivos.current[nomeCampo] !== selecao) return;
+   input.value = "";
+    setErrosArquivos((atuais) => ({ ...atuais, [nomeCampo]: error_.message }));
+  } finally {
+   if (selecoesArquivos.current[nomeCampo] === selecao) {
+    setValidandoArquivos((atuais) => ({ ...atuais, [nomeCampo]: false }));
+   }
+  }
+ }
+
+ async function atualizarDocumento() {
+  if (consultandoDocumento || enviando) return;
+  setConsultandoDocumento(true);
+  setErroEnvio(null);
+  try {
+   const atual = await buscarArquivo(progresso.current.relatorioId);
+   progresso.current.documento = atual;
+   setDocumento(atual);
+   } catch (error_) {
+    setErroEnvio(mensagemErroArquivo(error_));
+  } finally {
+   setConsultandoDocumento(false);
+  }
+ }
+
+ async function baixarDocumento() {
+  setConsultandoDocumento(true);
+  setErroEnvio(null);
+  try {
+   const { conteudo, documento: atual } = await obterConteudoArquivo(documento.id);
+   setDocumento(atual);
+   const url = URL.createObjectURL(conteudo);
+   const link = document.createElement("a");
+   link.href = url;
+   link.download = atual.nome || "documento";
+   link.click();
+   URL.revokeObjectURL(url);
+   } catch (error_) {
+    setErroEnvio(mensagemErroArquivo(error_));
+  } finally {
+   setConsultandoDocumento(false);
+  }
  }
 
  async function enviarAvaliacaoFormulario() {
@@ -246,9 +323,26 @@ function FormularioPeruca({irParaDashboard}) {
   setAvaliacaoEnviada(false);
   setErroAval(null);
   setErroEnvio(null);
+   setDocumento(null);
+   setErrosArquivos({});
+   setArquivosBloqueados(false);
   setEnviado(false);
   setPassoAtual(1);
  }
+
+ const estadoDocumento = documento && (
+  <div className={style.estadoDocumento}>
+   <div aria-live="polite">
+    <strong>{documento.nomeOriginal || documento.nome}: {documento.statusValidacao}</strong>
+    {documento.statusValidacao === "PENDENTE" && <p>Arquivo recebido. Aguardando validação.</p>}
+    {documento.statusValidacao === "REJEITADO" && <p>Documento rejeitado: {documento.observacaoValidacao || "Envie um novo documento."}</p>}
+    {documento.statusValidacao === "APROVADO" && <p>Documento aprovado. Você pode concluir a solicitação.</p>}
+   </div>
+   <button type="button" className={style.botaoDocumento} title="Consultar status do documento" aria-label="Consultar status do documento" disabled={consultandoDocumento || enviando} onClick={atualizarDocumento}><RefreshCw size={20} /></button>
+   {documento.statusValidacao === "APROVADO" && <button type="button" className={style.botaoDocumento} title="Baixar documento aprovado" aria-label="Baixar documento aprovado" disabled={consultandoDocumento || enviando} onClick={baixarDocumento}><Download size={20} /></button>}
+   {consultandoDocumento && <output>Consultando documento...</output>}
+  </div>
+ );
 
  if (enviado) {
   return (
@@ -597,31 +691,35 @@ function FormularioPeruca({irParaDashboard}) {
        <h2 className={style.tituloCard}>Documentos</h2>
 
        <div className={style.campoSimples}>
-        Foto do pedido/relatório médico *
+      Pedido/relatório médico *
         <p className={style.subLabel}>
-         Favor enviar APENAS UMA foto descrevendo o tratamento
+         Envie um documento descrevendo o tratamento.
         </p>
         <label className={`${style.upload} ${arquivoRelatorio ? style.uploadConcluido : ""}`}>
          <input
           type="file"
-          accept="image/*"
+          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+          disabled={enviando || arquivosBloqueados}
           hidden
           onChange={(evento) => selecionarArquivo(evento, setArquivoRelatorio, "arquivoRelatorio")}
          />
          {arquivoRelatorio ? (
           <>
            <span className={style.uploadCheck}>✓</span>
-           <span>Arquivo enviado com sucesso!</span>
+           <span>Arquivo selecionado</span>
            <span className={style.uploadLegenda}>{arquivoRelatorio}</span>
           </>
          ) : (
           <>
            <IconeNuvemUpload />
-           <span>Clique para fazer upload ou arraste o arquivo aqui</span>
-           <span className={style.uploadLegenda}>Máximo 10 MB - Apenas imagens</span>
+           <span>Clique para selecionar um arquivo</span>
+           <span className={style.uploadLegenda}>Máximo 10 MB - PDF, JPG/JPEG ou PNG</span>
           </>
          )}
         </label>
+      {validandoArquivos.arquivoRelatorio && <output>Verificando arquivo...</output>}
+      {errosArquivos.arquivoRelatorio && <p role="alert" className={style.erroEnvio}>{errosArquivos.arquivoRelatorio}</p>}
+      {estadoDocumento}
        </div>
 
        <div className={style.campoSimples}>
@@ -632,29 +730,32 @@ function FormularioPeruca({irParaDashboard}) {
         <label className={`${style.upload} ${arquivoCabelo ? style.uploadConcluido : ""}`}>
          <input
           type="file"
-          accept="image/*"
+          accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+          disabled={enviando || arquivosBloqueados}
           hidden
           onChange={(evento) => selecionarArquivo(evento, setArquivoCabelo, "arquivoCabelo")}
          />
          {arquivoCabelo ? (
           <>
            <span className={style.uploadCheck}>✓</span>
-           <span>Arquivo enviado com sucesso!</span>
+           <span>Arquivo selecionado</span>
            <span className={style.uploadLegenda}>{arquivoCabelo}</span>
           </>
          ) : (
           <>
            <IconeNuvemUpload />
-           <span>Clique para fazer upload ou arraste o arquivo aqui</span>
-           <span className={style.uploadLegenda}>Máximo 10 MB - Apenas imagens</span>
+           <span>Clique para selecionar um arquivo</span>
+           <span className={style.uploadLegenda}>Máximo 10 MB - PDF, JPG/JPEG ou PNG</span>
           </>
          )}
         </label>
+      {validandoArquivos.arquivoCabelo && <output>Verificando arquivo...</output>}
+      {errosArquivos.arquivoCabelo && <p role="alert" className={style.erroEnvio}>{errosArquivos.arquivoCabelo}</p>}
        </div>
 
        <div className={style.acoes}>
         <button className={style.botaoVoltar} onClick={voltar}>Voltar</button>
-        <button className={style.botaoAvancar} onClick={avancar}>Avançar</button>
+      <button className={style.botaoAvancar} onClick={avancar} disabled={validando || Object.values(errosArquivos).some(Boolean)}>Avançar</button>
        </div>
       </section>
      </>
@@ -684,10 +785,11 @@ function FormularioPeruca({irParaDashboard}) {
 
       <div className={style.rodapeDeclaracao}>
        <p className={style.assinatura}>Com Amor, Débora e equipe IAM</p>
-       {erroEnvio && <p className={style.erroEnvio}>{erroEnvio}</p>}
+          {estadoDocumento}
+          {erroEnvio && <p role="alert" className={style.erroEnvio}>{erroEnvio}</p>}
        <div className={style.acoes}>
-        <button className={style.botaoVoltar} onClick={voltar}>Voltar</button>
-        <button className={style.botaoAvancar} onClick={enviarFormulario} disabled={enviando}>{enviando ? "Enviando..." : "Enviar Formulário"}</button>
+            <button className={style.botaoVoltar} onClick={voltar} disabled={enviando}>Voltar</button>
+            <button className={style.botaoAvancar} onClick={enviarFormulario} disabled={enviando || validando || consultandoDocumento || Object.values(errosArquivos).some(Boolean)}>{enviando ? "Enviando..." : documento ? "Verificar e concluir solicitação" : "Enviar Formulário"}</button>
        </div>
       </div>
      </>

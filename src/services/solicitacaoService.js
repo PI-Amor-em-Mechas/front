@@ -1,6 +1,7 @@
 import { isAxiosError } from "axios";
 import api from "./api";
 import { EnvioFormularioError } from "./EnvioFormularioError";
+import { buscarArquivo, enviarArquivo, mensagemErroArquivo } from "./arquivoService";
 
 // Traduz o erro do Axios para a nossa exceção, usando o formato que o
 // GlobalExceptionHandler do backend devolve: { erro, campos }.
@@ -10,6 +11,9 @@ function traduzirErro(etapa, erro) {
   }
   if (!erro.response) {
     return new EnvioFormularioError(etapa, "Não foi possível conectar ao servidor. Verifique se o backend está rodando.");
+  }
+  if ([403, 409].includes(erro.response.status)) {
+    return new EnvioFormularioError(etapa, mensagemErroArquivo(erro));
   }
   const { erro: mensagem, campos } = erro.response.data ?? {};
   return new EnvioFormularioError(etapa, mensagem ?? "O servidor recusou os dados enviados.", campos);
@@ -25,11 +29,28 @@ async function post(etapa, url, corpo, config) {
   }
 }
 
-function enviarArquivo(etapa, arquivo, tipo) {
-  const formData = new FormData();
-  formData.append("arquivo", arquivo);
-  formData.append("tipo", tipo);
-  return post(etapa, "/arquivos", formData); // o Axios define o multipart sozinho
+async function upload(etapa, arquivo, tipo) {
+  try {
+    return await enviarArquivo(arquivo, tipo);
+  } catch (error_) {
+    throw new EnvioFormularioError(etapa, mensagemErroArquivo(error_));
+  }
+}
+
+async function exigirLaudoAprovado(progresso) {
+  try {
+    progresso.documento = await buscarArquivo(progresso.relatorioId);
+  } catch (error_) {
+    throw new EnvioFormularioError("relatório médico", mensagemErroArquivo(error_));
+  }
+  if (progresso.documento.statusValidacao === "APROVADO") return;
+  const pendente = progresso.documento.statusValidacao === "PENDENTE";
+  const mensagem = progresso.documento.statusValidacao === "REJEITADO"
+    ? `Documento rejeitado: ${progresso.documento.observacaoValidacao || "Envie um novo documento."}`
+    : "Arquivo recebido. Aguardando validação da equipe antes de concluir a solicitação.";
+  const erro = new EnvioFormularioError("relatório médico", mensagem);
+  erro.aguardandoValidacao = pendente;
+  throw erro;
 }
 
 /**
@@ -46,12 +67,17 @@ function enviarArquivo(etapa, arquivo, tipo) {
  */
 export async function enviarSolicitacao(f, progresso) {
   if (!progresso.relatorioId) {
-    const arq = await enviarArquivo("relatório médico", f.arquivoRelatorio, "RELATORIO_MEDICO");
+    const arq = await upload("relatório médico", f.arquivoRelatorio, "RELATORIO_MEDICO");
     progresso.relatorioId = arq.id;
+    progresso.documento = arq;
+  }
+
+  if (!progresso.dadosMedicosOk) {
+    await exigirLaudoAprovado(progresso);
   }
 
   if (!progresso.cabeloId) {
-    const arq = await enviarArquivo("foto do cabelo", f.arquivoCabelo, "FOTO_CABELO");
+    const arq = await upload("foto do cabelo", f.arquivoCabelo, "FOTO_CABELO");
     progresso.cabeloId = arq.id;
   }
 

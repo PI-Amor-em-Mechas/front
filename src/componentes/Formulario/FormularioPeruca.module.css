@@ -6,6 +6,27 @@
  background: #f5f5f7;
 }
 
+.estadoDocumento {
+ border-left: 4px solid #c2185b;
+ padding: 12px;
+ margin: 16px 0;
+ text-align: left;
+ overflow-wrap: anywhere;
+}
+
+.botaoDocumento {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ width: 40px;
+ height: 40px;
+ margin-right: 8px;
+ border: 1px solid #999;
+ border-radius: 4px;
+ background: white;
+ cursor: pointer;
+}
+
 .paginaSucesso {
  min-height: 100vh;
  display: flex;

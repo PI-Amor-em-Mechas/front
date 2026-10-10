@@ -4,6 +4,7 @@ import DashboardMadrinhas from "./componentes/DashboardMadrinhas/DashboardMadrin
 import DashboardEnvios from "./componentes/DashboardEnvios/DashboardEnvios";
 import DashboardPacientes from "./componentes/DashboardPacientes/DashboardPacientes";
 import LoginInterno from "./componentes/LoginInterno/LoginInterno";
+import RevisaoDocumentos from "./componentes/RevisaoDocumentos/RevisaoDocumentos";
 import { estaAutenticado, sair } from "./services/authService";
 
 function App() {
@@ -26,43 +27,51 @@ function App() {
         setPagina("formulario");
     }
 
-    if (pagina !== "formulario" && !autenticado) {
-        return <LoginInterno aoEntrar={() => setAutenticado(true)} />;
-    }
-
     return (
         <div>
-            {pagina === "formulario" && (
+            <div hidden={pagina !== "formulario"}>
                 <FormularioPeruca
                     irParaDashboard={() => setPagina("madrinhas")}/>
-            )}
+            </div>
+            {pagina !== "formulario" && !autenticado && <LoginInterno aoEntrar={() => setAutenticado(true)} />}
 
-            {pagina === "madrinhas" && (
+            {pagina === "madrinhas" && autenticado && (
                 <DashboardMadrinhas
                     irParaFormulario={() => setPagina("formulario")}
                     irParaEnvios={() => setPagina("envios")}
                     irParaPacientes={() => setPagina("pacientes")}
+                    irParaDocumentos={() => setPagina("documentos")}
                     sair={encerrarSessao}
                 />
             )}
 
-            {pagina === "envios" && (
+            {pagina === "envios" && autenticado && (
                 <DashboardEnvios
                     irParaFormulario={() => setPagina("formulario")}
                     irParaMadrinhas={() => setPagina("madrinhas")}
                     irParaPacientes={() => setPagina("pacientes")}
+                    irParaDocumentos={() => setPagina("documentos")}
                     sair={encerrarSessao}
                 />
             )}
 
-            {pagina === "pacientes" && (
+            {pagina === "pacientes" && autenticado && (
                 <DashboardPacientes
                     irParaFormulario={() => setPagina("formulario")}
                     irParaEnvios={() => setPagina("envios")}
                     irParaMadrinhas={() => setPagina("madrinhas")}
+                    irParaDocumentos={() => setPagina("documentos")}
                     sair={encerrarSessao}
                 />
             )}
+            {pagina === "documentos" && autenticado && <RevisaoDocumentos
+                irParaFormulario={() => setPagina("formulario")}
+                irParaEnvios={() => setPagina("envios")}
+                irParaPacientes={() => setPagina("pacientes")}
+                irParaMadrinhas={() => setPagina("madrinhas")}
+                irParaDocumentos={() => setPagina("documentos")}
+                sair={encerrarSessao}
+            />}
         </div>
     );
 }

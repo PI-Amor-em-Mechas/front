@@ -7,7 +7,7 @@ import { listarKits } from "../../services/dashboardService";
 import "../DashboardMadrinhas/DashboardMadrinhas.css";
 import "./DashboardEnvios.css";
 
-function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, sair }) {
+function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, irParaDocumentos, sair }) {
     const [kits, setKits] = useState([]);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
@@ -32,7 +32,7 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, s
 
     return (
         <div className="app">
-            <Navbar irParaFormulario={irParaFormulario} irParaMadrinhas={irParaMadrinhas} irParaPacientes={irParaPacientes} pagina="envios" sair={sair} />
+            <Navbar irParaFormulario={irParaFormulario} irParaMadrinhas={irParaMadrinhas} irParaPacientes={irParaPacientes} irParaDocumentos={irParaDocumentos} pagina="envios" sair={sair} />
             <main className="conteudo conteudoEnvios">
                 <section className="resumoEnvios">
                     <div className="resumoPrincipal">

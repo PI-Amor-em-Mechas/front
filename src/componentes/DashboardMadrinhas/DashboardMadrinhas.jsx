@@ -13,7 +13,7 @@ function normalizarStatus(status) {
   return String(status ?? "").trim().toLowerCase();
 }
 
-function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, sair }) {
+function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, irParaDocumentos, sair }) {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [madrinhaEmEdicao, setMadrinhaEmEdicao] = useState(null);
   const [madrinhas, setMadrinhas] = useState([]);
@@ -67,7 +67,7 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, s
 
   return (
     <div className="app">
-      <Navbar irParaFormulario={irParaFormulario} irParaEnvios={irParaEnvios} irParaPacientes={irParaPacientes} pagina="madrinhas" sair={sair} />
+      <Navbar irParaFormulario={irParaFormulario} irParaEnvios={irParaEnvios} irParaPacientes={irParaPacientes} irParaDocumentos={irParaDocumentos} pagina="madrinhas" sair={sair} />
       <main className="conteudo">
         <Header abrirModal={() => { setMadrinhaEmEdicao(null); setMostrarModal(true); }} />
         <section className="cards">
