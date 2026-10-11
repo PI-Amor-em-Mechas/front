@@ -56,6 +56,13 @@ nunca coloque senhas, tokens ou chaves nelas.
 ### Upload e segurança
 
 - Upload multipart em `POST /arquivos`, com campos `arquivo` e `tipo`.
+- O cadastro do paciente usa `POST /formulario-solicitacao-peruca`. Como o DTO
+	publicado exige `enderecoId`, o endereço e o solicitante são criados pelas
+	rotas existentes antes desse cadastro. O ID retornado fica no progresso.
+- O relatório é enviado depois do cadastro, com `pacienteId` no multipart.
+	Essa associação exige `ADMIN`, `MEDICO` ou `ENFERMEIRO`. O upload avulso sem
+	paciente continua disponível, inclusive para a foto do cabelo. A foto enviada
+	depois do cadastro não é vinculada automaticamente ao paciente por este fluxo.
 - Formatos permitidos: PDF, JPG/JPEG e PNG, até 10 MiB (10 MB exibidos na UI).
 - O front verifica extensão, MIME declarado, assinatura inicial, arquivo vazio
 	e tamanho, além de gerar um nome seguro antes do envio.
@@ -109,6 +116,28 @@ data de upload e não deve substituí-la.
 Arquivos antigos não são revalidados automaticamente pela nova política de
 upload. A revisão humana não deve ser confundida com uma inspeção de segurança.
 
+### Comparação de campos
+
+O formulário e a fila exibem `statusComparacao`: `NAO_SOLICITADA`, `AGUARDANDO`,
+`PROCESSANDO`, `CONCLUIDA` e `FALHA`. Enquanto aguardando ou processando, consultam
+`GET /arquivos/{id}` a cada 5 segundos, até 24 tentativas por acompanhamento.
+É possível interromper ou retomar manualmente. O acompanhamento é cancelado ao
+sair da tela e não continua indefinidamente após limite, falha ou conclusão.
+
+Com `CONCLUIDA`, revisores veem o mapa `comparacaoCampos` com rótulos amigáveis,
+incluindo campos de paciente, endereço e solicitante, e os resultados Confere,
+Divergente e Inconclusivo. Chaves desconhecidas mantêm seu nome. Campos ausentes
+ou nulos não são presumidos como conferidos. Resultados detalhados e `pacienteId`
+não são exibidos a usuários sem papel revisor; texto extraído não é exibido.
+
+Em `FALHA`, somente revisores podem solicitar
+`POST /arquivos/{id}/comparacao/reprocessar`. Após a solicitação, o front consulta
+o status real. A comparação nunca altera `statusValidacao`, aprova ou rejeita um
+documento, mesmo quando todos os campos conferem. A decisão permanece humana.
+
+Respostas `401` sem renovação válida encerram a sessão, interrompem o
+acompanhamento e apresentam uma mensagem solicitando novo login.
+
 ## Verificação
 
 ```powershell
@@ -120,6 +149,9 @@ npm run build
 Os testes automatizados do front usam transporte simulado e cobrem formatos
 inválidos, assinatura incompatível, tamanho, nomes seguros, papéis autorizados,
 tokens inválidos/expirados, bloqueio de acesso e retomada após aprovação.
+Incluem também cadastro público antes do upload associado, preservação do upload
+avulso, privacidade da comparação, reprocessamento autorizado, todos os estados,
+limite de consultas, interrupção e manutenção da revisão pendente.
 
 Também foram verificados no navegador, com respostas simuladas: upload pendente,
 rejeição com observação obrigatória, aprovação e conclusão, pré-visualização de

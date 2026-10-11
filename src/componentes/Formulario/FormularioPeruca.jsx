@@ -6,6 +6,7 @@ import { EnvioFormularioError } from "../../services/EnvioFormularioError";
 import { validarArquivo } from "../../services/arquivoValidation";
 import { buscarArquivo, obterConteudoArquivo, mensagemErroArquivo } from "../../services/arquivoService";
 import { Download, RefreshCw } from "lucide-react";
+import ComparacaoDocumento from "../ComparacaoDocumento/ComparacaoDocumento";
 
 function IconeNuvemUpload() {
  return (
@@ -42,7 +43,7 @@ const FORM_INICIAL = {
  declaracaoAceita: false, nomeSolicitante: "", rgSolicitante: "",
 };
 
-function FormularioPeruca({irParaDashboard}) {
+function FormularioPeruca({irParaDashboard, ativo = true}) {
  const [aceitouCookies, setAceitouCookies] = useState(false);
  const [passoAtual, setPassoAtual] = useState(1);
  const [enviado, setEnviado] = useState(false);
@@ -204,7 +205,7 @@ function FormularioPeruca({irParaDashboard}) {
    setEnviado(true);
   } catch (erro) {
    setDocumento(progresso.current.documento ?? null);
-   setArquivosBloqueados(Boolean(progresso.current.pacienteId));
+  setArquivosBloqueados(Boolean(progresso.current.dadosMedicosOk));
   if (erro.aguardandoValidacao) {
    setErroEnvio(null);
   } else if (erro instanceof EnvioFormularioError) {
@@ -341,6 +342,7 @@ function FormularioPeruca({irParaDashboard}) {
    <button type="button" className={style.botaoDocumento} title="Consultar status do documento" aria-label="Consultar status do documento" disabled={consultandoDocumento || enviando} onClick={atualizarDocumento}><RefreshCw size={20} /></button>
    {documento.statusValidacao === "APROVADO" && <button type="button" className={style.botaoDocumento} title="Baixar documento aprovado" aria-label="Baixar documento aprovado" disabled={consultandoDocumento || enviando} onClick={baixarDocumento}><Download size={20} /></button>}
    {consultandoDocumento && <output>Consultando documento...</output>}
+  <ComparacaoDocumento key={documento.id} documento={documento} ativo={ativo} aoAtualizar={(atual) => { progresso.current.documento = atual; setDocumento(atual); }} />
   </div>
  );
 

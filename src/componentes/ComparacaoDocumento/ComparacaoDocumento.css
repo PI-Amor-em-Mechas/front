@@ -1,0 +1,13 @@
+.comparacao-documento { margin-top: 16px; border-top: 1px solid #ddd; padding-top: 12px; text-align: left; overflow-wrap: anywhere; }
+.comparacao-documento h3 { margin: 0 0 8px; font-size: 16px; }
+.comparacao-documento p, .comparacao-documento output { font-size: 14px; }
+.comparacao-campos { margin: 12px 0; }
+.comparacao-campos > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(90px, auto); gap: 12px; padding: 6px 0; border-bottom: 1px solid #eee; }
+.comparacao-campos dd { margin: 0; }
+.comparacao-confere { color: #226840; }
+.comparacao-divergente, .comparacao-erro { color: #a12236; }
+.comparacao-inconclusivo { color: #70561a; }
+.comparacao-aviso { color: #555; }
+.comparacao-acoes { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.comparacao-acoes button { min-width: 40px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 8px; border: 1px solid #999; border-radius: 4px; background: white; font: inherit; cursor: pointer; }
+.comparacao-acoes button:disabled { cursor: not-allowed; opacity: .5; }

@@ -3,22 +3,25 @@ import { podeRevisarDocumentos } from "./authService";
 import { validarArquivo } from "./arquivoValidation";
 
 export function mensagemErroArquivo(erro) {
+  if (erro.response?.status === 401) return "Sessão expirada. Entre novamente para continuar.";
   if (erro.response?.status === 403) return "Acesso restrito. Você não tem permissão para acessar este documento.";
   if (erro.response?.status === 409) return "O laudo ainda não foi aprovado. Aguarde a validação da equipe.";
   return erro.response?.data?.erro ?? erro.response?.data?.mensagem ?? erro.message ?? "Não foi possível processar o documento.";
 }
 
-export async function enviarArquivo(arquivo, tipo) {
+export async function enviarArquivo(arquivo, tipo, pacienteId) {
+  if (pacienteId != null && !podeRevisarDocumentos()) throw new Error("A associação do documento ao paciente exige acesso da equipe de revisão.");
   const seguro = await validarArquivo(arquivo);
   const corpo = new FormData();
   corpo.append("arquivo", seguro);
   corpo.append("tipo", tipo);
+  if (pacienteId != null) corpo.append("pacienteId", String(pacienteId));
   const { data } = await api.post("/arquivos", corpo);
   return data;
 }
 
-export async function buscarArquivo(id) {
-  const { data } = await api.get(`/arquivos/${encodeURIComponent(id)}`);
+export async function buscarArquivo(id, signal) {
+  const { data } = await api.get(`/arquivos/${encodeURIComponent(id)}`, { signal });
   return data;
 }
 
@@ -45,4 +48,10 @@ export async function obterConteudoArquivo(id) {
   }
   const { data } = await api.get(`/arquivos/${encodeURIComponent(id)}/download`, { responseType: "blob" });
   return { documento, conteudo: data };
+}
+
+export async function reprocessarComparacao(id) {
+  if (!podeRevisarDocumentos()) throw new Error("Acesso restrito à equipe de revisão.");
+  const { data } = await api.post(`/arquivos/${encodeURIComponent(id)}/comparacao/reprocessar`);
+  return data;
 }

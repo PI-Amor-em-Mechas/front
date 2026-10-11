@@ -10,9 +10,11 @@ import { estaAutenticado, sair } from "./services/authService";
 function App() {
     const [pagina, setPagina] = useState("formulario");
     const [autenticado, setAutenticado] = useState(estaAutenticado);
+    const [sessaoExpirada, setSessaoExpirada] = useState(false);
 
     useEffect(() => {
         function sessaoExpirada() {
+            setSessaoExpirada(true);
             setAutenticado(false);
             setPagina("formulario");
         }
@@ -29,11 +31,13 @@ function App() {
 
     return (
         <div>
+            {sessaoExpirada && <p role="alert">Sessão expirada. Entre novamente na Área da equipe para continuar.</p>}
             <div hidden={pagina !== "formulario"}>
                 <FormularioPeruca
+                    ativo={pagina === "formulario" && !sessaoExpirada}
                     irParaDashboard={() => setPagina("madrinhas")}/>
             </div>
-            {pagina !== "formulario" && !autenticado && <LoginInterno aoEntrar={() => setAutenticado(true)} />}
+            {pagina !== "formulario" && !autenticado && <LoginInterno aoEntrar={() => { setAutenticado(true); setSessaoExpirada(false); }} />}
 
             {pagina === "madrinhas" && autenticado && (
                 <DashboardMadrinhas

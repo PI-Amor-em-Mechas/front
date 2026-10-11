@@ -29,9 +29,9 @@ async function post(etapa, url, corpo, config) {
   }
 }
 
-async function upload(etapa, arquivo, tipo) {
+async function upload(etapa, arquivo, tipo, pacienteId) {
   try {
-    return await enviarArquivo(arquivo, tipo);
+    return await enviarArquivo(arquivo, tipo, pacienteId);
   } catch (error_) {
     throw new EnvioFormularioError(etapa, mensagemErroArquivo(error_));
   }
@@ -53,34 +53,7 @@ async function exigirLaudoAprovado(progresso) {
   throw erro;
 }
 
-/**
- * Envia a solicitação inteira, um POST por vez, respeitando as dependências:
- *   1. /arquivos (relatório)  e  /arquivos (foto do cabelo)  -> ids dos arquivos
- *   2. /enderecos                                            -> enderecoId
- *   3. /solicitantes                                         -> solicitanteId
- *   4. /pacientes (usa enderecoId, solicitanteId, cabeloAntesId) -> pacienteId
- *   5. /dados-medicos (usa pacienteId e id do relatório)
- *   6. /kits (usa pacienteId e solicitanteId)
- *
- * `progresso` guarda os ids já criados. Se uma etapa falhar, o usuário corrige
- * e tenta de novo: as etapas que já deram certo são puladas (evita cadastro duplicado).
- */
 export async function enviarSolicitacao(f, progresso) {
-  if (!progresso.relatorioId) {
-    const arq = await upload("relatório médico", f.arquivoRelatorio, "RELATORIO_MEDICO");
-    progresso.relatorioId = arq.id;
-    progresso.documento = arq;
-  }
-
-  if (!progresso.dadosMedicosOk) {
-    await exigirLaudoAprovado(progresso);
-  }
-
-  if (!progresso.cabeloId) {
-    const arq = await upload("foto do cabelo", f.arquivoCabelo, "FOTO_CABELO");
-    progresso.cabeloId = arq.id;
-  }
-
   if (!progresso.enderecoId) {
     const endereco = await post("endereço", "/enderecos", {
       cep: f.cep,
@@ -105,7 +78,7 @@ export async function enviarSolicitacao(f, progresso) {
   if (!progresso.pacienteId) {
     const temFilhos = f.temFilhos === "sim";
     const idadesFilhos = temFilhos ? f.idadesFilhos.map(Number) : [];
-    const paciente = await post("paciente", "/pacientes", {
+    const paciente = await post("paciente", "/formulario-solicitacao-peruca", {
       nomeCompleto: f.nomePaciente,
       email: f.email,
       cel: f.celular,
@@ -118,13 +91,25 @@ export async function enviarSolicitacao(f, progresso) {
       qtdPessoasEmCasa: Number(f.qtdPessoasEmCasa),
       enderecoId: progresso.enderecoId,
       solicitanteId: progresso.solicitanteId,
-      cabeloAntesId: progresso.cabeloId,
+      cabeloAntesId: f.cabeloAntesId,
       consentimentoLgpd: f.declaracaoAceita,
     });
     progresso.pacienteId = paciente.id;
   }
 
+  if (!progresso.relatorioId) {
+    const arq = await upload("relatório médico", f.arquivoRelatorio, "RELATORIO_MEDICO", progresso.pacienteId);
+    progresso.relatorioId = arq.id;
+    progresso.documento = arq;
+  }
+
+  if (!progresso.cabeloId) {
+    const arq = await upload("foto do cabelo", f.arquivoCabelo, "FOTO_CABELO");
+    progresso.cabeloId = arq.id;
+  }
+
   if (!progresso.dadosMedicosOk) {
+    await exigirLaudoAprovado(progresso);
     await post("dados médicos", "/dados-medicos", {
       motivo: f.motivo,
       tipoCancer: f.tipoCancer || "Não se aplica",
