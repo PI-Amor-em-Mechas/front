@@ -8,7 +8,7 @@ import { podeRevisarDocumentos } from "../../services/authService";
 function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, irParaDocumentos, pagina, sair}) {
 
     return (
-        <nav className="navbar">
+        <nav className={`navbar navbar-${pagina || ""}`}>
             <div className="ladoEsquerdo">
                 <button type="button" className="logoBotao" aria-label="Voltar ao formulário" onClick={irParaFormulario}>
                     <img src={logo} alt="" className="logo" />

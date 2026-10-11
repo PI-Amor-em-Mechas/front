@@ -16,20 +16,44 @@ span{
     color:#667085;
 }
 
-.ativa{
-    color:#12B76A;
-    font-weight:400;
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
-.afastada{
-    color:#F79009;
-    font-weight:400;
+.status-ativa,
+.status-enviado,
+.status-entregue {
+    color: #027A48;
+    background: #ECFDF3;
 }
 
-.desassociada{
-    color:#F04438;
-    font-weight:400;
+.status-afastada,
+.status-pendente,
+.status-preparando {
+    color: #B54708;
+    background: #FFFAEB;
 }
+
+.status-desassociada,
+.status-cancelado {
+    color: #B42318;
+    background: #FEF3F2;
+}
+
+.status-enviando,
+.status-em-transito {
+    color: #175CD3;
+    background: #EFF8FF;
+}
+
 .acoes {
     display: flex;
     gap: 6px;

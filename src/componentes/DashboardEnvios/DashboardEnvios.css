@@ -1,46 +1,496 @@
-
 .conteudoEnvios {
+    width: 100%;
+    margin: 0;
+    padding: 20px 25px;
     gap: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: #222;
 }
 
-.resumoEnvios {
-    display: flex;
-    gap: 20px;
-    align-items: stretch;
+.navbar-envios {
+    height: 50px;
+    flex: 0 0 50px;
+    padding: 0 45px;
+    background: #fff;
 }
 
-.resumoPrincipal {
+.navbar-envios .menu {
+    gap: 40px;
+}
+
+.navbar-envios .menu a {
+    font-size: 14px;
+}
+
+.navbar-envios .btnExportar {
+    width: 160px;
+    height: 35px;
+    border-radius: 8px;
+    background: #EC2D6B;
+    font-size: small;
+}
+
+.resumoPrincipalEnvios {
     flex: 3;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 15px;
-    min-width: 0;
 }
 
-.resumoPrincipal .cards {
+.resumoPrincipalEnvios > .header {
+    margin: 0;
+}
+
+.resumoPrincipalEnvios > .header h1 {
+    margin: 0;
+    line-height: 1.2;
+}
+
+.resumoPrincipalEnvios > .header p {
+    margin: 4px 0 0;
+    line-height: 1.4;
+}
+
+.resumoEnvios {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(280px, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.cardsEnvios {
     display: flex;
     gap: 20px;
+    min-width: 0;
 }
 
-.resumoPrincipal .cards > * {
+.cardsEnvios > * {
     flex: 1;
     min-width: 0;
 }
 
-.conteudoEnvios .regioes {
-    flex: 1;
+.resumoEnvios .regioes {
+    min-width: 0;
+    width: 100%;
+    margin-top: 40px;
     padding: 15px;
     border-radius: 12px;
+    height: 200px;
+    align-self: start;
+}
+
+.resumoEnvios .regioes h2 {
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .graficosEnvios {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
 }
 
+.graficoEnvios {
+    min-width: 0;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #E91E63;
+    border-radius: 12px;
+}
 
-.conteudoEnvios .cards .card {
-    height: 110px;
+.cabecalhoGrafico {
+    min-height: 34px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.cabecalhoGrafico h2,
+.cabecalhoTabelaEnvios h2 {
+    margin: 2px 0 0;
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.seletorPeriodo select {
+    max-width: 150px;
+    height: 32px;
+    padding: 0 8px;
+    color: #333;
+    background: #fff;
+    border: 1px solid #E91E63;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.graficoPlot {
+    height: 200px;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    padding: 8px 7px 0 0;
+    border: 1px solid #E91E63;
+    border-radius: 8px;
+}
+
+.rotulosEixo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0 3px 12px 0;
+    color: #666;
+    font-size: 10px;
+    text-align: right;
+}
+
+.areaGrafico {
+    position: relative;
+    min-width: 0;
+    height: 100%;
+}
+
+.linhasGrade {
+    position: absolute;
+    inset: 0 0 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.linhasGrade span {
+    width: 100%;
+    border-top: 1px solid #dedede;
+}
+
+.colunasGrafico {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.colunaGrafico {
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 3px;
+    color: #444;
+    font-size: 10px;
+}
+
+.barraGrafico {
+    width: min(100%, 38px);
+    min-height: 2px;
+    border-radius: 1px 1px 0 0;
+}
+
+.tabelaEnvios {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    background: #fff;
+    border: 1px solid #E7E7E7;
+    border-radius: 10px;
+}
+
+.cabecalhoTabelaEnvios {
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 12px;
+}
+
+.cabecalhoTabelaEnvios h2 {
+    margin: 0;
+}
+
+.controlesTabela {
+    position: relative;
+    display: flex;
+    gap: 6px;
+}
+
+.buscaEnvios input {
+    width: 160px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid #E91E63;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.botaoFiltro {
+    width: 32px;
+    height: 32px;
+    color: #fff;
+    background: #EC2D6B;
+    border: 0;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.botaoFiltro.selecionado {
+    background: #c2185b;
+}
+
+.filtroStatus {
+    position: absolute;
+    z-index: 2;
+    top: 38px;
+    right: 0;
+    width: 170px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #E91E63;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.rolagemTabelaEnvios {
+    flex: 0 0 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.tabelaEnvios table {
+    width: 100%;
+    height: auto;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+.tabelaEnvios thead {
+    background: #F48FB1;
+}
+
+.tabelaEnvios th {
     padding: 15px;
+    color: #fff;
+    background: #F48FB1;
+    border: 0;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tabelaEnvios td {
+    padding: 22px;
+    color: #344054;
+    border-bottom: 1px solid #ECECEC;
+    font-size: 12px;
+}
+
+.tabelaEnvios td:first-child,
+.tabelaEnvios th:first-child {
+    width: 32px;
+    text-align: center;
+}
+
+.tabelaEnvios td input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #E91E63;
+}
+
+.tabelaEnvios td strong,
+.tabelaEnvios td small {
+    display: block;
+}
+
+.tabelaEnvios td strong {
+    color: #101828;
+    font-weight: 500;
+}
+
+.tabelaEnvios td small {
+    margin-top: 3px;
+    color: #667085;
+    font-size: 10px;
+}
+
+.semResultados {
+    height: 52px !important;
+    text-align: center;
+}
+
+.rodapeTabelaEnvios {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 5px 9px;
+    color: #667085;
+    background: #fafafa;
+    font-size: 12px;
+}
+
+.paginacaoEnvios {
+    display: flex;
+    gap: 4px;
+}
+
+.paginacaoEnvios button {
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    color: #555;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.paginacaoEnvios button:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.paginacaoEnvios button.paginaAtual {
+    color: #fff;
+    background: #EC2D6B;
+    border-color: #EC2D6B;
+}
+
+.visualmenteOculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 900px) {
+    .navbar-envios {
+        padding: 0 24px;
+    }
+
+    .navbar-envios .menu {
+        gap: 20px;
+    }
+
+    .conteudoEnvios {
+        padding: 20px;
+    }
+
+    .resumoEnvios {
+        gap: 20px;
+    }
+
+    .graficosEnvios {
+        gap: 14px;
+    }
+
+    .graficoEnvios {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 700px) {
+    .navbar-envios {
+        padding: 0 16px;
+    }
+
+    .navbar-envios .menu {
+        gap: 12px;
+    }
+
+    .navbar-envios .menu a {
+        font-size: 12px;
+    }
+
+    .navbar-envios .btnExportar {
+        width: 120px;
+        font-size: 10px;
+    }
+
+    .resumoEnvios {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .resumoPrincipalEnvios {
+        gap: 15px;
+    }
+
+    .resumoEnvios .regioes {
+        height: auto;
+        margin-top: 0;
+        align-self: stretch;
+    }
+}
+
+@media (max-width: 520px) {
+    .navbar-envios .ladoEsquerdo {
+        display: none;
+    }
+
+    .navbar-envios .menu {
+        gap: 10px;
+    }
+
+    .navbar-envios .menu a {
+        font-size: 11px;
+    }
+
+    .navbar-envios .btnExportar {
+        width: 105px;
+        height: 32px;
+        font-size: 9px;
+    }
+
+    .conteudoEnvios {
+        padding: 16px 12px;
+    }
+
+    .cardsEnvios,
+    .graficosEnvios {
+        grid-template-columns: 1fr;
+    }
+
+    .cardsEnvios {
+        flex-direction: column;
+    }
+
+    .graficoPlot {
+        height: 190px;
+    }
+
+    .cabecalhoTabelaEnvios {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .buscaEnvios input {
+        width: min(60vw, 220px);
+    }
+
+    .tabelaEnvios table {
+        min-width: 760px;
+    }
+
+    .rodapeTabelaEnvios {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }

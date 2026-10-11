@@ -1,6 +1,11 @@
 import "./LinhaTabela.css";
 
 function LinhaTabela({ dados, tipo, aoEditar, aoExcluir }) {
+    const classeStatus = dados.status.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "-");
+
     return (
         <tr>
             <td>
@@ -26,7 +31,7 @@ function LinhaTabela({ dados, tipo, aoEditar, aoExcluir }) {
                 {dados.data}
             </td>
             <td>
-                <span className={`status ${dados.status.toLowerCase()}`}>
+                <span className={`status status-${classeStatus}`}>
                     {dados.status}</span>
             </td>
 
