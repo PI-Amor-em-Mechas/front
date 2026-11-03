@@ -1,0 +1,45 @@
+/* Transição entre as telas */
+.tela {
+    animation: telaEntrando 0.45s ease both;
+}
+
+.tela.saindo {
+    animation: telaSaindo 0.3s ease both;
+}
+
+@keyframes telaEntrando {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes telaSaindo {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-24px); }
+}
+
+/* Botão "Voltar ao site da ONG" (aparece só no formulário) */
+.btnVoltarSite {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    color: #e0107a;
+    border: 2px solid #e0107a;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.btnVoltarSite:hover {
+    background: #e0107a;
+    color: #fff;
+    transform: translateX(-3px);
+}
