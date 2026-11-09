@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Download, Eye, RefreshCw, X } from "lucide-react";
 import Navbar from "../Navbar/Navbar";
-import ComparacaoDocumento from "../ComparacaoDocumento/ComparacaoDocumento";
 import { podeRevisarDocumentos } from "../../services/authService";
 import { listarPendentes, revisarArquivo, obterConteudoArquivo, mensagemErroArquivo } from "../../services/arquivoService";
 import "./RevisaoDocumentos.css";
@@ -110,9 +109,7 @@ export default function RevisaoDocumentos(props) {
                 <td>{documento.nomeOriginal || documento.nome}</td>
                 <td>{documento.mimeType}</td>
                 <td>{dataUpload(documento)}</td>
-                <td><strong>{documento.statusValidacao}</strong><p>{documento.statusValidacao === "PENDENTE" ? "Aguardando validação" : documento.observacaoValidacao}</p>
-                  <ComparacaoDocumento key={documento.id} documento={documento} aoAtualizar={(atual) => setDocumentos((atuais) => atuais.map((item) => item.id === atual.id ? atual : item))} />
-                </td>
+                <td><strong>{documento.statusValidacao}</strong><p>{documento.statusValidacao === "PENDENTE" ? "Aguardando revisão humana" : documento.observacaoValidacao}</p></td>
                 <td><div className="documentos-revisao">
                   <label htmlFor={`observacao-${documento.id}`}>Observação</label>
                   <textarea id={`observacao-${documento.id}`} value={observacoes[documento.id] ?? ""}

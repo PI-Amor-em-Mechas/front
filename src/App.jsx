@@ -5,6 +5,7 @@ import FormularioPeruca from "./componentes/Formulario/FormularioPeruca";
 import DashboardMadrinhas from "./componentes/DashboardMadrinhas/DashboardMadrinhas";
 import DashboardEnvios from "./componentes/DashboardEnvios/DashboardEnvios";
 import DashboardPacientes from "./componentes/DashboardPacientes/DashboardPacientes";
+import DashboardSolicitacoes from "./componentes/DashboardSolicitacoes/DashboardSolicitacoes";
 import LoginInterno from "./componentes/LoginInterno/LoginInterno";
 import RevisaoDocumentos from "./componentes/RevisaoDocumentos/RevisaoDocumentos";
 import { estaAutenticado, sair } from "./services/authService";
@@ -49,7 +50,6 @@ function App() {
             {pagina === "site" && <SiteOng irParaFormulario={() => irPara("formulario")} />}
             <div hidden={pagina !== "formulario"}>
                 <FormularioPeruca
-                    ativo={pagina === "formulario" && !sessaoExpirada}
                     irParaDashboard={() => irPara("madrinhas")}/>
                 <button type="button" className="btnVoltarSite" onClick={() => irPara("site")}>
                     ← Voltar ao site da ONG
@@ -63,6 +63,7 @@ function App() {
                     irParaEnvios={() => irPara("envios")}
                     irParaPacientes={() => irPara("pacientes")}
                     irParaDocumentos={() => irPara("documentos")}
+                    irParaSolicitacoes={() => irPara("solicitacoes")}
                     sair={encerrarSessao}
                 />
             )}
@@ -73,6 +74,7 @@ function App() {
                     irParaMadrinhas={() => irPara("madrinhas")}
                     irParaPacientes={() => irPara("pacientes")}
                     irParaDocumentos={() => irPara("documentos")}
+                    irParaSolicitacoes={() => irPara("solicitacoes")}
                     sair={encerrarSessao}
                 />
             )}
@@ -83,6 +85,7 @@ function App() {
                     irParaEnvios={() => irPara("envios")}
                     irParaMadrinhas={() => irPara("madrinhas")}
                     irParaDocumentos={() => irPara("documentos")}
+                    irParaSolicitacoes={() => irPara("solicitacoes")}
                     sair={encerrarSessao}
                 />
             )}
@@ -92,6 +95,16 @@ function App() {
                 irParaPacientes={() => irPara("pacientes")}
                 irParaMadrinhas={() => irPara("madrinhas")}
                 irParaDocumentos={() => irPara("documentos")}
+                irParaSolicitacoes={() => irPara("solicitacoes")}
+                sair={encerrarSessao}
+            />}
+            {pagina === "solicitacoes" && autenticado && <DashboardSolicitacoes
+                irParaFormulario={() => irPara("formulario")}
+                irParaEnvios={() => irPara("envios")}
+                irParaPacientes={() => irPara("pacientes")}
+                irParaMadrinhas={() => irPara("madrinhas")}
+                irParaDocumentos={() => irPara("documentos")}
+                irParaSolicitacoes={() => irPara("solicitacoes")}
                 sair={encerrarSessao}
             />}
         </div>

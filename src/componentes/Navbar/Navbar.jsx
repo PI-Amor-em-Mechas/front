@@ -5,7 +5,7 @@ import logo from "../../assets/logo.png";
 import perfil from "../../assets/perfil.png";
 import { podeRevisarDocumentos } from "../../services/authService";
 
-function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, irParaDocumentos, pagina, sair}) {
+function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPacientes, irParaDocumentos, irParaSolicitacoes, pagina, sair}) {
 
     return (
         <nav className={`navbar navbar-${pagina || ""}`}>
@@ -21,6 +21,8 @@ function Navbar({irParaFormulario, irParaEnvios, irParaMadrinhas, irParaPaciente
                     aria-current={pagina === "envios" ? "page" : undefined} onClick={irParaEnvios}>Painel</button>
                 <button type="button" className={pagina === "pacientes" ? "ativo" : ""}
                     aria-current={pagina === "pacientes" ? "page" : undefined} onClick={irParaPacientes}>Pacientes</button>
+                {irParaSolicitacoes && <button type="button" className={pagina === "solicitacoes" ? "ativo" : ""}
+                    aria-current={pagina === "solicitacoes" ? "page" : undefined} onClick={irParaSolicitacoes}>Solicitações</button>}
                 <button type="button" className={pagina === "madrinhas" ? "ativo" : ""}
                     aria-current={pagina === "madrinhas" ? "page" : undefined} onClick={irParaMadrinhas}>Madrinhas</button>
                 {podeRevisarDocumentos() && irParaDocumentos && <button type="button" className={pagina === "documentos" ? "ativo" : ""}

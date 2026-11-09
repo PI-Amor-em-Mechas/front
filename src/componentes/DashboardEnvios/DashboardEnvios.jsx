@@ -69,7 +69,7 @@ function formatarStatus(status) {
     return conhecidos[normalizado] ?? (status || "Não informado");
 }
 
-function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, irParaDocumentos, sair }) {
+function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, irParaDocumentos, irParaSolicitacoes, sair }) {
     const [kits, setKits] = useState([]);
     const [pacientes, setPacientes] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -177,7 +177,7 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
 
     return (
         <div className="app">
-            <Navbar irParaFormulario={irParaFormulario} irParaMadrinhas={irParaMadrinhas} irParaPacientes={irParaPacientes} irParaDocumentos={irParaDocumentos} pagina="envios" sair={sair} />
+            <Navbar irParaFormulario={irParaFormulario} irParaMadrinhas={irParaMadrinhas} irParaPacientes={irParaPacientes} irParaDocumentos={irParaDocumentos} irParaSolicitacoes={irParaSolicitacoes} pagina="envios" sair={sair} />
             <main className="conteudo conteudoEnvios">
                 <section className="resumoEnvios">
                     <div className="resumoPrincipalEnvios">

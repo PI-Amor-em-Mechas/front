@@ -51,6 +51,32 @@ nunca coloque senhas, tokens ou chaves nelas.
 - A visibilidade da revisão usa o claim JWT `role` e sua validade. A autorização
 	efetiva deve ser aplicada pelo backend em todas as rotas.
 
+## Solicitações de peruca (equipe)
+
+A entrada **Solicitações** está no menu de Painel, Pacientes, Madrinhas e
+Documentos. Exige sessão da equipe (`ADMIN`, `MEDICO`, `ENFERMEIRO` ou
+`ATENDENTE`), com autorização efetiva aplicada pela API.
+
+- A lista consulta `GET /solicitacoes?page=0&size=20&busca=...`, com busca por
+  nome/e-mail no banco inteiro, paginação e ordenação dos pedidos mais recentes.
+- O botão **i** de cada linha consulta `GET /solicitacoes/{id}` e abre um modal
+  com paciente, contato, CPF completo (somente neste detalhe restrito à equipe), endereço, dados familiares/médicos,
+  solicitante e kits. Campos ainda não preenchidos são sinalizados.
+- O modal usa diálogo nativo: foco contido, fechamento por Escape ou botão e
+  retorno do foco à lista. Funciona também em telas pequenas.
+- **Concluir solicitação** e **Cancelar solicitação** pedem confirmação antes de
+  chamar `PATCH /solicitacoes/{id}/status` com `CONCLUIDA` ou `CANCELADA`.
+  Após a resposta, a fila e o total são recarregados, corrigindo a última página
+  quando necessário. Falhas e conflitos são exibidos, sem simular sucesso.
+- Novos cadastros e registros antigos sem status são ativos, inclusive os que
+  aguardam completar o formulário. Anonimizados não aparecem. O encerramento
+  não exclui pacientes, não muda status de envio e não permite reabertura.
+- Use **Atualizar** para refletir alterações realizadas por outros atendimentos.
+- O indicador de status fica verde para solicitações ativas e cinza para
+  solicitações inativas (concluídas ou canceladas), na lista e nos detalhes.
+
+O contrato está na tag **Solicitacoes** do Swagger da API.
+
 ## Documentos médicos
 
 ### Upload e segurança
@@ -69,9 +95,9 @@ nunca coloque senhas, tokens ou chaves nelas.
 - ZIP, scripts, HTML e demais extensões não fazem parte da lista permitida.
 - Essas verificações locais são apenas uma barreira de UX: podem ser contornadas
 	por chamadas diretas à API e não comprovam segurança nem legitimidade médica.
-- A inspeção estrutural dos PDFs e a validação real das imagens pertencem ao
-	backend. Antivírus, isolamento do processamento e proteção da pré-visualização
-	são camadas adicionais, não garantidas pela validação local.
+- A API limita tamanho e tipos, verifica início/fim do PDF e decodifica imagens.
+  Isso não equivale à inspeção completa de PDFs nem a um antivírus. Isolamento
+  do processamento e proteção da pré-visualização são camadas adicionais.
 
 ### Status e conclusão
 
@@ -109,34 +135,20 @@ estado. A retomada entre sessões ainda não foi implementada.
 - Os metadados usados são `id`, `nome`, `nomeOriginal`, `mimeType`,
 	`statusValidacao` e `observacaoValidacao`.
 
-O contrato atual não informa data de upload. A tabela usa `dataUpload` quando
-disponível e exibe “Não informada pela API” quando ausente. `validadoEm` não é
+Novos uploads incluem `dataUpload`. A tabela exibe “Não informada pela API”
+para arquivos legados sem esse campo. `validadoEm` não é
 data de upload e não deve substituí-la.
 
 Arquivos antigos não são revalidados automaticamente pela nova política de
 upload. A revisão humana não deve ser confundida com uma inspeção de segurança.
 
-### Comparação de campos
+### Revisão exclusivamente humana
 
-O formulário e a fila exibem `statusComparacao`: `NAO_SOLICITADA`, `AGUARDANDO`,
-`PROCESSANDO`, `CONCLUIDA` e `FALHA`. Enquanto aguardando ou processando, consultam
-`GET /arquivos/{id}` a cada 5 segundos, até 24 tentativas por acompanhamento.
-É possível interromper ou retomar manualmente. O acompanhamento é cancelado ao
-sair da tela e não continua indefinidamente após limite, falha ou conclusão.
-
-Com `CONCLUIDA`, revisores veem o mapa `comparacaoCampos` com rótulos amigáveis,
-incluindo campos de paciente, endereço e solicitante, e os resultados Confere,
-Divergente e Inconclusivo. Chaves desconhecidas mantêm seu nome. Campos ausentes
-ou nulos não são presumidos como conferidos. Resultados detalhados e `pacienteId`
-não são exibidos a usuários sem papel revisor; texto extraído não é exibido.
-
-Em `FALHA`, somente revisores podem solicitar
-`POST /arquivos/{id}/comparacao/reprocessar`. Após a solicitação, o front consulta
-o status real. A comparação nunca altera `statusValidacao`, aprova ou rejeita um
-documento, mesmo quando todos os campos conferem. A decisão permanece humana.
-
-Respostas `401` sem renovação válida encerram a sessão, interrompem o
-acompanhamento e apresentam uma mensagem solicitando novo login.
+A equipe visualiza o laudo e decide entre aprovar e rejeitar. Não há OCR,
+comparação automática de campos, reprocessamento nem consultas periódicas
+automáticas. Nenhuma instalação de Tesseract é necessária. Use **Atualizar lista**
+na revisão e **Verificar e concluir solicitação** no formulário para obter
+o estado atual da API.
 
 ## Verificação
 
@@ -150,14 +162,18 @@ Os testes automatizados do front usam transporte simulado e cobrem formatos
 inválidos, assinatura incompatível, tamanho, nomes seguros, papéis autorizados,
 tokens inválidos/expirados, bloqueio de acesso e retomada após aprovação.
 Incluem também cadastro público antes do upload associado, preservação do upload
-avulso, privacidade da comparação, reprocessamento autorizado, todos os estados,
-limite de consultas, interrupção e manutenção da revisão pendente.
+avulso e manutenção da revisão humana pendente.
 
 Também foram verificados no navegador, com respostas simuladas: upload pendente,
 rejeição com observação obrigatória, aprovação e conclusão, pré-visualização de
 imagem, tratamento de `403` e apresentação em desktop e celular.
 
-### Homologação local com API real em 10/10/2026
+### Histórico de homologação em 10/10/2026
+
+Registro da versão anterior, não uma garantia do backend atual. Na integração,
+as rotas de revisão foram implementadas novamente. A validação atual do PDF
+verifica apenas início/fim e tamanho: não analisa ações JavaScript ou toda a
+estrutura interna. A revisão permanece humana.
 
 - Health check direto e pelo proxy: `200`.
 - Login de desenvolvimento `admin.dev`: `200`, com Bearer enviado pelo front.
@@ -169,13 +185,13 @@ imagem, tratamento de `403` e apresentação em desktop e celular.
 
 Esses resultados comprovam apenas os cenários exercitados. O login por senha e
 a conclusão completa com a API real não foram homologados. A suíte completa do
-backend tinha uma falha reportada em `FilhoServiceTest`; ela não foi corrigida
-nem reexecutada nesta homologação do front.
+backend tinha uma falha reportada em `FilhoServiceTest`; o mock de paciente
+desse teste foi corrigido na integração de 09/11/2026.
 
 ## Limitações conhecidas
 
 - Retomada do formulário não persiste após recarregamento.
-- Data de upload depende de campo adicional no backend.
+- Arquivos legados podem não ter data de upload.
 - A pré-visualização não deve ser considerada um ambiente isolado de segurança.
 - Na auditoria de dependências realizada durante a implementação, `npm audit`
 	apontou uma vulnerabilidade alta na dependência transitiva `source-map-js`.

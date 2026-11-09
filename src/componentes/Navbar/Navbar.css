@@ -1,4 +1,5 @@
 .navbar{
+    flex-shrink: 0;
     height:50px;
     display:flex;
     justify-content:space-between;
@@ -68,4 +69,27 @@
     color: #888;
     font: inherit;
     cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .navbar {
+        height: auto;
+        min-height: 50px;
+        padding: 8px 16px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .menu {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .ladoDireito {
+        gap: 10px;
+    }
+
+    .ladoDireito .btnExportar {
+        width: 70px;
+    }
 }

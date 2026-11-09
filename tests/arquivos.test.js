@@ -2,9 +2,6 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createServer } from "vite";
 import { validarArquivo, LIMITE_ARQUIVO } from "../src/services/arquivoValidation.js";
-import { acompanharComparacao, esperarComparacao, rotuloComparacao, CAMPOS_COMPARACAO } from "../src/services/comparacaoService.js";
-import { createElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 
 test("valida assinatura, extensão, tamanho e nome seguro", async () => {
   const documento = await validarArquivo(new File(["%PDF-1.7"], "../laudo teste.pdf", { type: "application/pdf" }));
@@ -28,8 +25,7 @@ test("laudo pendente/rejeitado não cria dados médicos e aprovado retoma sem du
     const { default: api } = await servidor.ssrLoadModule("/src/services/api.js");
     const { enviarSolicitacao } = await servidor.ssrLoadModule("/src/services/solicitacaoService.js");
     const { podeRevisarDocumentos } = await servidor.ssrLoadModule("/src/services/authService.js");
-    const { listarPendentes, revisarArquivo, obterConteudoArquivo, mensagemErroArquivo, enviarArquivo, reprocessarComparacao } = await servidor.ssrLoadModule("/src/services/arquivoService.js");
-    const { default: ComparacaoDocumento } = await servidor.ssrLoadModule("/src/componentes/ComparacaoDocumento/ComparacaoDocumento.jsx");
+    const { listarPendentes, revisarArquivo, obterConteudoArquivo, mensagemErroArquivo, enviarArquivo } = await servidor.ssrLoadModule("/src/services/arquivoService.js");
     let status = "PENDENTE";
     const chamadas = [];
     const uploads = [];
@@ -68,15 +64,9 @@ test("laudo pendente/rejeitado não cria dados médicos e aprovado retoma sem du
     await assert.rejects(listarPendentes, /Acesso restrito/);
     await assert.rejects(() => revisarArquivo(1, "APROVADO", ""), /Acesso restrito/);
     await assert.rejects(() => enviarArquivo(form.arquivoRelatorio, "RELATORIO_MEDICO", 2), /associação/);
-    await assert.rejects(() => reprocessarComparacao(1), /Acesso restrito/);
     assert.equal(chamadas.length, totalChamadas);
     await enviarArquivo(form.arquivoRelatorio, "RELATORIO_MEDICO");
     assert.equal(uploads.at(-1).get("pacienteId"), null);
-    const restrito = renderToStaticMarkup(createElement(ComparacaoDocumento, {
-      documento: { id: 1, pacienteId: 9876, statusComparacao: "CONCLUIDA", comparacaoCampos: { nomeCompleto: "CONFERE" } }, aoAtualizar: () => {},
-    }));
-    assert.ok(!restrito.includes("9876"));
-    assert.ok(!restrito.includes("Nome do paciente"));
     status = "PENDENTE";
     await assert.rejects(() => obterConteudoArquivo(1), /Acesso restrito/);
     assert.ok(!chamadas.some((chamada) => chamada.endsWith("/download")));
@@ -88,44 +78,13 @@ test("laudo pendente/rejeitado não cria dados médicos e aprovado retoma sem du
     assert.match(mensagemErroArquivo({ response: { status: 409 } }), /ainda não foi aprovado/);
     assert.match(mensagemErroArquivo({ response: { status: 401 } }), /Sessão expirada/);
     token = `test.${btoa(JSON.stringify({ role: "ROLE_MEDICO", exp: Date.now() / 1000 + 3600 }))}.test`;
-    await reprocessarComparacao(1);
-    assert.ok(chamadas.includes("post /arquivos/1/comparacao/reprocessar"));
-    const antesRender = chamadas.length;
-    const comparacao = renderToStaticMarkup(createElement(ComparacaoDocumento, {
-      documento: { id: 1, statusValidacao: "PENDENTE", statusComparacao: "CONCLUIDA", comparacaoCampos: { nomeCompleto: "CONFERE", cpf: "DIVERGENTE", "endereco.rua": "INCONCLUSIVO", campoNovo: "CONFERE", constructor: "DESCONHECIDO" } }, aoAtualizar: () => {},
-    }));
-    for (const texto of ["Nome do paciente", "Divergente", "Inconclusivo", "campoNovo", "Resultado não informado"]) assert.ok(comparacao.includes(texto));
-    assert.equal(chamadas.length, antesRender);
-    for (const statusComparacao of ["NAO_SOLICITADA", "AGUARDANDO", "PROCESSANDO", "FALHA", "CONCLUIDA"]) {
-      const html = renderToStaticMarkup(createElement(ComparacaoDocumento, { documento: { id: 1, statusComparacao }, aoAtualizar: () => {} }));
-      assert.ok(html.includes("Comparação"));
-      assert.equal(html.includes("Reprocessar comparação"), statusComparacao === "FALHA");
-    }
+    await revisarArquivo(1, "APROVADO", "");
+    assert.ok(chamadas.includes("patch /arquivos/1/validacao"));
+    await obterConteudoArquivo(1);
+    assert.ok(chamadas.includes("get /arquivos/1/download"));
+    assert.ok(chamadas.every((chamada) => !chamada.includes("/comparacao")));
   } finally {
     delete globalThis.sessionStorage;
     await servidor.close();
   }
-});
-
-test("polling conclui, falha, limita tentativas e interrompe sem novas consultas", async () => {
-  const controle = new AbortController();
-  let consultas = 0;
-  const atualizados = [];
-  const base = { id: 1, signal: controle.signal, esperar: async () => {}, aoAtualizar: (documento) => atualizados.push(documento) };
-  const finalizada = await acompanharComparacao({ ...base, consultar: async () => ({ id: 1, statusValidacao: "PENDENTE", statusComparacao: ++consultas < 3 ? "PROCESSANDO" : "CONCLUIDA", comparacaoCampos: { cpf: "CONFERE" } }) });
-  assert.equal(finalizada, "FINALIZADA");
-  assert.equal(consultas, 3);
-  assert.ok(atualizados.every((documento) => documento.statusValidacao === "PENDENTE"));
-  consultas = 0;
-  assert.equal(await acompanharComparacao({ ...base, limite: 2, consultar: async () => { consultas += 1; return { statusComparacao: "AGUARDANDO" }; } }), "LIMITE");
-  assert.equal(consultas, 2);
-  assert.equal(await acompanharComparacao({ ...base, consultar: async () => ({ statusComparacao: "FALHA" }) }), "FINALIZADA");
-  await assert.rejects(() => acompanharComparacao({ ...base, consultar: async () => { throw new Error("Sessão expirada"); } }), /Sessão expirada/);
-  const espera = esperarComparacao(5000, controle.signal);
-  controle.abort();
-  await assert.rejects(() => espera, { name: "AbortError" });
-  consultas = 0;
-  assert.equal(await acompanharComparacao({ ...base, consultar: async () => { consultas += 1; } }), "INTERROMPIDA");
-  assert.equal(consultas, 0);
-  assert.equal(rotuloComparacao(CAMPOS_COMPARACAO, "constructor", "constructor"), "constructor");
 });

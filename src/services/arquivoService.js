@@ -49,9 +49,3 @@ export async function obterConteudoArquivo(id) {
   const { data } = await api.get(`/arquivos/${encodeURIComponent(id)}/download`, { responseType: "blob" });
   return { documento, conteudo: data };
 }
-
-export async function reprocessarComparacao(id) {
-  if (!podeRevisarDocumentos()) throw new Error("Acesso restrito à equipe de revisão.");
-  const { data } = await api.post(`/arquivos/${encodeURIComponent(id)}/comparacao/reprocessar`);
-  return data;
-}
