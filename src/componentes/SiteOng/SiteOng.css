@@ -1,0 +1,136 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Lato:wght@400;700&display=swap");
+
+.site {
+    min-height: 100vh;
+    background: #f5f5f5;
+    font-family: "Lato", system-ui, sans-serif;
+    color: #111;
+}
+
+/* Faixa rosa do topo */
+.siteFaixa {
+    background: #f01480;
+    color: #fff;
+    text-align: center;
+    padding: 18px 16px;
+    font-size: 18px;
+}
+
+/* Menu */
+.siteMenu {
+    background: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 40px;
+    padding: 28px 16px;
+}
+
+.siteLink {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 17px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #3d1d33;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+}
+
+.siteLink:hover,
+.siteLink.ativo {
+    color: #e0107a;
+}
+
+.siteSeta {
+    width: 12px;
+    height: 8px;
+}
+
+/* Conteúdo */
+.siteConteudo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 60px;
+}
+
+.siteLogo {
+    width: 420px;
+    max-width: 90%;
+    height: auto;
+}
+
+.siteTitulo {
+    font-family: "Cinzel", serif;
+    font-weight: 400;
+    font-size: 38px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 8px 0 40px;
+    color: #111;
+}
+
+/* Banner da home (troque por uma imagem se quiser: background-image) */
+.siteBanner {
+    width: 100%;
+    max-width: 1330px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        repeating-linear-gradient(180deg, #f01480 0 28px, #111 28px 40px);
+    color: #fff;
+    font-family: "Cinzel", serif;
+    font-size: 48px;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Bloco do formulário (igual ao site) */
+.siteFormulario {
+    width: 100vw;
+    background: #f5f5f5;
+    text-align: center;
+    padding: 30px 16px;
+}
+
+.siteFormulario p {
+    font-size: 26px;
+    margin: 0 0 24px;
+}
+
+.siteBotao {
+    background: #f01480;
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 24px 50px;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.siteBotao:hover {
+    background: #d10c6c;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 700px) {
+    .siteTitulo { font-size: 24px; }
+    .siteBanner { height: 220px; font-size: 26px; }
+    .siteFormulario p { font-size: 20px; }
+    .siteBotao { padding: 18px 28px; font-size: 14px; }
+    .siteMenu { gap: 14px 22px; }
+    .siteLink { font-size: 14px; }
+}
