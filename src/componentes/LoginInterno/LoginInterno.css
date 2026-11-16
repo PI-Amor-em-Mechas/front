@@ -62,12 +62,6 @@
     opacity: 0.7;
 }
 
-.loginPainel .botaoDemo {
-    border: 1px solid #c2185b;
-    background: #fff;
-    color: #9e174a;
-}
-
 .loginPainel .loginErro {
     color: #b42318;
     font-size: 14px;

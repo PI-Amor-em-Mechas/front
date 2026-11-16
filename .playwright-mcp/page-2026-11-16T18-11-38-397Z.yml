@@ -1,0 +1,44 @@
+- generic [ref=f27e890]:
+  - navigation [ref=f27e891]:
+    - button "Voltar ao formulário" [ref=f27e893] [cursor=pointer]
+    - generic [ref=f27e894]:
+      - button "Painel" [ref=f27e895] [cursor=pointer]
+      - button "Pacientes" [ref=f27e896] [cursor=pointer]
+      - button "Solicitações" [ref=f27e897] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e898] [cursor=pointer]
+      - button "Documentos" [ref=f27e899] [cursor=pointer]
+    - generic [ref=f27e900]:
+      - button "Sair" [ref=f27e901] [cursor=pointer]
+      - img "Perfil" [ref=f27e902]
+  - main [ref=f27e903]:
+    - generic [ref=f27e905]:
+      - heading "Solicitações de peruca" [level=1] [ref=f27e906]
+      - paragraph [ref=f27e907]: Acompanhe e gerencie os pedidos ativos
+    - generic [ref=f27e908]:
+      - generic [ref=f27e909]:
+        - strong [ref=f27e910]: —
+        - generic [ref=f27e911]: solicitações ativas
+      - paragraph [ref=f27e912]: Use o ícone de informação para consultar os detalhes e encerrar um atendimento.
+    - generic [ref=f27e913]:
+      - generic [ref=f27e914]: Buscar por nome ou e-mail
+      - generic [ref=f27e915]:
+        - searchbox "Buscar por nome ou e-mail" [ref=f27e916]
+        - button "Buscar" [disabled] [ref=f27e917]
+        - button "Atualizar" [disabled] [ref=f27e921]
+    - generic [ref=f27e928]:
+      - table [ref=f27e929]:
+        - caption [ref=f27e930]: Solicitações ativas de peruca
+        - rowgroup [ref=f27e931]:
+          - row [ref=f27e932]:
+            - columnheader "Pedido" [ref=f27e933]
+            - columnheader "Paciente" [ref=f27e934]
+            - columnheader "Data do pedido" [ref=f27e935]
+            - columnheader "Localidade" [ref=f27e936]
+            - columnheader "Status" [ref=f27e937]
+            - columnheader "Detalhes" [ref=f27e938]
+        - rowgroup
+      - status [ref=f27e939]: Carregando solicitações...
+    - generic [ref=f27e940]:
+      - button "Anterior" [disabled] [ref=f27e941]
+      - generic [ref=f27e942]: Página 0 de 0
+      - button "Próxima" [disabled] [ref=f27e943]

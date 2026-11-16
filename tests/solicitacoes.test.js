@@ -51,14 +51,41 @@ test("solicitações usam busca e paginação na API, carregam detalhes e persis
   }
 });
 
-test("mensagens distinguem acesso negado, pedido ausente e encerramento concorrente", async () => {
+test("lista de pacientes aprovados usa timeout compatível com a consulta Azure", async () => {
+  const servidor = await createServer({ server: { middlewareMode: true, ws: false }, appType: "custom" });
+  globalThis.sessionStorage = { getItem: () => null };
+  try {
+    const { default: api } = await servidor.ssrLoadModule("/src/services/api.js");
+    const { listarPacientes } = await servidor.ssrLoadModule("/src/services/dashboardService.js");
+    let chamada;
+    api.defaults.adapter = async (config) => {
+      chamada = config;
+      return { data: { content: [], totalPages: 0, totalElements: 0 }, status: 200, statusText: "OK", headers: {}, config };
+    };
+    await listarPacientes(0, 20);
+    assert.equal(chamada.timeout, 30000);
+    assert.deepEqual(chamada.params, { page: 0, size: 20, statusSolicitacao: "CONCLUIDA" });
+  } finally {
+    delete globalThis.sessionStorage;
+    await servidor.close();
+  }
+});
+
+test("mensagens distinguem autenticação, permissão, dados ausentes e falhas técnicas", async () => {
   const servidor = await createServer({ server: { middlewareMode: true, ws: false }, appType: "custom" });
   try {
     const { mensagemErroSolicitacao } = await servidor.ssrLoadModule("/src/services/solicitacoesAdminService.js");
-    for (const [status, mensagem] of [[401, /Sessão expirada/], [403, /permissão/], [404, /não encontrada/], [409, /outro atendimento/]]) {
+    for (const [status, mensagem] of [
+      [401, /Sessão expirada/],
+      [403, /permissão/],
+      [404, /não encontrada/],
+      [409, /outro atendimento/],
+      [500, /carregar os detalhes/],
+    ]) {
       assert.match(mensagemErroSolicitacao({ response: { status } }), mensagem);
     }
-    assert.match(mensagemErroSolicitacao(new Error("offline")), /Tente novamente/);
+    assert.match(mensagemErroSolicitacao({ code: "ECONNABORTED" }), /demorou demais/);
+    assert.match(mensagemErroSolicitacao({ code: "ERR_NETWORK" }), /conectar ao servidor/);
   } finally {
     await servidor.close();
   }
@@ -78,4 +105,20 @@ test("menu administrativo referencia solicitações e identifica a página ativa
     delete globalThis.sessionStorage;
     await servidor.close();
   }
+});
+
+test("modal de detalhes expõe laudos e usa a revisão autenticada", async () => {
+  const source = await readFile(new URL("../src/componentes/DashboardSolicitacoes/DashboardSolicitacoes.jsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../src/componentes/DashboardSolicitacoes/DashboardSolicitacoes.css", import.meta.url), "utf8");
+  assert.match(source, /cpfMascarado\(paciente\.cpf\)/);
+  assert.match(source, /cpfFormatado\(paciente\.cpf\)/);
+  assert.match(source, /aria-label=\{cpfVisivel \? "Ocultar CPF" : "Visualizar CPF"\}/);
+  assert.match(css, /\.solicitacoes-cpf-toggle/);
+  assert.match(source, /documento\.nomeOriginal/);
+  assert.match(source, /documento\.dataUpload/);
+  assert.match(source, /documento\.statusValidacao/);
+  assert.match(source, /documento\.validadoPor/);
+  assert.match(source, /documento\.validadoEm/);
+  assert.match(source, /revisarArquivo\(documento\.id, decisao/);
+  assert.match(source, /setSelecionada\(item\.id\)/);
 });

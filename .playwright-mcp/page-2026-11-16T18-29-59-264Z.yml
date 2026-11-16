@@ -1,0 +1,204 @@
+- generic [ref=f28e254]:
+  - navigation [ref=f28e255]:
+    - button "Voltar ao formulário" [ref=f28e257] [cursor=pointer]
+    - generic [ref=f28e258]:
+      - button "Painel" [ref=f28e259] [cursor=pointer]
+      - button "Pacientes" [ref=f28e260] [cursor=pointer]
+      - button "Solicitações" [ref=f28e261] [cursor=pointer]
+      - button "Madrinhas" [ref=f28e262] [cursor=pointer]
+      - button "Documentos" [ref=f28e263] [cursor=pointer]
+    - generic [ref=f28e264]:
+      - button "Sair" [ref=f28e265]
+      - img "Perfil" [ref=f28e266]
+  - main [ref=f28e267]:
+    - generic [ref=f28e268]:
+      - generic [ref=f28e269]:
+        - generic [ref=f28e271]:
+          - heading "Dashboard de Envios" [level=1] [ref=f28e272]
+          - paragraph [ref=f28e273]: Acompanhe os dados de envio de perucas em tempo real
+        - generic [ref=f28e274]:
+          - generic [ref=f28e275]:
+            - heading "Total de Envios" [level=3] [ref=f28e276]
+            - heading "22" [level=2] [ref=f28e922]
+            - paragraph [ref=f28e278]: Kits retornados pela API
+            - generic [ref=f28e279]: ▦
+          - generic [ref=f28e280]:
+            - heading "Entregues" [level=3] [ref=f28e281]
+            - heading "-" [level=2] [ref=f28e282]
+            - paragraph [ref=f28e283]: Status não informado pela API
+            - generic [ref=f28e284]: ✓
+          - generic [ref=f28e285]:
+            - heading "Em Trânsito" [level=3] [ref=f28e286]
+            - heading "-" [level=2] [ref=f28e287]
+            - paragraph [ref=f28e288]: Status não informado pela API
+            - generic [ref=f28e289]: ▰
+      - generic [ref=f28e290]:
+        - heading "Regiões com mais kits cadastrados" [level=2] [ref=f28e291]
+        - generic [ref=f28e924]:
+          - generic [ref=f28e925]: 1. SP
+          - generic [ref=f28e926]: 22 kits
+    - generic [ref=f28e334]:
+      - region "Envios por Estado" [ref=f28e335]:
+        - generic [ref=f28e336]:
+          - heading "Envios por Estado" [level=2] [ref=f28e337]
+          - generic [ref=f28e338]:
+            - generic [ref=f28e339]: Período do gráfico Envios por Estado
+            - combobox "Período do gráfico Envios por Estado" [ref=f28e340]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e341]:
+          - generic [ref=f28e342]:
+            - generic [ref=f28e929]: "6"
+            - generic [ref=f28e930]: "4"
+            - generic [ref=f28e931]: "2"
+            - generic [ref=f28e346]: "0"
+          - generic [ref=f28e932]:
+            - generic "6 envios" [ref=f28e933]
+            - generic [ref=f28e934]: SP
+      - region "Solicitações por Estado" [ref=f28e366]:
+        - generic [ref=f28e367]:
+          - heading "Solicitações por Estado" [level=2] [ref=f28e368]
+          - generic [ref=f28e369]:
+            - generic [ref=f28e370]: Período do gráfico Solicitações por Estado
+            - combobox "Período do gráfico Solicitações por Estado" [ref=f28e371]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e372]:
+          - generic [ref=f28e373]:
+            - generic [ref=f28e935]: "3"
+            - generic [ref=f28e936]: "2"
+            - generic [ref=f28e376]: "1"
+            - generic [ref=f28e377]: "0"
+          - generic [ref=f28e937]:
+            - generic "3 solicitações" [ref=f28e938]
+            - generic [ref=f28e939]: SP
+    - generic [ref=f28e397]:
+      - generic [ref=f28e398]:
+        - heading "Envios Recentes" [level=2] [ref=f28e399]
+        - generic [ref=f28e400]:
+          - generic [ref=f28e401]:
+            - generic [ref=f28e402]: Buscar envios
+            - textbox "Buscar envios" [ref=f28e403]:
+              - /placeholder: Buscar...
+          - button "Filtrar por status" [expanded] [ref=f28e404] [cursor=pointer]: ▼
+          - generic "Filtros dos envios" [ref=f28e510]:
+            - combobox "Filtrar por estado" [ref=f28e511]:
+              - option "Todos os estados"
+              - option "BA"
+              - option "MG"
+              - option "PE"
+              - option "PR"
+              - option "RJ"
+              - option "SC"
+              - option "SP" [selected]
+            - combobox "Filtrar por cidade" [ref=f28e512]:
+              - option "Todas as cidades" [selected]
+              - option "Osasco"
+              - option "S?o Paulo"
+              - option "Santo André"
+              - option "São Paulo"
+            - combobox "Agrupar ranking por" [ref=f28e513]:
+              - option "Agrupar por estado" [selected]
+              - option "Agrupar por cidade"
+            - combobox "Filtrar por status" [ref=f28e514]:
+              - option "Todos os status"
+              - option "Não informado" [selected]
+            - button "Limpar filtros" [active] [ref=f28e515]
+      - table [ref=f28e406]:
+        - rowgroup [ref=f28e407]:
+          - row [ref=f28e408]:
+            - columnheader "Selecionar envio" [ref=f28e409]
+            - columnheader "ID" [ref=f28e410]
+            - columnheader "Cliente" [ref=f28e411]
+            - columnheader "Produto" [ref=f28e412]
+            - columnheader "Estado" [ref=f28e413]
+            - columnheader "Cidade" [ref=f28e414]
+            - columnheader "Data" [ref=f28e415]
+            - columnheader "Status" [ref=f28e416]
+            - columnheader "Ações" [ref=f28e417]
+        - rowgroup [ref=f28e418]:
+          - row [ref=f28e940]:
+            - cell [ref=f28e941]:
+              - checkbox "Selecionar envio 66" [ref=f28e942]
+            - cell "#66" [ref=f28e943]
+            - cell "Mariana Oliveira Demo demo.paciente01@exemplo.test" [ref=f28e944]:
+              - strong [ref=f28e945]: Mariana Oliveira Demo
+              - generic [ref=f28e946]: demo.paciente01@exemplo.test
+            - cell "Peruca Castanho escuro" [ref=f28e947]
+            - cell "SP" [ref=f28e948]
+            - cell "São Paulo" [ref=f28e949]
+            - cell "08/11/2026" [ref=f28e950]
+            - cell "Não informado" [ref=f28e951]
+            - cell [ref=f28e953]:
+              - button "Editar" [ref=f28e954] [cursor=pointer]
+              - button "Excluir" [ref=f28e955] [cursor=pointer]
+          - row [ref=f28e956]:
+            - cell [ref=f28e957]:
+              - checkbox "Selecionar envio 67" [ref=f28e958]
+            - cell "#67" [ref=f28e959]
+            - cell "Carolina Martins Demo demo.paciente02@exemplo.test" [ref=f28e960]:
+              - strong [ref=f28e961]: Carolina Martins Demo
+              - generic [ref=f28e962]: demo.paciente02@exemplo.test
+            - cell "Peruca Preto" [ref=f28e963]
+            - cell "SP" [ref=f28e964]
+            - cell "São Paulo" [ref=f28e965]
+            - cell "02/11/2026" [ref=f28e966]
+            - cell "Não informado" [ref=f28e967]
+            - cell [ref=f28e969]:
+              - button "Editar" [ref=f28e970] [cursor=pointer]
+              - button "Excluir" [ref=f28e971] [cursor=pointer]
+          - row [ref=f28e972]:
+            - cell [ref=f28e973]:
+              - checkbox "Selecionar envio 68" [ref=f28e974]
+            - cell "#68" [ref=f28e975]
+            - cell "Renata Almeida Demo demo.paciente03@exemplo.test" [ref=f28e976]:
+              - strong [ref=f28e977]: Renata Almeida Demo
+              - generic [ref=f28e978]: demo.paciente03@exemplo.test
+            - cell "Peruca Castanho claro" [ref=f28e979]
+            - cell "SP" [ref=f28e980]
+            - cell "São Paulo" [ref=f28e981]
+            - cell "27/10/2026" [ref=f28e982]
+            - cell "Não informado" [ref=f28e983]
+            - cell [ref=f28e985]:
+              - button "Editar" [ref=f28e986] [cursor=pointer]
+              - button "Excluir" [ref=f28e987] [cursor=pointer]
+          - row [ref=f28e988]:
+            - cell [ref=f28e989]:
+              - checkbox "Selecionar envio 69" [ref=f28e990]
+            - cell "#69" [ref=f28e991]
+            - cell "Juliana Ferreira Demo demo.paciente04@exemplo.test" [ref=f28e992]:
+              - strong [ref=f28e993]: Juliana Ferreira Demo
+              - generic [ref=f28e994]: demo.paciente04@exemplo.test
+            - cell "Peruca Loiro escuro" [ref=f28e995]
+            - cell "SP" [ref=f28e996]
+            - cell "São Paulo" [ref=f28e997]
+            - cell "21/10/2026" [ref=f28e998]
+            - cell "Não informado" [ref=f28e999]
+            - cell [ref=f28e1001]:
+              - button "Editar" [ref=f28e1002] [cursor=pointer]
+              - button "Excluir" [ref=f28e1003] [cursor=pointer]
+          - row [ref=f28e1004]:
+            - cell [ref=f28e1005]:
+              - checkbox "Selecionar envio 70" [ref=f28e1006]
+            - cell "#70" [ref=f28e1007]
+            - cell "Patricia Souza Demo demo.paciente05@exemplo.test" [ref=f28e1008]:
+              - strong [ref=f28e1009]: Patricia Souza Demo
+              - generic [ref=f28e1010]: demo.paciente05@exemplo.test
+            - cell "Peruca Castanho escuro" [ref=f28e1011]
+            - cell "SP" [ref=f28e1012]
+            - cell "São Paulo" [ref=f28e1013]
+            - cell "15/10/2026" [ref=f28e1014]
+            - cell "Não informado" [ref=f28e1015]
+            - cell [ref=f28e1017]:
+              - button "Editar" [ref=f28e1018] [cursor=pointer]
+              - button "Excluir" [ref=f28e1019] [cursor=pointer]
+      - generic [ref=f28e499]:
+        - generic [ref=f28e500]: Mostrando 1 a 5 de 22 resultados
+        - generic [ref=f28e501]:
+          - button "Anterior" [disabled] [ref=f28e502]
+          - button "1" [ref=f28e503] [cursor=pointer]
+          - button "2" [ref=f28e1020] [cursor=pointer]
+          - button "3" [ref=f28e1021] [cursor=pointer]
+          - button "4" [ref=f28e1022] [cursor=pointer]
+          - button "5" [ref=f28e1023] [cursor=pointer]
+          - button "Próximo" [ref=f28e509] [cursor=pointer]

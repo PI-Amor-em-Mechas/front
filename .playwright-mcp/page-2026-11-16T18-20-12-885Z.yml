@@ -1,0 +1,57 @@
+- generic [ref=f27e1186]:
+  - navigation [ref=f27e1187]:
+    - button "Voltar ao formulário" [ref=f27e1189] [cursor=pointer]
+    - generic [ref=f27e1190]:
+      - button "Painel" [ref=f27e1191] [cursor=pointer]
+      - button "Pacientes" [ref=f27e1192] [cursor=pointer]
+      - button "Solicitações" [ref=f27e1193] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e1194] [cursor=pointer]
+      - button "Documentos" [ref=f27e1195] [cursor=pointer]
+    - generic [ref=f27e1196]:
+      - button "Sair" [ref=f27e1197] [cursor=pointer]
+      - img "Perfil" [ref=f27e1198]
+  - main [ref=f27e1199]:
+    - generic [ref=f27e1200]:
+      - generic [ref=f27e1201]:
+        - heading "Madrinhas do Amor" [level=1] [ref=f27e1202]
+        - paragraph [ref=f27e1203]: Gestão de horas das madrinhas do amor
+      - button "Cadastrar Madrinha" [ref=f27e1204]
+    - generic [ref=f27e1205]:
+      - generic [ref=f27e1206]:
+        - heading "Total de Madrinhas" [level=3] [ref=f27e1207]
+        - heading "0" [level=2] [ref=f27e1208]
+        - paragraph [ref=f27e1209]: Cadastros retornados pela API
+      - generic [ref=f27e1210]:
+        - heading "Madrinha com Mais Horas" [level=3] [ref=f27e1211]
+        - heading "-" [level=2] [ref=f27e1212]
+        - paragraph [ref=f27e1213]: Sem registros
+      - generic [ref=f27e1214]:
+        - heading "Total de Horas Voluntárias" [level=3] [ref=f27e1215]
+        - heading "0 horas" [level=2] [ref=f27e1216]
+        - paragraph [ref=f27e1217]: Soma dos cadastros
+      - generic [ref=f27e1218]:
+        - heading "Madrinhas Ativas" [level=3] [ref=f27e1219]
+        - heading "0" [level=2] [ref=f27e1220]
+        - paragraph [ref=f27e1221]: Status atual
+    - generic [ref=f27e1223]:
+      - searchbox "Buscar por nome ou ID..." [ref=f27e1224]
+      - combobox [ref=f27e1225]:
+        - option "Todos os Status" [selected]
+        - option "Ativa"
+        - option "Afastada"
+        - option "Desassociada"
+      - spinbutton "Horas mínimas..." [ref=f27e1226]
+      - textbox "Filtrar por mês de cadastro" [ref=f27e1227]
+    - table [ref=f27e1230]:
+      - rowgroup [ref=f27e1231]:
+        - row [ref=f27e1232]:
+          - columnheader "ID" [ref=f27e1233]
+          - columnheader "Voluntária" [ref=f27e1234]
+          - columnheader "Horas Voluntárias" [ref=f27e1235]
+          - columnheader "Função" [ref=f27e1236]
+          - columnheader "Data Cadastro" [ref=f27e1237]
+          - columnheader "Status" [ref=f27e1238]
+          - columnheader "Ações" [ref=f27e1239]
+      - rowgroup [ref=f27e1240]:
+        - row [ref=f27e1241]:
+          - cell "Nenhuma madrinha encontrada." [ref=f27e1242]

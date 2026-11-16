@@ -1,0 +1,95 @@
+- generic [ref=f28e142]:
+  - navigation [ref=f28e143]:
+    - button "Voltar ao formulário" [ref=f28e145] [cursor=pointer]
+    - generic [ref=f28e146]:
+      - button "Painel" [ref=f28e147] [cursor=pointer]
+      - button "Pacientes" [ref=f28e148] [cursor=pointer]
+      - button "Solicitações" [ref=f28e149] [cursor=pointer]
+      - button "Madrinhas" [ref=f28e150] [cursor=pointer]
+      - button "Documentos" [ref=f28e151] [cursor=pointer]
+    - generic [ref=f28e152]:
+      - button "Sair" [ref=f28e153]
+      - img "Perfil" [ref=f28e154]
+  - main [ref=f28e155]:
+    - generic [ref=f28e156]:
+      - generic [ref=f28e157]:
+        - generic [ref=f28e159]:
+          - heading "Dashboard de Envios" [level=1] [ref=f28e160]
+          - paragraph [ref=f28e161]: Acompanhe os dados de envio de perucas em tempo real
+        - generic [ref=f28e162]:
+          - generic [ref=f28e163]:
+            - heading "Total de Envios" [level=3] [ref=f28e164]
+            - heading "0" [level=2] [ref=f28e165]
+            - paragraph [ref=f28e166]: Kits retornados pela API
+            - generic [ref=f28e167]: ▦
+          - generic [ref=f28e168]:
+            - heading "Entregues" [level=3] [ref=f28e169]
+            - heading "-" [level=2] [ref=f28e170]
+            - paragraph [ref=f28e171]: Status não informado pela API
+            - generic [ref=f28e172]: ✓
+          - generic [ref=f28e173]:
+            - heading "Em Trânsito" [level=3] [ref=f28e174]
+            - heading "-" [level=2] [ref=f28e175]
+            - paragraph [ref=f28e176]: Status não informado pela API
+            - generic [ref=f28e177]: ▰
+      - generic [ref=f28e178]:
+        - heading "Regiões com mais kits cadastrados" [level=2] [ref=f28e179]
+        - paragraph [ref=f28e180]: Nenhum kit cadastrado.
+    - paragraph [ref=f28e181]: Carregando kits...
+    - generic [ref=f28e182]:
+      - region "Envios por Estado" [ref=f28e183]:
+        - generic [ref=f28e184]:
+          - heading "Envios por Estado" [level=2] [ref=f28e185]
+          - generic [ref=f28e186]:
+            - generic [ref=f28e187]: Período do gráfico Envios por Estado
+            - combobox "Período do gráfico Envios por Estado" [ref=f28e188]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e190]:
+          - generic [ref=f28e191]: "1"
+          - generic [ref=f28e192]: "1"
+          - generic [ref=f28e193]: "1"
+          - generic [ref=f28e194]: "0"
+        - paragraph [ref=f28e202]: Nenhum registro no período selecionado.
+      - region "Solicitações por Estado" [ref=f28e203]:
+        - generic [ref=f28e204]:
+          - heading "Solicitações por Estado" [level=2] [ref=f28e205]
+          - generic [ref=f28e206]:
+            - generic [ref=f28e207]: Período do gráfico Solicitações por Estado
+            - combobox "Período do gráfico Solicitações por Estado" [ref=f28e208]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e210]:
+          - generic [ref=f28e211]: "1"
+          - generic [ref=f28e212]: "1"
+          - generic [ref=f28e213]: "1"
+          - generic [ref=f28e214]: "0"
+        - paragraph [ref=f28e222]: Nenhum registro no período selecionado.
+    - generic [ref=f28e223]:
+      - generic [ref=f28e224]:
+        - heading "Envios Recentes" [level=2] [ref=f28e225]
+        - generic [ref=f28e226]:
+          - generic [ref=f28e227]:
+            - generic [ref=f28e228]: Buscar envios
+            - textbox "Buscar envios" [ref=f28e229]:
+              - /placeholder: Buscar...
+          - button "Filtrar por status" [ref=f28e230] [cursor=pointer]: ▼
+      - table [ref=f28e232]:
+        - rowgroup [ref=f28e233]:
+          - row [ref=f28e234]:
+            - columnheader "Selecionar envio" [ref=f28e235]
+            - columnheader "ID" [ref=f28e236]
+            - columnheader "Cliente" [ref=f28e237]
+            - columnheader "Produto" [ref=f28e238]
+            - columnheader "Estado" [ref=f28e239]
+            - columnheader "Cidade" [ref=f28e240]
+            - columnheader "Data" [ref=f28e241]
+            - columnheader "Status" [ref=f28e242]
+            - columnheader "Ações" [ref=f28e243]
+        - rowgroup
+      - generic [ref=f28e244]:
+        - generic [ref=f28e245]: Mostrando 0 a 0 de 0 resultados
+        - generic [ref=f28e246]:
+          - button "Anterior" [disabled] [ref=f28e247]
+          - button "1" [ref=f28e248] [cursor=pointer]
+          - button "Próximo" [disabled] [ref=f28e249]

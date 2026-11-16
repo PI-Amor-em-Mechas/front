@@ -79,7 +79,30 @@
     padding: 15px;
     border-radius: 12px;
     height: 200px;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
     align-self: start;
+    scrollbar-width: thin;
+    scrollbar-color: #E91E63 #FCE3EC;
+}
+
+.resumoEnvios .regioes::-webkit-scrollbar {
+    width: 6px;
+}
+
+.resumoEnvios .regioes::-webkit-scrollbar-track {
+    background: #FCE3EC;
+    border-radius: 10px;
+}
+
+.resumoEnvios .regioes::-webkit-scrollbar-thumb {
+    background: #E91E63;
+    border-radius: 10px;
+}
+
+.resumoEnvios .regioes::-webkit-scrollbar-thumb:hover {
+    background: #C2185B;
 }
 
 .resumoEnvios .regioes h2 {
@@ -259,6 +282,20 @@
     border-radius: 8px;
     font-size: 12px;
 }
+.filtrosEnvios {
+    position: absolute;
+    z-index: 2;
+    top: 38px;
+    right: 0;
+    display: grid;
+    gap: 6px;
+    width: 190px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #E91E63;
+    border-radius: 8px;
+}
+.filtrosEnvios select { width: 100%; padding: 7px; font-size: 12px; }
 
 .rolagemTabelaEnvios {
     flex: 0 0 auto;
@@ -433,7 +470,7 @@
     }
 
     .resumoEnvios .regioes {
-        height: auto;
+        height: 200px;
         margin-top: 0;
         align-self: stretch;
     }

@@ -1,0 +1,381 @@
+- generic [ref=f27e142]:
+  - navigation [ref=f27e143]:
+    - button "Voltar ao formulário" [ref=f27e145] [cursor=pointer]
+    - generic [ref=f27e146]:
+      - button "Painel" [ref=f27e147] [cursor=pointer]
+      - button "Pacientes" [ref=f27e148] [cursor=pointer]
+      - button "Solicitações" [ref=f27e149] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e150] [cursor=pointer]
+      - button "Documentos" [ref=f27e199] [cursor=pointer]
+    - generic [ref=f27e152]:
+      - button "Sair" [ref=f27e153] [cursor=pointer]
+      - img "Perfil" [ref=f27e154]
+  - main [ref=f27e155]:
+    - generic [ref=f27e157]:
+      - heading "Solicitações de peruca" [level=1] [ref=f27e158]
+      - paragraph [ref=f27e159]: Acompanhe e gerencie os pedidos ativos
+    - generic [ref=f27e160]:
+      - generic [ref=f27e161]:
+        - strong [ref=f27e162]: "16"
+        - generic [ref=f27e163]: solicitações ativas
+      - paragraph [ref=f27e164]: Use o ícone de informação para consultar os detalhes e encerrar um atendimento.
+    - generic [ref=f27e165]:
+      - generic [ref=f27e166]: Buscar por nome ou e-mail
+      - generic [ref=f27e167]:
+        - searchbox "Buscar por nome ou e-mail" [ref=f27e168]
+        - button "Buscar" [ref=f27e169] [cursor=pointer]
+        - button "Atualizar" [ref=f27e173] [cursor=pointer]
+    - table [ref=f27e181]:
+      - caption [ref=f27e182]: Solicitações ativas de peruca
+      - rowgroup [ref=f27e183]:
+        - row [ref=f27e184]:
+          - columnheader "Pedido" [ref=f27e185]
+          - columnheader "Paciente" [ref=f27e186]
+          - columnheader "Data do pedido" [ref=f27e187]
+          - columnheader "Localidade" [ref=f27e188]
+          - columnheader "Status" [ref=f27e189]
+          - columnheader "Detalhes" [ref=f27e190]
+      - rowgroup [ref=f27e200]:
+        - row [ref=f27e201]:
+          - cell "#153" [ref=f27e202]
+          - cell [ref=f27e203]:
+            - strong [ref=f27e204]: Paciente Envio Adicional Demo 1
+            - text: envio.adicional.demo01@exemplo.test
+          - cell "15/11/2026" [ref=f27e205]
+          - cell "S?o Paulo / SP" [ref=f27e206]
+          - cell "Ativa" [ref=f27e207]
+          - cell [ref=f27e209]:
+            - 'button "Ver detalhes da solicitação #153 de Paciente Envio Adicional Demo 1" [ref=f27e210] [cursor=pointer]'
+        - row [ref=f27e213]:
+          - cell "#154" [ref=f27e214]
+          - cell [ref=f27e215]:
+            - strong [ref=f27e216]: Paciente Envio Adicional Demo 2
+            - text: envio.adicional.demo02@exemplo.test
+          - cell "14/11/2026" [ref=f27e217]
+          - cell "S?o Paulo / SP" [ref=f27e218]
+          - cell "Ativa" [ref=f27e219]
+          - cell [ref=f27e221]:
+            - 'button "Ver detalhes da solicitação #154 de Paciente Envio Adicional Demo 2" [ref=f27e222] [cursor=pointer]'
+        - row [ref=f27e225]:
+          - cell "#155" [ref=f27e226]
+          - cell [ref=f27e227]:
+            - strong [ref=f27e228]: Paciente Envio Adicional Demo 3
+            - text: envio.adicional.demo03@exemplo.test
+          - cell "13/11/2026" [ref=f27e229]
+          - cell "S?o Paulo / SP" [ref=f27e230]
+          - cell "Ativa" [ref=f27e231]
+          - cell [ref=f27e233]:
+            - 'button "Ver detalhes da solicitação #155 de Paciente Envio Adicional Demo 3" [ref=f27e234] [cursor=pointer]'
+        - row [ref=f27e237]:
+          - cell "#124" [ref=f27e238]
+          - cell [ref=f27e239]:
+            - strong [ref=f27e240]: Renata Almeida Demo
+            - text: demo.paciente03@exemplo.test
+          - cell "27/10/2026" [ref=f27e241]
+          - cell "São Paulo / SP" [ref=f27e242]
+          - cell "Ativa" [ref=f27e243]
+          - cell [ref=f27e245]:
+            - 'button "Ver detalhes da solicitação #124 de Renata Almeida Demo" [ref=f27e246] [cursor=pointer]'
+        - row [ref=f27e249]:
+          - cell "#125" [ref=f27e250]
+          - cell [ref=f27e251]:
+            - strong [ref=f27e252]: Juliana Ferreira Demo
+            - text: demo.paciente04@exemplo.test
+          - cell "21/10/2026" [ref=f27e253]
+          - cell "São Paulo / SP" [ref=f27e254]
+          - cell "Ativa" [ref=f27e255]
+          - cell [ref=f27e257]:
+            - 'button "Ver detalhes da solicitação #125 de Juliana Ferreira Demo" [ref=f27e258] [cursor=pointer]'
+        - row [ref=f27e261]:
+          - cell "#126" [ref=f27e262]
+          - cell [ref=f27e263]:
+            - strong [ref=f27e264]: Patricia Souza Demo
+            - text: demo.paciente05@exemplo.test
+          - cell "15/10/2026" [ref=f27e265]
+          - cell "São Paulo / SP" [ref=f27e266]
+          - cell "Ativa" [ref=f27e267]
+          - cell [ref=f27e269]:
+            - 'button "Ver detalhes da solicitação #126 de Patricia Souza Demo" [ref=f27e270] [cursor=pointer]'
+        - row [ref=f27e273]:
+          - cell "#127" [ref=f27e274]
+          - cell [ref=f27e275]:
+            - strong [ref=f27e276]: Beatriz Rodrigues Demo
+            - text: demo.paciente06@exemplo.test
+          - cell "09/10/2026" [ref=f27e277]
+          - cell "São Paulo / SP" [ref=f27e278]
+          - cell "Ativa" [ref=f27e279]
+          - cell [ref=f27e281]:
+            - 'button "Ver detalhes da solicitação #127 de Beatriz Rodrigues Demo" [ref=f27e282] [cursor=pointer]'
+        - row [ref=f27e285]:
+          - cell "#128" [ref=f27e286]
+          - cell [ref=f27e287]:
+            - strong [ref=f27e288]: Camila Nogueira Demo
+            - text: demo.paciente07@exemplo.test
+          - cell "03/10/2026" [ref=f27e289]
+          - cell "São Paulo / SP" [ref=f27e290]
+          - cell "Ativa" [ref=f27e291]
+          - cell [ref=f27e293]:
+            - 'button "Ver detalhes da solicitação #128 de Camila Nogueira Demo" [ref=f27e294] [cursor=pointer]'
+        - row [ref=f27e297]:
+          - cell "#129" [ref=f27e298]
+          - cell [ref=f27e299]:
+            - strong [ref=f27e300]: Larissa Barbosa Demo
+            - text: demo.paciente08@exemplo.test
+          - cell "27/09/2026" [ref=f27e301]
+          - cell "São Paulo / SP" [ref=f27e302]
+          - cell "Ativa" [ref=f27e303]
+          - cell [ref=f27e305]:
+            - 'button "Ver detalhes da solicitação #129 de Larissa Barbosa Demo" [ref=f27e306] [cursor=pointer]'
+        - row [ref=f27e309]:
+          - cell "#130" [ref=f27e310]
+          - cell [ref=f27e311]:
+            - strong [ref=f27e312]: Fernanda Costa Demo
+            - text: demo.paciente09@exemplo.test
+          - cell "21/09/2026" [ref=f27e313]
+          - cell "Osasco / SP" [ref=f27e314]
+          - cell "Ativa" [ref=f27e315]
+          - cell [ref=f27e317]:
+            - 'button "Ver detalhes da solicitação #130 de Fernanda Costa Demo" [ref=f27e318] [cursor=pointer]'
+        - row [ref=f27e321]:
+          - cell "#131" [ref=f27e322]
+          - cell [ref=f27e323]:
+            - strong [ref=f27e324]: Aline Moreira Demo
+            - text: demo.paciente10@exemplo.test
+          - cell "15/09/2026" [ref=f27e325]
+          - cell "Santo André / SP" [ref=f27e326]
+          - cell "Ativa" [ref=f27e327]
+          - cell [ref=f27e329]:
+            - 'button "Ver detalhes da solicitação #131 de Aline Moreira Demo" [ref=f27e330] [cursor=pointer]'
+        - row [ref=f27e333]:
+          - cell "#132" [ref=f27e334]
+          - cell [ref=f27e335]:
+            - strong [ref=f27e336]: Gabriela Ramos Demo
+            - text: demo.paciente11@exemplo.test
+          - cell "09/09/2026" [ref=f27e337]
+          - cell "São Paulo / SP" [ref=f27e338]
+          - cell "Ativa" [ref=f27e339]
+          - cell [ref=f27e341]:
+            - 'button "Ver detalhes da solicitação #132 de Gabriela Ramos Demo" [ref=f27e342] [cursor=pointer]'
+        - row [ref=f27e345]:
+          - cell "#133" [ref=f27e346]
+          - cell [ref=f27e347]:
+            - strong [ref=f27e348]: Isabela Teixeira Demo
+            - text: demo.paciente12@exemplo.test
+          - cell "03/09/2026" [ref=f27e349]
+          - cell "São Paulo / SP" [ref=f27e350]
+          - cell "Ativa" [ref=f27e351]
+          - cell [ref=f27e353]:
+            - 'button "Ver detalhes da solicitação #133 de Isabela Teixeira Demo" [ref=f27e354] [cursor=pointer]'
+        - row [ref=f27e357]:
+          - cell "#134" [ref=f27e358]
+          - cell [ref=f27e359]:
+            - strong [ref=f27e360]: Nathalia Mendes Demo
+            - text: demo.paciente13@exemplo.test
+          - cell "28/08/2026" [ref=f27e361]
+          - cell "São Paulo / SP" [ref=f27e362]
+          - cell "Ativa" [ref=f27e363]
+          - cell [ref=f27e365]:
+            - 'button "Ver detalhes da solicitação #134 de Nathalia Mendes Demo" [ref=f27e366] [cursor=pointer]'
+        - row [ref=f27e369]:
+          - cell "#135" [ref=f27e370]
+          - cell [ref=f27e371]:
+            - strong [ref=f27e372]: Luana Cardoso Demo
+            - text: demo.paciente14@exemplo.test
+          - cell "22/08/2026" [ref=f27e373]
+          - cell "São Paulo / SP" [ref=f27e374]
+          - cell "Ativa" [ref=f27e375]
+          - cell [ref=f27e377]:
+            - 'button "Ver detalhes da solicitação #135 de Luana Cardoso Demo" [ref=f27e378] [cursor=pointer]'
+        - row [ref=f27e381]:
+          - cell "#136" [ref=f27e382]
+          - cell [ref=f27e383]:
+            - strong [ref=f27e384]: Vanessa Araújo Demo
+            - text: demo.paciente15@exemplo.test
+          - cell "16/08/2026" [ref=f27e385]
+          - cell "São Paulo / SP" [ref=f27e386]
+          - cell "Ativa" [ref=f27e387]
+          - cell [ref=f27e389]:
+            - 'button "Ver detalhes da solicitação #136 de Vanessa Araújo Demo" [ref=f27e390] [cursor=pointer]'
+    - generic [ref=f27e192]:
+      - button "Anterior" [disabled] [ref=f27e193]
+      - generic [ref=f27e194]: Página 1 de 1
+      - button "Próxima" [disabled] [ref=f27e195]
+  - dialog [ref=f27e571]:
+    - generic [ref=f27e572]:
+      - generic [ref=f27e573]:
+        - 'heading "Solicitação #153" [level=2] [ref=f27e574]'
+        - paragraph [ref=f27e575]: Detalhes do pedido de peruca
+      - button "Fechar detalhes" [ref=f27e576] [cursor=pointer]
+    - generic [ref=f27e580]: Ativa
+    - generic [ref=f27e581]:
+      - heading "Paciente e contato" [level=3] [ref=f27e582]
+      - generic [ref=f27e583]:
+        - generic [ref=f27e584]:
+          - term [ref=f27e585]: Nome completo
+          - definition [ref=f27e586]: Paciente Envio Adicional Demo 1
+        - generic [ref=f27e587]:
+          - term [ref=f27e588]: E-mail
+          - definition [ref=f27e589]: envio.adicional.demo01@exemplo.test
+        - generic [ref=f27e590]:
+          - term [ref=f27e591]: Celular
+          - definition [ref=f27e592]: (11) 97771001
+        - generic [ref=f27e593]:
+          - term [ref=f27e594]: CPF
+          - definition [ref=f27e595]:
+            - generic [ref=f27e596]: "123456789288"
+            - button "Ocultar CPF" [active] [ref=f27e754] [cursor=pointer]
+        - generic [ref=f27e601]:
+          - term [ref=f27e602]: Nascimento
+          - definition [ref=f27e603]: 11/01/1981
+        - generic [ref=f27e604]:
+          - term [ref=f27e605]: Idade
+          - definition [ref=f27e606]: 45 anos
+        - generic [ref=f27e607]:
+          - term [ref=f27e608]: Data do pedido
+          - definition [ref=f27e609]: 15/11/2026
+        - generic [ref=f27e610]:
+          - term [ref=f27e611]: Solicitante
+          - definition [ref=f27e612]: Respons?vel Envio Demo 1
+        - generic [ref=f27e613]:
+          - term [ref=f27e614]: Finalidade
+          - definition [ref=f27e615]: Envio sint?tico adicional para demonstra??o
+    - generic [ref=f27e616]:
+      - heading "Endereço" [level=3] [ref=f27e617]
+      - generic [ref=f27e618]:
+        - generic [ref=f27e619]:
+          - term [ref=f27e620]: Rua
+          - definition [ref=f27e621]: Rua Envio Sint?tico 1
+        - generic [ref=f27e622]:
+          - term [ref=f27e623]: Número
+          - definition [ref=f27e624]: "101"
+        - generic [ref=f27e625]:
+          - term [ref=f27e626]: Complemento
+          - definition [ref=f27e627]: Unidade Demo 1
+        - generic [ref=f27e628]:
+          - term [ref=f27e629]: Bairro
+          - definition [ref=f27e630]: Centro
+        - generic [ref=f27e631]:
+          - term [ref=f27e632]: Cidade / UF
+          - definition [ref=f27e633]: S?o Paulo / SP
+        - generic [ref=f27e634]:
+          - term [ref=f27e635]: CEP
+          - definition [ref=f27e636]: 01001-900
+    - generic [ref=f27e637]:
+      - heading "Dados familiares" [level=3] [ref=f27e638]
+      - generic [ref=f27e639]:
+        - generic [ref=f27e640]:
+          - term [ref=f27e641]: Estado civil
+          - definition [ref=f27e642]: Solteira
+        - generic [ref=f27e643]:
+          - term [ref=f27e644]: Pessoas na residência
+          - definition [ref=f27e645]: "3"
+        - generic [ref=f27e646]:
+          - term [ref=f27e647]: Tem filhos
+          - definition [ref=f27e648]: Sim
+        - generic [ref=f27e649]:
+          - term [ref=f27e650]: Idades dos filhos
+          - definition [ref=f27e651]: Não informado
+    - generic [ref=f27e652]:
+      - heading "Dados médicos" [level=3] [ref=f27e653]
+      - generic [ref=f27e654]:
+        - generic [ref=f27e655]:
+          - term [ref=f27e656]: Motivo da solicitação
+          - definition [ref=f27e657]: Tratamento oncol?gico
+        - generic [ref=f27e658]:
+          - term [ref=f27e659]: Tipo de câncer
+          - definition [ref=f27e660]: Mama
+        - generic [ref=f27e661]:
+          - term [ref=f27e662]: Início do tratamento
+          - definition [ref=f27e663]: 17/08/2026
+        - generic [ref=f27e664]:
+          - term [ref=f27e665]: Tipo de atendimento
+          - definition [ref=f27e666]: SUS
+        - generic [ref=f27e667]:
+          - term [ref=f27e668]: Justificativa
+          - definition [ref=f27e669]: Dados m?dicos sint?ticos do envio adicional 1.
+    - generic [ref=f27e670]:
+      - heading "Laudos e documentos" [level=3] [ref=f27e671]
+      - list [ref=f27e672]:
+        - listitem [ref=f27e673]:
+          - strong [ref=f27e674]: laudo-envio-adicional-demo-1.pdf
+          - generic [ref=f27e675]:
+            - generic [ref=f27e676]:
+              - term [ref=f27e677]: ID
+              - definition [ref=f27e678]: "14"
+            - generic [ref=f27e679]:
+              - term [ref=f27e680]: Tipo
+              - definition [ref=f27e681]: RELATORIO_MEDICO
+            - generic [ref=f27e682]:
+              - term [ref=f27e683]: MIME type
+              - definition [ref=f27e684]: application/pdf
+            - generic [ref=f27e685]:
+              - term [ref=f27e686]: Tamanho
+              - definition [ref=f27e687]: 337 bytes
+            - generic [ref=f27e688]:
+              - term [ref=f27e689]: Upload
+              - definition [ref=f27e690]: 16/11/2026, 14:57:05
+            - generic [ref=f27e691]:
+              - term [ref=f27e692]: Status
+              - definition [ref=f27e693]: PENDENTE
+            - generic [ref=f27e694]:
+              - term [ref=f27e695]: Observação
+              - definition [ref=f27e696]: Não informado
+            - generic [ref=f27e697]:
+              - term [ref=f27e698]: Validado por
+              - definition [ref=f27e699]: Não informado
+            - generic [ref=f27e700]:
+              - term [ref=f27e701]: Validado em
+              - definition [ref=f27e702]: Não informado
+          - generic [ref=f27e703]:
+            - button "Visualizar" [ref=f27e704] [cursor=pointer]
+            - button "Baixar" [ref=f27e705] [cursor=pointer]
+          - generic [ref=f27e706]:
+            - text: Observação da validação
+            - textbox "Observação da validação" [ref=f27e707]
+            - button "Aprovar" [ref=f27e708] [cursor=pointer]
+            - button "Reprovar" [ref=f27e709] [cursor=pointer]
+        - listitem [ref=f27e710]:
+          - strong [ref=f27e711]: foto-envio-adicional-demo-1.png
+          - generic [ref=f27e712]:
+            - generic [ref=f27e713]:
+              - term [ref=f27e714]: ID
+              - definition [ref=f27e715]: "15"
+            - generic [ref=f27e716]:
+              - term [ref=f27e717]: Tipo
+              - definition [ref=f27e718]: FOTO_CABELO
+            - generic [ref=f27e719]:
+              - term [ref=f27e720]: MIME type
+              - definition [ref=f27e721]: image/png
+            - generic [ref=f27e722]:
+              - term [ref=f27e723]: Tamanho
+              - definition [ref=f27e724]: 68 bytes
+            - generic [ref=f27e725]:
+              - term [ref=f27e726]: Upload
+              - definition [ref=f27e727]: 16/11/2026, 14:57:05
+            - generic [ref=f27e728]:
+              - term [ref=f27e729]: Status
+              - definition [ref=f27e730]: PENDENTE
+            - generic [ref=f27e731]:
+              - term [ref=f27e732]: Observação
+              - definition [ref=f27e733]: Não informado
+            - generic [ref=f27e734]:
+              - term [ref=f27e735]: Validado por
+              - definition [ref=f27e736]: Não informado
+            - generic [ref=f27e737]:
+              - term [ref=f27e738]: Validado em
+              - definition [ref=f27e739]: Não informado
+          - generic [ref=f27e740]:
+            - button "Visualizar" [ref=f27e741] [cursor=pointer]
+            - button "Baixar" [ref=f27e742] [cursor=pointer]
+          - generic [ref=f27e743]:
+            - text: Observação da validação
+            - textbox "Observação da validação" [ref=f27e744]
+            - button "Aprovar" [ref=f27e745] [cursor=pointer]
+            - button "Reprovar" [ref=f27e746] [cursor=pointer]
+    - generic [ref=f27e747]:
+      - heading "Kit de peruca" [level=3] [ref=f27e748]
+      - list [ref=f27e749]:
+        - listitem [ref=f27e750]: "Kit #83 — Cor: Preto"
+    - generic [ref=f27e751]:
+      - button "Cancelar solicitação" [ref=f27e752] [cursor=pointer]
+      - button "Concluir solicitação" [ref=f27e753] [cursor=pointer]

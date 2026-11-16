@@ -42,7 +42,8 @@ function Tabela({ madrinhas, aoEditar, aoExcluir }) {
                                     id: madrinha.id,
                                     nome: madrinha.nomeCompleto ?? "Sem nome",
                                     email: madrinha.email ?? "-",
-                                    horas: `${madrinha.horasVoluntarias ?? 0} horas`,
+                                    horas: madrinha.duracaoVoluntaria
+                                        ?? `${(madrinha.horasVoluntarias ?? 0) * 60}min`,
                                     funcao: madrinha.funcao ?? "-",
                                     data: formatarData(madrinha.dataCadastro),
                                     status: formatarStatus(madrinha.status),

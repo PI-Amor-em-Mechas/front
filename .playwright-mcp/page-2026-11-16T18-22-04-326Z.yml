@@ -1,0 +1,15 @@
+- generic [ref=f28e4]:
+  - generic [ref=f28e5]: 🌱 Aqui sua doação transforma vidas - DOAR AGORA 🌱
+  - navigation [ref=f28e6]:
+    - button "Home" [ref=f28e7] [cursor=pointer]
+    - button "O Projeto" [ref=f28e8] [cursor=pointer]
+    - button "Quero uma peruca" [ref=f28e11] [cursor=pointer]
+    - button "Como doar" [ref=f28e12] [cursor=pointer]
+    - button "Campanhas" [ref=f28e13] [cursor=pointer]
+    - button "Pontos de coleta" [ref=f28e14] [cursor=pointer]
+    - button "Parcerias" [ref=f28e15] [cursor=pointer]
+    - button "Mais" [ref=f28e16] [cursor=pointer]
+  - main [ref=f28e19]:
+    - img "Instituto Amor em Mechas - Transformando Vidas" [ref=f28e20]
+    - heading "Transforme vidas com ações sociais" [level=1] [ref=f28e21]
+    - generic [ref=f28e22]: Instituto Amor em Mechas

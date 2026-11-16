@@ -1,0 +1,95 @@
+- generic [ref=f27e1420]:
+  - navigation [ref=f27e1421]:
+    - button "Voltar ao formulário" [ref=f27e1423] [cursor=pointer]
+    - generic [ref=f27e1424]:
+      - button "Painel" [ref=f27e1425] [cursor=pointer]
+      - button "Pacientes" [ref=f27e1426] [cursor=pointer]
+      - button "Solicitações" [ref=f27e1427] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e1428] [cursor=pointer]
+      - button "Documentos" [ref=f27e1429] [cursor=pointer]
+    - generic [ref=f27e1430]:
+      - button "Sair" [ref=f27e1431]
+      - img "Perfil" [ref=f27e1432]
+  - main [ref=f27e1433]:
+    - generic [ref=f27e1434]:
+      - generic [ref=f27e1435]:
+        - generic [ref=f27e1437]:
+          - heading "Dashboard de Envios" [level=1] [ref=f27e1438]
+          - paragraph [ref=f27e1439]: Acompanhe os dados de envio de perucas em tempo real
+        - generic [ref=f27e1440]:
+          - generic [ref=f27e1441]:
+            - heading "Total de Envios" [level=3] [ref=f27e1442]
+            - heading "0" [level=2] [ref=f27e1443]
+            - paragraph [ref=f27e1444]: Kits retornados pela API
+            - generic [ref=f27e1445]: ▦
+          - generic [ref=f27e1446]:
+            - heading "Entregues" [level=3] [ref=f27e1447]
+            - heading "-" [level=2] [ref=f27e1448]
+            - paragraph [ref=f27e1449]: Status não informado pela API
+            - generic [ref=f27e1450]: ✓
+          - generic [ref=f27e1451]:
+            - heading "Em Trânsito" [level=3] [ref=f27e1452]
+            - heading "-" [level=2] [ref=f27e1453]
+            - paragraph [ref=f27e1454]: Status não informado pela API
+            - generic [ref=f27e1455]: ▰
+      - generic [ref=f27e1456]:
+        - heading "Regiões com mais kits cadastrados" [level=2] [ref=f27e1457]
+        - paragraph [ref=f27e1458]: Nenhum kit cadastrado.
+    - paragraph [ref=f27e1459]: Carregando kits...
+    - generic [ref=f27e1460]:
+      - region "Envios por Estado" [ref=f27e1461]:
+        - generic [ref=f27e1462]:
+          - heading "Envios por Estado" [level=2] [ref=f27e1463]
+          - generic [ref=f27e1464]:
+            - generic [ref=f27e1465]: Período do gráfico Envios por Estado
+            - combobox "Período do gráfico Envios por Estado" [ref=f27e1466]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f27e1468]:
+          - generic [ref=f27e1469]: "1"
+          - generic [ref=f27e1470]: "1"
+          - generic [ref=f27e1471]: "1"
+          - generic [ref=f27e1472]: "0"
+        - paragraph [ref=f27e1480]: Nenhum registro no período selecionado.
+      - region "Solicitações por Estado" [ref=f27e1481]:
+        - generic [ref=f27e1482]:
+          - heading "Solicitações por Estado" [level=2] [ref=f27e1483]
+          - generic [ref=f27e1484]:
+            - generic [ref=f27e1485]: Período do gráfico Solicitações por Estado
+            - combobox "Período do gráfico Solicitações por Estado" [ref=f27e1486]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f27e1488]:
+          - generic [ref=f27e1489]: "1"
+          - generic [ref=f27e1490]: "1"
+          - generic [ref=f27e1491]: "1"
+          - generic [ref=f27e1492]: "0"
+        - paragraph [ref=f27e1500]: Nenhum registro no período selecionado.
+    - generic [ref=f27e1501]:
+      - generic [ref=f27e1502]:
+        - heading "Envios Recentes" [level=2] [ref=f27e1503]
+        - generic [ref=f27e1504]:
+          - generic [ref=f27e1505]:
+            - generic [ref=f27e1506]: Buscar envios
+            - textbox "Buscar envios" [ref=f27e1507]:
+              - /placeholder: Buscar...
+          - button "Filtrar por status" [ref=f27e1508] [cursor=pointer]: ▼
+      - table [ref=f27e1510]:
+        - rowgroup [ref=f27e1511]:
+          - row [ref=f27e1512]:
+            - columnheader "Selecionar envio" [ref=f27e1513]
+            - columnheader "ID" [ref=f27e1514]
+            - columnheader "Cliente" [ref=f27e1515]
+            - columnheader "Produto" [ref=f27e1516]
+            - columnheader "Estado" [ref=f27e1517]
+            - columnheader "Cidade" [ref=f27e1518]
+            - columnheader "Data" [ref=f27e1519]
+            - columnheader "Status" [ref=f27e1520]
+            - columnheader "Ações" [ref=f27e1521]
+        - rowgroup
+      - generic [ref=f27e1522]:
+        - generic [ref=f27e1523]: Mostrando 0 a 0 de 0 resultados
+        - generic [ref=f27e1524]:
+          - button "Anterior" [disabled] [ref=f27e1525]
+          - button "1" [ref=f27e1526] [cursor=pointer]
+          - button "Próximo" [disabled] [ref=f27e1527]

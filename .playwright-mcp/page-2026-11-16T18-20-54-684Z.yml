@@ -1,0 +1,45 @@
+- generic [ref=f27e1362]:
+  - navigation [ref=f27e1363]:
+    - button "Voltar ao formulário" [ref=f27e1365] [cursor=pointer]
+    - generic [ref=f27e1366]:
+      - button "Painel" [ref=f27e1367] [cursor=pointer]
+      - button "Pacientes" [ref=f27e1368] [cursor=pointer]
+      - button "Solicitações" [ref=f27e1369] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e1370] [cursor=pointer]
+      - button "Documentos" [ref=f27e1371] [cursor=pointer]
+    - generic [ref=f27e1372]:
+      - button "Sair" [ref=f27e1373]
+      - img "Perfil" [ref=f27e1374]
+  - main [ref=f27e1375]:
+    - generic [ref=f27e1376]:
+      - generic [ref=f27e1377]:
+        - heading "Madrinhas do Amor" [level=1] [ref=f27e1378]
+        - paragraph [ref=f27e1379]: Gestão de horas das madrinhas do amor
+      - button "Cadastrar Madrinha" [ref=f27e1380]
+    - generic [ref=f27e1381]:
+      - generic [ref=f27e1382]:
+        - heading "Total de Madrinhas" [level=3] [ref=f27e1383]
+        - heading "0" [level=2] [ref=f27e1384]
+        - paragraph [ref=f27e1385]: Cadastros retornados pela API
+      - generic [ref=f27e1386]:
+        - heading "Madrinha com Mais Horas" [level=3] [ref=f27e1387]
+        - heading "-" [level=2] [ref=f27e1388]
+        - paragraph [ref=f27e1389]: Sem registros
+      - generic [ref=f27e1390]:
+        - heading "Total de Horas Voluntárias" [level=3] [ref=f27e1391]
+        - heading "0 horas" [level=2] [ref=f27e1392]
+        - paragraph [ref=f27e1393]: Soma dos cadastros
+      - generic [ref=f27e1394]:
+        - heading "Madrinhas Ativas" [level=3] [ref=f27e1395]
+        - heading "0" [level=2] [ref=f27e1396]
+        - paragraph [ref=f27e1397]: Status atual
+    - generic [ref=f27e1399]:
+      - searchbox "Buscar por nome ou ID..." [ref=f27e1400]
+      - combobox [ref=f27e1401]:
+        - option "Todos os Status" [selected]
+        - option "Ativa"
+        - option "Afastada"
+        - option "Desassociada"
+      - spinbutton "Horas mínimas..." [ref=f27e1402]
+      - textbox "Filtrar por mês de cadastro" [ref=f27e1403]
+    - paragraph [ref=f27e1404]: Carregando madrinhas...

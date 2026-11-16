@@ -20,12 +20,15 @@ export async function removerMadrinha(id) {
 }
 
 export async function listarKits() {
-  const { data } = await api.get("/kits");
-  return Array.isArray(data) ? data : [];
+  const { data } = await api.get("/kits", { timeout: 30000 });
+  return Array.isArray(data) ? data : data?.content ?? [];
 }
 
 export async function listarPacientes(page = 0, size = 20) {
-  const { data } = await api.get("/pacientes", { params: { page, size } });
+  const { data } = await api.get("/pacientes", {
+    params: { page, size, statusSolicitacao: "CONCLUIDA" },
+    timeout: 30000,
+  });
   return data;
 }
 

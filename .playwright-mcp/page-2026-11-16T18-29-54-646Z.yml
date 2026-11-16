@@ -1,0 +1,131 @@
+- generic [ref=f28e254]:
+  - navigation [ref=f28e255]:
+    - button "Voltar ao formulário" [ref=f28e257] [cursor=pointer]
+    - generic [ref=f28e258]:
+      - button "Painel" [ref=f28e259] [cursor=pointer]
+      - button "Pacientes" [ref=f28e260] [cursor=pointer]
+      - button "Solicitações" [ref=f28e261] [cursor=pointer]
+      - button "Madrinhas" [ref=f28e262] [cursor=pointer]
+      - button "Documentos" [ref=f28e263] [cursor=pointer]
+    - generic [ref=f28e264]:
+      - button "Sair" [ref=f28e265]
+      - img "Perfil" [ref=f28e266]
+  - main [ref=f28e267]:
+    - generic [ref=f28e268]:
+      - generic [ref=f28e269]:
+        - generic [ref=f28e271]:
+          - heading "Dashboard de Envios" [level=1] [ref=f28e272]
+          - paragraph [ref=f28e273]: Acompanhe os dados de envio de perucas em tempo real
+        - generic [ref=f28e274]:
+          - generic [ref=f28e275]:
+            - heading "Total de Envios" [level=3] [ref=f28e276]
+            - heading "1" [level=2] [ref=f28e898]
+            - paragraph [ref=f28e278]: Kits retornados pela API
+            - generic [ref=f28e279]: ▦
+          - generic [ref=f28e280]:
+            - heading "Entregues" [level=3] [ref=f28e281]
+            - heading "-" [level=2] [ref=f28e282]
+            - paragraph [ref=f28e283]: Status não informado pela API
+            - generic [ref=f28e284]: ✓
+          - generic [ref=f28e285]:
+            - heading "Em Trânsito" [level=3] [ref=f28e286]
+            - heading "-" [level=2] [ref=f28e287]
+            - paragraph [ref=f28e288]: Status não informado pela API
+            - generic [ref=f28e289]: ▰
+      - generic [ref=f28e290]:
+        - heading "Regiões com mais kits cadastrados" [level=2] [ref=f28e291]
+        - generic [ref=f28e771]:
+          - generic [ref=f28e772]: 1. BA
+          - generic [ref=f28e773]: 1 kits
+    - generic [ref=f28e334]:
+      - region "Envios por Estado" [ref=f28e335]:
+        - generic [ref=f28e336]:
+          - heading "Envios por Estado" [level=2] [ref=f28e337]
+          - generic [ref=f28e338]:
+            - generic [ref=f28e339]: Período do gráfico Envios por Estado
+            - combobox "Período do gráfico Envios por Estado" [ref=f28e340]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e342]:
+          - generic [ref=f28e899]: "1"
+          - generic [ref=f28e900]: "1"
+          - generic [ref=f28e901]: "1"
+          - generic [ref=f28e346]: "0"
+        - paragraph [ref=f28e902]: Nenhum registro no período selecionado.
+      - region "Solicitações por Estado" [ref=f28e366]:
+        - generic [ref=f28e367]:
+          - heading "Solicitações por Estado" [level=2] [ref=f28e368]
+          - generic [ref=f28e369]:
+            - generic [ref=f28e370]: Período do gráfico Solicitações por Estado
+            - combobox "Período do gráfico Solicitações por Estado" [ref=f28e371]:
+              - option "Pedidos nos últimos 7 dias" [selected]
+              - option "Pedidos nos últimos 30 dias"
+        - generic [ref=f28e373]:
+          - generic [ref=f28e903]: "1"
+          - generic [ref=f28e904]: "1"
+          - generic [ref=f28e376]: "1"
+          - generic [ref=f28e377]: "0"
+        - paragraph [ref=f28e905]: Nenhum registro no período selecionado.
+    - generic [ref=f28e397]:
+      - generic [ref=f28e398]:
+        - heading "Envios Recentes" [level=2] [ref=f28e399]
+        - generic [ref=f28e400]:
+          - generic [ref=f28e401]:
+            - generic [ref=f28e402]: Buscar envios
+            - textbox "Buscar envios" [ref=f28e403]:
+              - /placeholder: Buscar...
+          - button "Filtrar por status" [expanded] [ref=f28e404] [cursor=pointer]: ▼
+          - generic "Filtros dos envios" [ref=f28e510]:
+            - combobox "Filtrar por estado" [ref=f28e511]:
+              - option "Todos os estados"
+              - option "BA" [selected]
+              - option "MG"
+              - option "PE"
+              - option "PR"
+              - option "RJ"
+              - option "SC"
+              - option "SP"
+            - combobox "Filtrar por cidade" [ref=f28e512]:
+              - option "Todas as cidades" [selected]
+              - option "Salvador"
+            - combobox "Agrupar ranking por" [ref=f28e513]:
+              - option "Agrupar por estado" [selected]
+              - option "Agrupar por cidade"
+            - combobox "Filtrar por status" [ref=f28e514]:
+              - option "Todos os status"
+              - option "Não informado" [selected]
+            - button "Limpar filtros" [active] [ref=f28e515]
+      - table [ref=f28e406]:
+        - rowgroup [ref=f28e407]:
+          - row [ref=f28e408]:
+            - columnheader "Selecionar envio" [ref=f28e409]
+            - columnheader "ID" [ref=f28e410]
+            - columnheader "Cliente" [ref=f28e411]
+            - columnheader "Produto" [ref=f28e412]
+            - columnheader "Estado" [ref=f28e413]
+            - columnheader "Cidade" [ref=f28e414]
+            - columnheader "Data" [ref=f28e415]
+            - columnheader "Status" [ref=f28e416]
+            - columnheader "Ações" [ref=f28e417]
+        - rowgroup [ref=f28e418]:
+          - row [ref=f28e906]:
+            - cell [ref=f28e907]:
+              - checkbox "Selecionar envio 93" [ref=f28e908]
+            - cell "#93" [ref=f28e909]
+            - cell "Paciente Kit Regional Demo 6 kit.regional.demo06@exemplo.test" [ref=f28e910]:
+              - strong [ref=f28e911]: Paciente Kit Regional Demo 6
+              - generic [ref=f28e912]: kit.regional.demo06@exemplo.test
+            - cell "Peruca Castanho claro" [ref=f28e913]
+            - cell "BA" [ref=f28e914]
+            - cell "Salvador" [ref=f28e915]
+            - cell "09/11/2026" [ref=f28e916]
+            - cell "Não informado" [ref=f28e917]
+            - cell [ref=f28e919]:
+              - button "Editar" [ref=f28e920] [cursor=pointer]
+              - button "Excluir" [ref=f28e921] [cursor=pointer]
+      - generic [ref=f28e499]:
+        - generic [ref=f28e500]: Mostrando 1 a 1 de 1 resultados
+        - generic [ref=f28e501]:
+          - button "Anterior" [disabled] [ref=f28e502]
+          - button "1" [ref=f28e503] [cursor=pointer]
+          - button "Próximo" [disabled] [ref=f28e509]

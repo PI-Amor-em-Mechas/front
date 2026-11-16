@@ -24,7 +24,7 @@ export function limparSessao() {
 
 api.interceptors.request.use((config) => {
   const accessToken = obterAccessToken();
-  if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+  if (accessToken && !config.skipAuth) config.headers.Authorization = `Bearer ${accessToken}`;
   return config;
 });
 
@@ -38,7 +38,7 @@ api.interceptors.response.use(
     const endpointDeAuth = ["/auth/login", "/auth/refresh", "/auth/dev-token"]
       .some((endpoint) => url.includes(endpoint));
 
-    if (erro.response?.status !== 401 || !config || config._retry || endpointDeAuth) {
+    if (erro.response?.status !== 401 || !config || config._retry || config.skipAuthRefresh || endpointDeAuth) {
       throw erro;
     }
 

@@ -1,0 +1,34 @@
+- generic [ref=f27e760]:
+  - navigation [ref=f27e761]:
+    - button "Voltar ao formulário" [ref=f27e763] [cursor=pointer]
+    - generic [ref=f27e764]:
+      - button "Painel" [ref=f27e765] [cursor=pointer]
+      - button "Pacientes" [ref=f27e766] [cursor=pointer]
+      - button "Solicitações" [ref=f27e767] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e768] [cursor=pointer]
+      - button "Documentos" [ref=f27e769] [cursor=pointer]
+    - generic [ref=f27e770]:
+      - button "Sair" [ref=f27e771]
+      - img "Perfil" [ref=f27e772]
+  - main [ref=f27e773]:
+    - generic [ref=f27e775]:
+      - heading "Pacientes" [level=1] [ref=f27e776]
+      - paragraph [ref=f27e777]: Solicitações registradas no sistema
+    - generic [ref=f27e778]:
+      - strong [ref=f27e779]: 0 pacientes
+      - searchbox "Buscar nesta página por nome, e-mail ou ID" [ref=f27e780]
+    - generic [ref=f27e782]:
+      - table [ref=f27e783]:
+        - rowgroup [ref=f27e784]:
+          - row [ref=f27e785]:
+            - columnheader "ID" [ref=f27e786]
+            - columnheader "Paciente" [ref=f27e787]
+            - columnheader "Data da solicitação" [ref=f27e788]
+            - columnheader "Tratamento" [ref=f27e789]
+            - columnheader "Localidade" [ref=f27e790]
+        - rowgroup
+      - paragraph [ref=f27e791]: Carregando pacientes...
+    - generic [ref=f27e792]:
+      - button "Anterior" [disabled] [ref=f27e793]
+      - generic [ref=f27e794]: Página 0 de 0
+      - button "Próxima" [disabled] [ref=f27e795]

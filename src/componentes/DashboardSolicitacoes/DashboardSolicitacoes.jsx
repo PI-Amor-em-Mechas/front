@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Info, RefreshCw, Search, X } from "lucide-react";
+import { Eye, EyeOff, Info, RefreshCw, Search, X } from "lucide-react";
 import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 import {
   buscarSolicitacao, encerrarSolicitacao, listarSolicitacoesAtivas, mensagemErroSolicitacao,
 } from "../../services/solicitacoesAdminService";
+import { mensagemErroArquivo, obterConteudoArquivo, revisarArquivo } from "../../services/arquivoService";
+import { podeRevisarDocumentos } from "../../services/authService";
 import "../DashboardMadrinhas/DashboardMadrinhas.css";
 import "../Tabela/Tabela.css";
 import "./DashboardSolicitacoes.css";
@@ -18,13 +20,30 @@ function Campo({ titulo, valor }) {
   return <div><dt>{titulo}</dt><dd>{valor === null || valor === undefined || valor === "" ? "Não informado" : valor}</dd></div>;
 }
 
+function cpfMascarado(valor) {
+  const digitos = String(valor ?? "").replace(/\D/g, "");
+  if (digitos.length < 2) return valor;
+  return `***.***.***-${digitos.slice(-2)}`;
+}
+
+function cpfFormatado(valor) {
+  const digitos = String(valor ?? "").replace(/\D/g, "");
+  if (digitos.length !== 11) return valor;
+  return digitos.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+}
+
+function dataHoraLocal(valor) {
+  if (!valor || Number.isNaN(new Date(valor).getTime())) return "Não informado";
+  return new Date(valor).toLocaleString("pt-BR");
+}
+
 export function StatusSolicitacao({ status }) {
   return <span className="solicitacoes-status" data-status={status}>
     {({ ATIVA: "Ativa", CONCLUIDA: "Concluída", CANCELADA: "Cancelada" })[status]}
   </span>;
 }
 
-function DetalhesSolicitacao({ id, aoFechar, aoEncerrar }) {
+function DetalhesSolicitacao({ id, aoFechar, aoEncerrar, aoRevisar }) {
   const dialog = useRef(null);
   const [detalhe, setDetalhe] = useState(null);
   const [erro, setErro] = useState("");
@@ -32,6 +51,18 @@ function DetalhesSolicitacao({ id, aoFechar, aoEncerrar }) {
   const [salvando, setSalvando] = useState(false);
   const [confirmacao, setConfirmacao] = useState(null);
   const [tentativa, setTentativa] = useState(0);
+  const [observacoes, setObservacoes] = useState({});
+  const [revisando, setRevisando] = useState(null);
+  const [revisaoErro, setRevisaoErro] = useState("");
+  const [arquivoErro, setArquivoErro] = useState("");
+  const [visualizacao, setVisualizacao] = useState(null);
+  const [cpfVisivel, setCpfVisivel] = useState(false);
+  const visualizacaoUrl = useRef(null);
+  const autorizado = podeRevisarDocumentos();
+
+  useEffect(() => () => {
+    if (visualizacaoUrl.current) URL.revokeObjectURL(visualizacaoUrl.current);
+  }, []);
 
   useEffect(() => {
     const elemento = dialog.current;
@@ -67,6 +98,50 @@ function DetalhesSolicitacao({ id, aoFechar, aoEncerrar }) {
     }
   }
 
+  async function revisar(documento, decisao) {
+    const observacao = observacoes[documento.id] ?? "";
+    if (decisao === "REJEITADO" && !observacao.trim()) {
+      setRevisaoErro("Informe a observação da rejeição.");
+      return;
+    }
+    setRevisando(documento.id);
+    setRevisaoErro("");
+    try {
+      const atualizado = await revisarArquivo(documento.id, decisao, observacao);
+      setDetalhe((atual) => ({
+        ...atual,
+        documentos: atual.documentos.map((item) => item.id === atualizado.id ? atualizado : item),
+      }));
+      setTentativa((valor) => valor + 1);
+      aoRevisar();
+    } catch (error_) {
+      setRevisaoErro(mensagemErroArquivo(error_));
+    } finally {
+      setRevisando(null);
+    }
+  }
+
+  async function visualizarArquivo(documento, baixar = false) {
+    setArquivoErro("");
+    try {
+      const { conteudo } = await obterConteudoArquivo(documento.id);
+      const url = URL.createObjectURL(conteudo);
+      if (baixar) {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = documento.nomeOriginal || documento.nome || `arquivo-${documento.id}`;
+        link.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
+      if (visualizacaoUrl.current) URL.revokeObjectURL(visualizacaoUrl.current);
+      visualizacaoUrl.current = url;
+      setVisualizacao({ url, mimeType: documento.mimeType, nome: documento.nomeOriginal || documento.nome });
+    } catch (error_) {
+      setArquivoErro(mensagemErroArquivo(error_));
+    }
+  }
+
   const paciente = detalhe?.paciente;
   const medico = paciente?.dadosMedicos;
   const endereco = paciente?.endereco;
@@ -91,11 +166,20 @@ function DetalhesSolicitacao({ id, aoFechar, aoEncerrar }) {
         <Campo titulo="Nome completo" valor={paciente.nomeCompleto} />
         <Campo titulo="E-mail" valor={paciente.email} />
         <Campo titulo="Celular" valor={paciente.cel} />
-        <Campo titulo="CPF" valor={paciente.cpf} />
+        <div><dt>CPF</dt><dd className="solicitacoes-cpf">
+          <span>{cpfVisivel ? cpfFormatado(paciente.cpf) : cpfMascarado(paciente.cpf)}</span>
+          <button type="button" className="solicitacoes-cpf-toggle"
+            aria-label={cpfVisivel ? "Ocultar CPF" : "Visualizar CPF"}
+            title={cpfVisivel ? "Ocultar CPF" : "Visualizar CPF"}
+            onClick={() => setCpfVisivel((visivel) => !visivel)}>
+            {cpfVisivel ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
+          </button>
+        </dd></div>
         <Campo titulo="Nascimento" valor={dataLocal(paciente.dtNasc)} />
         <Campo titulo="Idade" valor={paciente.idade == null ? null : `${paciente.idade} anos`} />
         <Campo titulo="Data do pedido" valor={dataLocal(paciente.dtPedido)} />
         <Campo titulo="Solicitante" valor={detalhe.nomeSolicitante} />
+        <Campo titulo="Finalidade" valor={paciente.finalidadeTratamento} />
       </dl></section>
       <section><h3>Endereço</h3><dl className="solicitacoes-campos">
         <Campo titulo="Rua" valor={endereco?.rua} />
@@ -118,6 +202,55 @@ function DetalhesSolicitacao({ id, aoFechar, aoEncerrar }) {
         <Campo titulo="Tipo de atendimento" valor={medico.tipoAtendimento} />
         <Campo titulo="Justificativa" valor={medico.justificativa} />
       </dl> : <p>Dados médicos ainda não cadastrados. O formulário pode estar aguardando validação do laudo.</p>}</section>
+      <section><h3>Laudos e documentos</h3>
+        {revisaoErro && <p className="solicitacoes-erro" role="alert">{revisaoErro}</p>}
+        {arquivoErro && <p className="solicitacoes-erro" role="alert">{arquivoErro}</p>}
+        {detalhe.documentos?.length ? <ul className="solicitacoes-documentos">
+          {detalhe.documentos.map((documento) => <li key={documento.id}>
+            <strong>{documento.nomeOriginal || documento.nome}</strong>
+            <dl className="solicitacoes-campos">
+              <Campo titulo="ID" valor={documento.id} />
+              <Campo titulo="Tipo" valor={documento.tipo} />
+              <Campo titulo="MIME type" valor={documento.mimeType} />
+              <Campo titulo="Tamanho" valor={documento.tamanho == null ? null : `${documento.tamanho} bytes`} />
+              <Campo titulo="Upload" valor={dataHoraLocal(documento.dataUpload)} />
+              <Campo titulo="Status" valor={documento.statusValidacao} />
+              <Campo titulo="Observação" valor={documento.observacaoValidacao} />
+              <Campo titulo="Validado por" valor={documento.validadoPor} />
+              <Campo titulo="Validado em" valor={dataHoraLocal(documento.validadoEm)} />
+            </dl>
+            <div className="solicitacoes-documento-acoes">
+              <button type="button" onClick={() => visualizarArquivo(documento)}>Visualizar</button>
+              <button type="button" onClick={() => visualizarArquivo(documento, true)}>Baixar</button>
+            </div>
+            {autorizado && documento.statusValidacao === "PENDENTE" && <div>
+              <label htmlFor={`observacao-laudo-${documento.id}`}>Observação da validação</label>
+              <textarea id={`observacao-laudo-${documento.id}`} value={observacoes[documento.id] ?? ""}
+                disabled={revisando !== null} onChange={(evento) => setObservacoes((atuais) => ({
+                  ...atuais, [documento.id]: evento.target.value,
+                }))} />
+              <button type="button" disabled={revisando !== null} onClick={() => revisar(documento, "APROVADO")}>
+                Aprovar
+              </button>
+              <button type="button" disabled={revisando !== null} onClick={() => revisar(documento, "REJEITADO")}>
+                Reprovar
+              </button>
+            </div>}
+          </li>)}
+        </ul> : <p>Nenhum laudo vinculado a esta solicitação.</p>}
+      </section>
+      {visualizacao && <div className="solicitacoes-preview" role="dialog" aria-label={`Visualização de ${visualizacao.nome}`}>
+        <div className="solicitacoes-preview-cabecalho">
+          <strong>{visualizacao.nome}</strong>
+          <button type="button" onClick={() => {
+            if (visualizacaoUrl.current) URL.revokeObjectURL(visualizacaoUrl.current);
+            visualizacaoUrl.current = null;
+            setVisualizacao(null);
+          }}>Fechar visualização</button>
+        </div>
+        {visualizacao.mimeType?.startsWith("image/") ? <img src={visualizacao.url} alt={visualizacao.nome} />
+          : <iframe title={visualizacao.nome} src={visualizacao.url} />}
+      </div>}
       <section><h3>Kit de peruca</h3>{detalhe.kits.length ? <ul>
         {detalhe.kits.map((kit) => <li key={kit.id}>Kit #{kit.id} — Cor: {kit.corPeruca || "Não informada"}</li>)}
       </ul> : <p>Kit ainda não cadastrado.</p>}</section>
@@ -216,6 +349,7 @@ export default function DashboardSolicitacoes(props) {
       </div>
     </main>
     {selecionada !== null && <DetalhesSolicitacao key={selecionada} id={selecionada} aoFechar={() => setSelecionada(null)}
+      aoRevisar={() => consultar()}
       aoEncerrar={(atualizada) => {
         setSelecionada(null);
         setFeedback(`Solicitação #${atualizada.id} ${atualizada.status === "CONCLUIDA" ? "concluída" : "cancelada"} com sucesso.`);

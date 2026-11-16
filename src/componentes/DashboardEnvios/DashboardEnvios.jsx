@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Header from "../Header/Header";
 import CardInfo from "../CardInfo/CardInfo";
@@ -78,12 +78,17 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
     const [busca, setBusca] = useState("");
     const [filtroAberto, setFiltroAberto] = useState(false);
     const [statusFiltro, setStatusFiltro] = useState("");
+    const [estadoFiltro, setEstadoFiltro] = useState("");
+    const [cidadeFiltro, setCidadeFiltro] = useState("");
+    const [agrupamentoRanking, setAgrupamentoRanking] = useState("estado");
     const [pagina, setPagina] = useState(1);
     const [selecionados, setSelecionados] = useState([]);
+    const carregamentoRef = useRef(null);
 
     useEffect(() => {
         let ativo = true;
-        Promise.allSettled([listarKits(), listarTodosPacientes()])
+        carregamentoRef.current ??= Promise.allSettled([listarKits(), listarTodosPacientes()]);
+        carregamentoRef.current
             .then(([resultadoKits, resultadoPacientes]) => {
                 if (!ativo) return;
                 if (resultadoKits.status === "fulfilled") setKits(resultadoKits.value);
@@ -98,14 +103,6 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
         return () => { ativo = false; };
     }, []);
 
-    const temStatusEntrega = kits.some((kit) => kit.status ?? kit.statusEntrega ?? kit.statusEnvio);
-    const kitsEntregues = kits.filter((kit) => ["entregue", "delivered"].includes(normalizarStatus(kit.status ?? kit.statusEntrega ?? kit.statusEnvio))).length;
-    const kitsEmTransito = kits.filter((kit) => ["em-transito", "em-rota"].includes(normalizarStatus(kit.status ?? kit.statusEntrega ?? kit.statusEnvio))).length;
-    const cards = [
-        { titulo: "Total de Envios", valor: kits.length, descricao: "Kits retornados pela API", icone: "▦" },
-        { titulo: "Entregues", valor: temStatusEntrega ? kitsEntregues : "-", descricao: temStatusEntrega ? "Status informado pela API" : "Status não informado pela API", icone: "✓" },
-        { titulo: "Em Trânsito", valor: temStatusEntrega ? kitsEmTransito : "-", descricao: temStatusEntrega ? "Status informado pela API" : "Status não informado pela API", icone: "▰" },
-    ];
     const envios = kits.map((kit, indice) => ({
         key: kit.id ?? kit.kitId ?? indice,
         id: kit.id ?? kit.kitId ?? "-",
@@ -114,19 +111,41 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
         produto: kit.corPeruca && kit.corPeruca !== "A definir" ? `Peruca ${kit.corPeruca}` : "Kit de peruca",
         data: formatarData(kit.paciente?.dtPedido ?? kit.dataCadastro ?? kit.dataSolicitacao ?? kit.createdAt),
         status: formatarStatus(kit.status ?? kit.statusEntrega ?? kit.statusEnvio),
+        estado: kit.paciente?.endereco?.estado ?? "Não informado",
+        cidade: kit.paciente?.endereco?.cidade ?? "Não informado",
     }));
     const statusDisponiveis = [...new Set(envios.map((envio) => envio.status))].sort();
-
-    const dadosGraficos = {
-        envios: agruparPorEstado(kits, periodo),
-        solicitacoes: agruparPorEstado(pacientes, periodo),
-    };
-
+    const estadosDisponiveis = [...new Set(envios.map((envio) => envio.estado))].sort((a, b) => a.localeCompare(b));
+    const cidadesDisponiveis = [...new Set(envios
+        .filter((envio) => !estadoFiltro || envio.estado === estadoFiltro)
+        .map((envio) => envio.cidade))].sort((a, b) => a.localeCompare(b));
     const enviosFiltrados = envios.filter((envio) => {
         const correspondeBusca = `${envio.id} ${envio.cliente} ${envio.email} ${envio.produto}`
             .toLowerCase().includes(busca.toLowerCase());
-        return correspondeBusca && (!statusFiltro || normalizarStatus(envio.status) === normalizarStatus(statusFiltro));
+        return correspondeBusca
+            && (!statusFiltro || normalizarStatus(envio.status) === normalizarStatus(statusFiltro))
+            && (!estadoFiltro || envio.estado === estadoFiltro)
+            && (!cidadeFiltro || envio.cidade === cidadeFiltro);
     });
+    const kitsFiltrados = kits.filter((kit) => enviosFiltrados.some((envio) => envio.key === (kit.id ?? kit.kitId)));
+    const pacientesFiltrados = pacientes.filter((paciente) => {
+        const estado = paciente.endereco?.estado ?? "Não informado";
+        const cidade = paciente.endereco?.cidade ?? "Não informado";
+        return (!estadoFiltro || estado === estadoFiltro) && (!cidadeFiltro || cidade === cidadeFiltro);
+    });
+
+    const dadosGraficos = {
+        envios: agruparPorEstado(kitsFiltrados, periodo),
+        solicitacoes: agruparPorEstado(pacientesFiltrados, periodo),
+    };
+    const kitsComStatus = kitsFiltrados.filter((kit) => kit.status ?? kit.statusEntrega ?? kit.statusEnvio);
+    const kitsEntregues = kitsComStatus.filter((kit) => ["entregue", "delivered"].includes(normalizarStatus(kit.status ?? kit.statusEntrega ?? kit.statusEnvio))).length;
+    const kitsEmTransito = kitsComStatus.filter((kit) => ["em-transito", "em-rota"].includes(normalizarStatus(kit.status ?? kit.statusEntrega ?? kit.statusEnvio))).length;
+    const cards = [
+        { titulo: "Total de Envios", valor: carregando ? "-" : kitsFiltrados.length, descricao: "Kits retornados pela API", icone: "▦" },
+        { titulo: "Entregues", valor: kitsComStatus.length ? kitsEntregues : "-", descricao: kitsComStatus.length ? "Status informado pela API" : "Status não informado pela API", icone: "✓" },
+        { titulo: "Em Trânsito", valor: kitsComStatus.length ? kitsEmTransito : "-", descricao: kitsComStatus.length ? "Status informado pela API" : "Status não informado pela API", icone: "▰" },
+    ];
     const itensPorPagina = 5;
     const totalPaginas = Math.max(1, Math.ceil(enviosFiltrados.length / itensPorPagina));
     const paginaAtual = Math.min(pagina, totalPaginas);
@@ -187,7 +206,8 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
                             {cards.map((card) => <CardInfo key={card.titulo} {...card} />)}
                         </div>
                     </div>
-                    <RankingRegioes kits={kits} />
+                    <RankingRegioes kits={kitsFiltrados} por={agrupamentoRanking} carregando={carregando}
+                        titulo="Regiões com mais kits cadastrados" />
                 </section>
                 {carregando && <p>Carregando kits...</p>}
                 {erro && <p role="alert">{erro}</p>}
@@ -209,18 +229,42 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
                                 type="button" aria-label="Filtrar por status" aria-expanded={filtroAberto}
                                 onClick={() => setFiltroAberto((aberto) => !aberto)}>▼</button>
                             {filtroAberto && (
-                                <select className="filtroStatus" aria-label="Status dos envios"
-                                    value={statusFiltro} onChange={(evento) => { setStatusFiltro(evento.target.value); setPagina(1); }}>
-                                    <option value="">Todos os status</option>
-                                    {statusDisponiveis.map((status) => <option key={status}>{status}</option>)}
-                                </select>
+                                <div className="filtrosEnvios" aria-label="Filtros dos envios">
+                                    <select aria-label="Filtrar por estado" value={estadoFiltro}
+                                        onChange={(evento) => { setEstadoFiltro(evento.target.value); setCidadeFiltro(""); setPagina(1); }}>
+                                        <option value="">Todos os estados</option>
+                                        {estadosDisponiveis.map((estado) => <option key={estado}>{estado}</option>)}
+                                    </select>
+                                    <select aria-label="Filtrar por cidade" value={cidadeFiltro}
+                                        onChange={(evento) => { setCidadeFiltro(evento.target.value); setPagina(1); }}>
+                                        <option value="">Todas as cidades</option>
+                                        {cidadesDisponiveis.map((cidade) => <option key={cidade}>{cidade}</option>)}
+                                    </select>
+                                    <select aria-label="Agrupar ranking por" value={agrupamentoRanking}
+                                        onChange={(evento) => setAgrupamentoRanking(evento.target.value)}>
+                                        <option value="estado">Agrupar por estado</option>
+                                        <option value="cidade">Agrupar por cidade</option>
+                                    </select>
+                                    <select aria-label="Filtrar por status" value={statusFiltro}
+                                        onChange={(evento) => { setStatusFiltro(evento.target.value); setPagina(1); }}>
+                                        <option value="">Todos os status</option>
+                                        {statusDisponiveis.map((status) => <option key={status}>{status}</option>)}
+                                    </select>
+                                    <button type="button" onClick={() => {
+                                        setEstadoFiltro("");
+                                        setCidadeFiltro("");
+                                        setStatusFiltro("");
+                                        setBusca("");
+                                        setPagina(1);
+                                    }}>Limpar filtros</button>
+                                </div>
                             )}
                         </div>
                     </div>
                     <div className="rolagemTabelaEnvios">
                         <table>
                             <thead><tr>
-                                <th aria-label="Selecionar envio"></th><th>ID</th><th>Cliente</th><th>Produto</th><th>Data</th><th>Status</th><th>Ações</th>
+                                <th aria-label="Selecionar envio"></th><th>ID</th><th>Cliente</th><th>Produto</th><th>Estado</th><th>Cidade</th><th>Data</th><th>Status</th><th>Ações</th>
                             </tr></thead>
                             <tbody>
                                 {enviosVisiveis.map((envio) => (
@@ -229,7 +273,7 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
                                             checked={selecionados.includes(envio.key)} onChange={() => alternarSelecao(envio.key)} /></td>
                                         <td>#{envio.id}</td>
                                         <td><strong>{envio.cliente}</strong><small>{envio.email}</small></td>
-                                        <td>{envio.produto}</td><td>{envio.data}</td>
+                                        <td>{envio.produto}</td><td>{envio.estado}</td><td>{envio.cidade}</td><td>{envio.data}</td>
                                         <td><span className={`status status-${envio.status.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-")}`}>{envio.status}</span></td>
                                         <td className="acoes">
                                             <button className="btn-editar" type="button">Editar</button>
@@ -237,7 +281,7 @@ function DashboardEnvios({ irParaFormulario, irParaMadrinhas, irParaPacientes, i
                                         </td>
                                     </tr>
                                 ))}
-                                {!carregando && enviosVisiveis.length === 0 && <tr><td className="semResultados" colSpan="7">Nenhum envio encontrado.</td></tr>}
+                                {!carregando && enviosVisiveis.length === 0 && <tr><td className="semResultados" colSpan="9">Nenhum envio encontrado.</td></tr>}
                             </tbody>
                         </table>
                     </div>

@@ -13,6 +13,19 @@ function normalizarStatus(status) {
   return String(status ?? "").trim().toLowerCase();
 }
 
+function minutosDaMadrinha(madrinha) {
+  if (madrinha.minutosVoluntarios != null) return Number(madrinha.minutosVoluntarios);
+  return Number(madrinha.horasVoluntarias ?? 0) * 60;
+}
+
+function formatarDuracao(minutos) {
+  const total = Math.max(0, Number(minutos) || 0);
+  if (total < 60) return `${total}min`;
+  const horas = Math.floor(total / 60);
+  const restantes = total % 60;
+  return restantes ? `${horas}h ${restantes}min` : `${horas}h`;
+}
+
 function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, irParaDocumentos, irParaSolicitacoes, sair }) {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [madrinhaEmEdicao, setMadrinhaEmEdicao] = useState(null);
@@ -33,15 +46,15 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, i
     return () => { ativo = false; };
   }, [atualizacao]);
 
-  const horasTotais = madrinhas.reduce((total, madrinha) => total + Number(madrinha.horasVoluntarias ?? 0), 0);
+  const minutosTotais = madrinhas.reduce((total, madrinha) => total + minutosDaMadrinha(madrinha), 0);
   const maisHoras = madrinhas.reduce((maior, madrinha) => (
-    Number(madrinha.horasVoluntarias ?? 0) > Number(maior?.horasVoluntarias ?? -1) ? madrinha : maior
+    minutosDaMadrinha(madrinha) > (maior ? minutosDaMadrinha(maior) : -1) ? madrinha : maior
   ), null);
   const ativas = madrinhas.filter((madrinha) => normalizarStatus(madrinha.status) === "ativa").length;
   const cards = [
     { titulo: "Total de Madrinhas", valor: madrinhas.length, descricao: "Cadastros retornados pela API" },
-    { titulo: "Madrinha com Mais Horas", valor: maisHoras?.nomeCompleto ?? "-", descricao: maisHoras ? `${maisHoras.horasVoluntarias} horas` : "Sem registros" },
-    { titulo: "Total de Horas Voluntárias", valor: `${horasTotais} horas`, descricao: "Soma dos cadastros" },
+    { titulo: "Madrinha com Mais Horas", valor: maisHoras?.nomeCompleto ?? "-", descricao: maisHoras ? formatarDuracao(minutosDaMadrinha(maisHoras)) : "Sem registros" },
+    { titulo: "Total de Horas Voluntárias", valor: formatarDuracao(minutosTotais), descricao: "Soma dos cadastros" },
     { titulo: "Madrinhas Ativas", valor: ativas, descricao: "Status atual" },
   ];
 
@@ -49,7 +62,7 @@ function DashboardMadrinhas({ irParaFormulario, irParaEnvios, irParaPacientes, i
     const busca = filtros.busca.trim().toLowerCase();
     const correspondeBusca = !busca || `${madrinha.id} ${madrinha.nomeCompleto} ${madrinha.email}`.toLowerCase().includes(busca);
     const correspondeStatus = !filtros.status || normalizarStatus(madrinha.status) === normalizarStatus(filtros.status);
-    const correspondeHoras = filtros.horas === "" || Number(madrinha.horasVoluntarias ?? 0) >= Number(filtros.horas);
+    const correspondeHoras = filtros.horas === "" || minutosDaMadrinha(madrinha) >= Number(filtros.horas) * 60;
     const correspondeMes = !filtros.mes || madrinha.dataCadastro?.startsWith(filtros.mes);
     return correspondeBusca && correspondeStatus && correspondeHoras && correspondeMes;
   });

@@ -17,6 +17,7 @@ function CadastroMadrinha({ fecharModal, aoSalvar, madrinha = null }) {
         horasVoluntarias: String(madrinha?.horasVoluntarias ?? 0),
         funcao: madrinha?.funcao ?? "",
         status: obterStatusInicial(madrinha),
+        colaboradorId: madrinha?.colaboradorId ?? "",
     }));
     const [erro, setErro] = useState("");
     const [enviando, setEnviando] = useState(false);
@@ -73,6 +74,10 @@ function CadastroMadrinha({ fecharModal, aoSalvar, madrinha = null }) {
                     <label>
                         <span>Função *</span>
                         <input required value={form.funcao} onChange={(evento) => alterar("funcao", evento.target.value)} />
+                    </label>
+                    <label>
+                        <span>ID do colaborador facial</span>
+                        <input value={form.colaboradorId} onChange={(evento) => alterar("colaboradorId", evento.target.value)} placeholder="Ex.: pessoa-..." />
                     </label>
                     <label>
                         <span>Status *</span>

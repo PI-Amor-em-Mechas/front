@@ -1,0 +1,57 @@
+- generic [ref=f28e85]:
+  - navigation [ref=f28e86]:
+    - button "Voltar ao formulário" [ref=f28e88] [cursor=pointer]
+    - generic [ref=f28e89]:
+      - button "Painel" [ref=f28e90] [cursor=pointer]
+      - button "Pacientes" [ref=f28e91] [cursor=pointer]
+      - button "Solicitações" [ref=f28e92] [cursor=pointer]
+      - button "Madrinhas" [ref=f28e93] [cursor=pointer]
+      - button "Documentos" [ref=f28e94] [cursor=pointer]
+    - generic [ref=f28e95]:
+      - button "Sair" [ref=f28e96] [cursor=pointer]
+      - img "Perfil" [ref=f28e97]
+  - main [ref=f28e98]:
+    - generic [ref=f28e99]:
+      - generic [ref=f28e100]:
+        - heading "Madrinhas do Amor" [level=1] [ref=f28e101]
+        - paragraph [ref=f28e102]: Gestão de horas das madrinhas do amor
+      - button "Cadastrar Madrinha" [ref=f28e103]
+    - generic [ref=f28e104]:
+      - generic [ref=f28e105]:
+        - heading "Total de Madrinhas" [level=3] [ref=f28e106]
+        - heading "0" [level=2] [ref=f28e107]
+        - paragraph [ref=f28e108]: Cadastros retornados pela API
+      - generic [ref=f28e109]:
+        - heading "Madrinha com Mais Horas" [level=3] [ref=f28e110]
+        - heading "-" [level=2] [ref=f28e111]
+        - paragraph [ref=f28e112]: Sem registros
+      - generic [ref=f28e113]:
+        - heading "Total de Horas Voluntárias" [level=3] [ref=f28e114]
+        - heading "0 horas" [level=2] [ref=f28e115]
+        - paragraph [ref=f28e116]: Soma dos cadastros
+      - generic [ref=f28e117]:
+        - heading "Madrinhas Ativas" [level=3] [ref=f28e118]
+        - heading "0" [level=2] [ref=f28e119]
+        - paragraph [ref=f28e120]: Status atual
+    - generic [ref=f28e122]:
+      - searchbox "Buscar por nome ou ID..." [ref=f28e123]
+      - combobox [ref=f28e124]:
+        - option "Todos os Status" [selected]
+        - option "Ativa"
+        - option "Afastada"
+        - option "Desassociada"
+      - spinbutton "Horas mínimas..." [ref=f28e125]
+      - textbox "Filtrar por mês de cadastro" [ref=f28e126]
+    - table [ref=f28e129]:
+      - rowgroup [ref=f28e130]:
+        - row [ref=f28e131]:
+          - columnheader "ID" [ref=f28e132]
+          - columnheader "Voluntária" [ref=f28e133]
+          - columnheader "Horas Voluntárias" [ref=f28e134]
+          - columnheader "Função" [ref=f28e135]
+          - columnheader "Data Cadastro" [ref=f28e136]
+          - columnheader "Status" [ref=f28e137]
+          - columnheader "Ações" [ref=f28e138]
+      - rowgroup [ref=f28e139]:
+        - row [ref=f28e140]:
+          - cell "Nenhuma madrinha encontrada." [ref=f28e141]

@@ -4,8 +4,6 @@ import logo from "../../assets/logo amor em mechas.png";
 import { enviarSolicitacao, enviarAvaliacao, buscarCep } from "../../services/solicitacaoService";
 import { EnvioFormularioError } from "../../services/EnvioFormularioError";
 import { validarArquivo } from "../../services/arquivoValidation";
-import { buscarArquivo, obterConteudoArquivo, mensagemErroArquivo } from "../../services/arquivoService";
-import { Download, RefreshCw } from "lucide-react";
 
 function IconeNuvemUpload() {
  return (
@@ -63,7 +61,6 @@ function FormularioPeruca({irParaDashboard}) {
  const [documento, setDocumento] = useState(null);
  const [errosArquivos, setErrosArquivos] = useState({});
  const [validandoArquivos, setValidandoArquivos] = useState({});
- const [consultandoDocumento, setConsultandoDocumento] = useState(false);
  const [arquivosBloqueados, setArquivosBloqueados] = useState(false);
  const selecoesArquivos = useRef({});
  const validando = Object.values(validandoArquivos).some(Boolean);
@@ -171,7 +168,17 @@ function FormularioPeruca({irParaDashboard}) {
  }
 
  function avancar() {
-   if (passoAtual === 3 && (validando || Object.values(errosArquivos).some(Boolean))) return;
+  if (passoAtual === 1) {
+   const camposObrigatorios = [
+    "nomePaciente", "email", "dataNascimento", "celular", "cpf", "cep",
+    "endereco", "numero", "bairro", "cidade", "estado",
+   ];
+   if (camposObrigatorios.some((campoObrigatorio) => !String(form[campoObrigatorio]).trim())) {
+    setErroEnvio("Preencha todos os campos obrigatórios antes de avançar.");
+    return;
+   }
+  }
+  if (passoAtual === 3 && (validando || Object.values(errosArquivos).some(Boolean))) return;
   if (passoAtual === 2 && !filhosValidos()) {
    setErroEnvio("Informe quantos filhos você tem e a idade de cada um.");
    return;
@@ -251,40 +258,6 @@ function FormularioPeruca({irParaDashboard}) {
   }
  }
 
- async function atualizarDocumento() {
-  if (consultandoDocumento || enviando) return;
-  setConsultandoDocumento(true);
-  setErroEnvio(null);
-  try {
-   const atual = await buscarArquivo(progresso.current.relatorioId);
-   progresso.current.documento = atual;
-   setDocumento(atual);
-   } catch (error_) {
-    setErroEnvio(mensagemErroArquivo(error_));
-  } finally {
-   setConsultandoDocumento(false);
-  }
- }
-
- async function baixarDocumento() {
-  setConsultandoDocumento(true);
-  setErroEnvio(null);
-  try {
-   const { conteudo, documento: atual } = await obterConteudoArquivo(documento.id);
-   setDocumento(atual);
-   const url = URL.createObjectURL(conteudo);
-   const link = document.createElement("a");
-   link.href = url;
-   link.download = atual.nome || "documento";
-   link.click();
-   URL.revokeObjectURL(url);
-   } catch (error_) {
-    setErroEnvio(mensagemErroArquivo(error_));
-  } finally {
-   setConsultandoDocumento(false);
-  }
- }
-
  async function enviarAvaliacaoFormulario() {
   setErroAval(null);
   if (nota < 1) {
@@ -326,6 +299,7 @@ function FormularioPeruca({irParaDashboard}) {
    setDocumento(null);
    setErrosArquivos({});
    setArquivosBloqueados(false);
+   progresso.current = {};
   setEnviado(false);
   setPassoAtual(1);
  }
@@ -338,9 +312,6 @@ function FormularioPeruca({irParaDashboard}) {
     {documento.statusValidacao === "REJEITADO" && <p>Documento rejeitado: {documento.observacaoValidacao || "Envie um novo documento."}</p>}
     {documento.statusValidacao === "APROVADO" && <p>Documento aprovado. Você pode concluir a solicitação.</p>}
    </div>
-   <button type="button" className={style.botaoDocumento} title="Consultar status do documento" aria-label="Consultar status do documento" disabled={consultandoDocumento || enviando} onClick={atualizarDocumento}><RefreshCw size={20} /></button>
-   {documento.statusValidacao === "APROVADO" && <button type="button" className={style.botaoDocumento} title="Baixar documento aprovado" aria-label="Baixar documento aprovado" disabled={consultandoDocumento || enviando} onClick={baixarDocumento}><Download size={20} /></button>}
-   {consultandoDocumento && <output>Consultando documento...</output>}
   </div>
  );
 
@@ -789,7 +760,7 @@ function FormularioPeruca({irParaDashboard}) {
           {erroEnvio && <p role="alert" className={style.erroEnvio}>{erroEnvio}</p>}
        <div className={style.acoes}>
             <button className={style.botaoVoltar} onClick={voltar} disabled={enviando}>Voltar</button>
-            <button className={style.botaoAvancar} onClick={enviarFormulario} disabled={enviando || validando || consultandoDocumento || Object.values(errosArquivos).some(Boolean)}>{enviando ? "Enviando..." : documento ? "Verificar e concluir solicitação" : "Enviar Formulário"}</button>
+            <button className={style.botaoAvancar} onClick={enviarFormulario} disabled={enviando || validando || Object.values(errosArquivos).some(Boolean)}>{enviando ? "Enviando..." : documento ? "Verificar e concluir solicitação" : "Enviar Formulário"}</button>
        </div>
       </div>
      </>

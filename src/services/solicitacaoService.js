@@ -1,7 +1,7 @@
 import { isAxiosError } from "axios";
 import api from "./api";
 import { EnvioFormularioError } from "./EnvioFormularioError";
-import { buscarArquivo, enviarArquivo, mensagemErroArquivo } from "./arquivoService";
+import { enviarArquivoPublico, mensagemErroArquivo } from "./arquivoService";
 
 // Traduz o erro do Axios para a nossa exceção, usando o formato que o
 // GlobalExceptionHandler do backend devolve: { erro, campos }.
@@ -14,6 +14,9 @@ function traduzirErro(etapa, erro) {
   }
   if ([403, 409].includes(erro.response.status)) {
     return new EnvioFormularioError(etapa, mensagemErroArquivo(erro));
+  }
+  if (erro.response.status === 413) {
+    return new EnvioFormularioError(etapa, "O arquivo excede o limite permitido.");
   }
   const { erro: mensagem, campos } = erro.response.data ?? {};
   return new EnvioFormularioError(etapa, mensagem ?? "O servidor recusou os dados enviados.", campos);
@@ -37,20 +40,28 @@ async function upload(etapa, arquivo, tipo, pacienteId) {
   }
 }
 
-async function exigirLaudoAprovado(progresso) {
+async function uploadRelatorio(progresso, arquivo) {
+  if (progresso.documento?.statusValidacao === "PENDENTE") {
+    const erro = new EnvioFormularioError("relatório médico", "Relatório enviado com sucesso e encaminhado para análise.");
+    erro.aguardandoValidacao = true;
+    throw erro;
+  }
+  if (!progresso.applicationToken) {
+    throw new EnvioFormularioError("relatório médico", "Não foi possível autorizar o envio do relatório médico. Tente novamente ou entre em contato com o atendimento.");
+  }
   try {
-    progresso.documento = await buscarArquivo(progresso.relatorioId);
+    const arq = await enviarArquivoPublico(arquivo, "RELATORIO_MEDICO", progresso.pacienteId, progresso.applicationToken);
+    progresso.relatorioId = arq.id;
+    progresso.documento = arq;
+    return arq;
   } catch (error_) {
+    if (error_ instanceof EnvioFormularioError) throw error_;
+    if (error_.response?.status === 401) {
+      delete progresso.applicationToken;
+      throw new EnvioFormularioError("relatório médico", "A autorização temporária do envio é inválida ou expirou. Inicie uma nova solicitação.");
+    }
     throw new EnvioFormularioError("relatório médico", mensagemErroArquivo(error_));
   }
-  if (progresso.documento.statusValidacao === "APROVADO") return;
-  const pendente = progresso.documento.statusValidacao === "PENDENTE";
-  const mensagem = progresso.documento.statusValidacao === "REJEITADO"
-    ? `Documento rejeitado: ${progresso.documento.observacaoValidacao || "Envie um novo documento."}`
-    : "Arquivo recebido. Aguardando validação da equipe antes de concluir a solicitação.";
-  const erro = new EnvioFormularioError("relatório médico", mensagem);
-  erro.aguardandoValidacao = pendente;
-  throw erro;
 }
 
 export async function enviarSolicitacao(f, progresso) {
@@ -95,21 +106,29 @@ export async function enviarSolicitacao(f, progresso) {
       consentimentoLgpd: f.declaracaoAceita,
     });
     progresso.pacienteId = paciente.id;
+    progresso.applicationToken = paciente.applicationToken;
+    if (progresso.pacienteId == null || !progresso.applicationToken) {
+      delete progresso.applicationToken;
+      throw new EnvioFormularioError("paciente", "A solicitação foi iniciada, mas não foi possível autorizar o envio do relatório médico.");
+    }
   }
 
   if (!progresso.relatorioId) {
-    const arq = await upload("relatório médico", f.arquivoRelatorio, "RELATORIO_MEDICO", progresso.pacienteId);
-    progresso.relatorioId = arq.id;
-    progresso.documento = arq;
+    await uploadRelatorio(progresso, f.arquivoRelatorio);
   }
 
   if (!progresso.cabeloId) {
-    const arq = await upload("foto do cabelo", f.arquivoCabelo, "FOTO_CABELO");
-    progresso.cabeloId = arq.id;
+    try {
+      const arq = await enviarArquivoPublico(
+        f.arquivoCabelo, "FOTO_CABELO", progresso.pacienteId, progresso.applicationToken,
+      );
+      progresso.cabeloId = arq.id;
+    } catch (error_) {
+      throw new EnvioFormularioError("foto do cabelo", mensagemErroArquivo(error_));
+    }
   }
 
   if (!progresso.dadosMedicosOk) {
-    await exigirLaudoAprovado(progresso);
     await post("dados médicos", "/dados-medicos", {
       motivo: f.motivo,
       tipoCancer: f.tipoCancer || "Não se aplica",
@@ -119,6 +138,8 @@ export async function enviarSolicitacao(f, progresso) {
       tipoAtendimento: f.tipoAtendimento,
       pacienteId: progresso.pacienteId,
       relatorioMedicoId: progresso.relatorioId,
+    }, {
+      headers: { "X-Application-Token": progresso.applicationToken },
     });
     progresso.dadosMedicosOk = true;
   }
@@ -129,8 +150,16 @@ export async function enviarSolicitacao(f, progresso) {
       corPeruca: "A definir",
       pacienteId: progresso.pacienteId,
       solicitanteId: progresso.solicitanteId,
+    }, {
+      headers: { "X-Application-Token": progresso.applicationToken },
     });
     progresso.kitOk = true;
+  }
+
+  if (progresso.documento?.statusValidacao !== "APROVADO") {
+    const erro = new EnvioFormularioError("relatório médico", "Relatório enviado com sucesso e encaminhado para análise.");
+    erro.aguardandoValidacao = true;
+    throw erro;
   }
 }
 

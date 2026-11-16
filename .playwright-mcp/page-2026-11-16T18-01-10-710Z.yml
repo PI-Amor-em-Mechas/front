@@ -1,0 +1,43 @@
+- generic [ref=f27e142]:
+  - navigation [ref=f27e143]:
+    - button "Voltar ao formulário" [ref=f27e145] [cursor=pointer]
+    - generic [ref=f27e146]:
+      - button "Painel" [ref=f27e147] [cursor=pointer]
+      - button "Pacientes" [ref=f27e148] [cursor=pointer]
+      - button "Solicitações" [ref=f27e149] [cursor=pointer]
+      - button "Madrinhas" [ref=f27e150] [cursor=pointer]
+    - generic [ref=f27e152]:
+      - button "Sair" [ref=f27e153] [cursor=pointer]
+      - img "Perfil" [ref=f27e154]
+  - main [ref=f27e155]:
+    - generic [ref=f27e157]:
+      - heading "Solicitações de peruca" [level=1] [ref=f27e158]
+      - paragraph [ref=f27e159]: Acompanhe e gerencie os pedidos ativos
+    - generic [ref=f27e160]:
+      - generic [ref=f27e161]:
+        - strong [ref=f27e162]: —
+        - generic [ref=f27e163]: solicitações ativas
+      - paragraph [ref=f27e164]: Use o ícone de informação para consultar os detalhes e encerrar um atendimento.
+    - generic [ref=f27e165]:
+      - generic [ref=f27e166]: Buscar por nome ou e-mail
+      - generic [ref=f27e167]:
+        - searchbox "Buscar por nome ou e-mail" [ref=f27e168]
+        - button "Buscar" [disabled] [ref=f27e169]
+        - button "Atualizar" [disabled] [ref=f27e173]
+    - generic [ref=f27e180]:
+      - table [ref=f27e181]:
+        - caption [ref=f27e182]: Solicitações ativas de peruca
+        - rowgroup [ref=f27e183]:
+          - row [ref=f27e184]:
+            - columnheader "Pedido" [ref=f27e185]
+            - columnheader "Paciente" [ref=f27e186]
+            - columnheader "Data do pedido" [ref=f27e187]
+            - columnheader "Localidade" [ref=f27e188]
+            - columnheader "Status" [ref=f27e189]
+            - columnheader "Detalhes" [ref=f27e190]
+        - rowgroup
+      - status [ref=f27e198]: Carregando solicitações...
+    - generic [ref=f27e192]:
+      - button "Anterior" [disabled] [ref=f27e193]
+      - generic [ref=f27e194]: Página 0 de 0
+      - button "Próxima" [disabled] [ref=f27e195]
